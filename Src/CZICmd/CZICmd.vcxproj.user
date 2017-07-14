@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerCommandArguments>CZIcmd.exe -c ChannelComposite  -s "D:\PICTURES\NaCZIrTestData\DCV_30MB_gamma_spline_and_blackwhitepoint.czi"  -o D:\PICTURES\Out_test</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerCommandArguments>CZIcmd.exe -c PrintInformation  -i PyramidStatistics -s D:\PICTURES\NaCZIrTestData\BF.czi</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='static Debug|x64'">
+    <LocalDebuggerCommandArguments>CZIcmd.exe -c ChannelComposite  -s "D:\PICTURES\NaCZIrTestData\DCV_30MB_gamma_spline_and_blackwhitepoint.czi"  -o D:\PICTURES\Out_test</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+</Project>

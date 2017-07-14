@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\classes">
+      <UniqueIdentifier>{eb2aac4d-cee1-4ffe-b8f5-c97592fc3559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\classes">
+      <UniqueIdentifier>{aa748bed-53aa-493a-8325-779d367d2ab5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Czi">
+      <UniqueIdentifier>{f7b1ff66-1581-409d-b905-b9cb766369f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Czi">
+      <UniqueIdentifier>{6795fe3c-f5ec-4c91-96ad-4902d950571e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\decoder">
+      <UniqueIdentifier>{e608fc4a-023c-4974-8b87-76f706d4ac2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\decoder">
+      <UniqueIdentifier>{e6ddd801-b2e0-40a4-bab5-b55ee441ba68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\classes\Bitmap">
+      <UniqueIdentifier>{465981c3-2c61-4990-a515-53c25b77ba55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Czi\metadata">
+      <UniqueIdentifier>{3474d9a7-4aa4-4613-8361-97a2f355ffa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Czi\metadata">
+      <UniqueIdentifier>{b47a3390-cf90-4dcb-b038-29ce7138374c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\classes\pugixml">
+      <UniqueIdentifier>{4f754e36-89f1-4a81-a2f0-1d5177385230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\classes\pugixml">
+      <UniqueIdentifier>{2d5bd6d1-baa4-4fef-a749-98131687b4c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Czi\Compositors">
+      <UniqueIdentifier>{e89e28fa-c537-45e5-86cf-80b3876b74f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Czi\Compositors">
+      <UniqueIdentifier>{89c31611-05ae-4cc9-9341-77b4a33da70d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\classes\Bitmap">
+      <UniqueIdentifier>{08a6b9b1-5fda-448e-a26a-904d5213cc3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\external interface">
+      <UniqueIdentifier>{cbfebeb5-20c9-49a2-a307-abb9db7ae1f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Doc">
+      <UniqueIdentifier>{e27a90e4-b8a9-482d-b06e-58aa66c3d2d8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CziParse.h">
+      <Filter>Header Files\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="CziStructs.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="CziDataStructs.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="CziSubBlockDirectory.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="CziSubBlock.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="decoder.h">
+      <Filter>Header Files\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="CziUtils.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="bitmapData.h">
+      <Filter>Header Files\classes\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="stdAllocator.h">
+      <Filter>Header Files\classes\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="CziMetadataSegment.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="CziMetadata.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="CziMetadataDocumentInfo.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities.h">
+      <Filter>Header Files\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="CziDimensionInfo.h">
+      <Filter>Header Files\Czi\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleChannelTileCompositor.h">
+      <Filter>Header Files\Czi\Compositors</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleChannelTileAccessor.h">
+      <Filter>Header Files\Czi\Compositors</Filter>
+    </ClInclude>
+    <ClInclude Include="pugixml.hpp">
+      <Filter>Header Files\classes\pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="pugiconfig.hpp">
+      <Filter>Header Files\classes\pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="priv_guiddef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CziDisplaySettings.h">
+      <Filter>Header Files\Czi\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Site.h">
+      <Filter>Header Files\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapOperations.h">
+      <Filter>Header Files\classes\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="MD5Sum.h">
+      <Filter>Header Files\classes\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="splines.h">
+      <Filter>Header Files\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="ImportExport.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="decoder_wic.h">
+      <Filter>Header Files\decoder</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleChannelPyramidLevelTileAccessor.h">
+      <Filter>Header Files\Czi\Compositors</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleChannelAccessorBase.h">
+      <Filter>Header Files\Czi\Compositors</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapOperations.hpp">
+      <Filter>Header Files\classes\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleChannelScalingTileAccessor.h">
+      <Filter>Header Files\Czi\Compositors</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamImpl.h">
+      <Filter>Header Files\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiChannelCompositor.h">
+      <Filter>Header Files\Czi\Compositors</Filter>
+    </ClInclude>
+    <ClInclude Include="libCZI.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="libCZI_Compositor.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="libCZI_DimCoordinate.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="libCZI_exceptions.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="libCZI_Helpers.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="libCZI_Metadata.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="libCZI_Pixels.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="libCZI_Site.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="libCZI_Utilities.h">
+      <Filter>Header Files\external interface</Filter>
+    </ClInclude>
+    <ClInclude Include="CziAttachmentsDirectory.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="CziAttachment.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="CZIReader.h">
+      <Filter>Header Files\Czi</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexSet.h">
+      <Filter>Header Files\classes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CziParse.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="CziSubBlockDirectory.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="DimCoordinate.cpp">
+      <Filter>Source Files\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="CziSubBlock.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="decoder.cpp">
+      <Filter>Source Files\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="CziUtils.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateBitmap.cpp">
+      <Filter>Source Files\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="stdAllocator.cpp">
+      <Filter>Source Files\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="CziMetadataSegment.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="CziMetadata.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="CziMetadataDocumentInfo.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="CziDimensionInfo.cpp">
+      <Filter>Source Files\Czi\metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleChannelTileCompositor.cpp">
+      <Filter>Source Files\Czi\Compositors</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleChannelTileAccessor.cpp">
+      <Filter>Source Files\Czi\Compositors</Filter>
+    </ClCompile>
+    <ClCompile Include="pugixml.cpp">
+      <Filter>Source Files\classes\pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="CziDisplaySettings.cpp">
+      <Filter>Source Files\Czi\metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities.cpp">
+      <Filter>Source Files\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="MD5Sum.cpp">
+      <Filter>Source Files\classes\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapOperations.cpp">
+      <Filter>Source Files\classes\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="splines.cpp">
+      <Filter>Source Files\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="decoder_wic.cpp">
+      <Filter>Source Files\decoder</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleChannelPyramidLevelTileAccessor.cpp">
+      <Filter>Source Files\Czi\Compositors</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleChannelAccessorBase.cpp">
+      <Filter>Source Files\Czi\Compositors</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleChannelScalingTileAccessor.cpp">
+      <Filter>Source Files\Czi\Compositors</Filter>
+    </ClCompile>
+    <ClCompile Include="StreamImpl.cpp">
+      <Filter>Source Files\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiChannelCompositor.cpp">
+      <Filter>Source Files\Czi\Compositors</Filter>
+    </ClCompile>
+    <ClCompile Include="libCZI_Site.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libCZI_Utilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libCZI_Lib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CziAttachmentsDirectory.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="CziAttachment.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="CZIReader.cpp">
+      <Filter>Source Files\Czi</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexSet.cpp">
+      <Filter>Source Files\classes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Doxyfile" />
+    <None Include="Doc\mainpage.markdown">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\multichannelcomposition.markdown">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\image_document_concept.markdown">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\accessors.markdown">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\3rd_party_software.markdown">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\Todos.markdown">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\CZICmd_usage.markdown">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\using_libCZI.markdown">
+      <Filter>Doc</Filter>
+    </None>
+    <None Include="Doc\building_libCZI.markdown">
+      <Filter>Doc</Filter>
+    </None>
+  </ItemGroup>
+</Project>

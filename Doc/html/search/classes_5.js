@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['iaccessor',['IAccessor',['../classlib_c_z_i_1_1_i_accessor.html',1,'libCZI']]],
+  ['iattachment',['IAttachment',['../classlib_c_z_i_1_1_i_attachment.html',1,'libCZI']]],
+  ['iattachmentrepository',['IAttachmentRepository',['../classlib_c_z_i_1_1_i_attachment_repository.html',1,'libCZI']]],
+  ['ibitmapdata',['IBitmapData',['../classlib_c_z_i_1_1_i_bitmap_data.html',1,'libCZI']]],
+  ['ichanneldisplaysetting',['IChannelDisplaySetting',['../classlib_c_z_i_1_1_i_channel_display_setting.html',1,'libCZI']]],
+  ['iczimetadata',['ICziMetadata',['../classlib_c_z_i_1_1_i_czi_metadata.html',1,'libCZI']]],
+  ['iczimultidimensiondocumentinfo',['ICziMultiDimensionDocumentInfo',['../classlib_c_z_i_1_1_i_czi_multi_dimension_document_info.html',1,'libCZI']]],
+  ['iczireader',['ICZIReader',['../classlib_c_z_i_1_1_i_c_z_i_reader.html',1,'libCZI']]],
+  ['idecoder',['IDecoder',['../classlib_c_z_i_1_1_i_decoder.html',1,'libCZI']]],
+  ['idimbounds',['IDimBounds',['../classlib_c_z_i_1_1_i_dim_bounds.html',1,'libCZI']]],
+  ['idimcoordinate',['IDimCoordinate',['../classlib_c_z_i_1_1_i_dim_coordinate.html',1,'libCZI']]],
+  ['idimensioninfo',['IDimensionInfo',['../classlib_c_z_i_1_1_i_dimension_info.html',1,'libCZI']]],
+  ['idisplaysettings',['IDisplaySettings',['../classlib_c_z_i_1_1_i_display_settings.html',1,'libCZI']]],
+  ['iindexset',['IIndexSet',['../classlib_c_z_i_1_1_i_index_set.html',1,'libCZI']]],
+  ['imetadatasegment',['IMetadataSegment',['../classlib_c_z_i_1_1_i_metadata_segment.html',1,'libCZI']]],
+  ['intrect',['IntRect',['../structlib_c_z_i_1_1_int_rect.html',1,'libCZI']]],
+  ['intsize',['IntSize',['../structlib_c_z_i_1_1_int_size.html',1,'libCZI']]],
+  ['isinglechannelpyramidlayertileaccessor',['ISingleChannelPyramidLayerTileAccessor',['../classlib_c_z_i_1_1_i_single_channel_pyramid_layer_tile_accessor.html',1,'libCZI']]],
+  ['isinglechannelscalingtileaccessor',['ISingleChannelScalingTileAccessor',['../classlib_c_z_i_1_1_i_single_channel_scaling_tile_accessor.html',1,'libCZI']]],
+  ['isinglechanneltileaccessor',['ISingleChannelTileAccessor',['../classlib_c_z_i_1_1_i_single_channel_tile_accessor.html',1,'libCZI']]],
+  ['isite',['ISite',['../classlib_c_z_i_1_1_i_site.html',1,'libCZI']]],
+  ['istream',['IStream',['../classlib_c_z_i_1_1_i_stream.html',1,'libCZI']]],
+  ['isubblock',['ISubBlock',['../classlib_c_z_i_1_1_i_sub_block.html',1,'libCZI']]],
+  ['isubblockrepository',['ISubBlockRepository',['../classlib_c_z_i_1_1_i_sub_block_repository.html',1,'libCZI']]]
+];

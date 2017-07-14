@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Jxr">
+      <UniqueIdentifier>{43648d15-f414-4eae-8e9b-3dc9f92fa2dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Jxr">
+      <UniqueIdentifier>{23d08755-cd57-4a21-95d8-c7958eb8eefa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Jxr\x86">
+      <UniqueIdentifier>{3934cdc2-48ae-4e38-9e06-e79efb608446}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\JXRGlue.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\JXRTest.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\JXRMeta.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\windowsmediaphoto.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="JxrDecode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\strcodec.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\common.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\perfTimer.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\decode.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\strTransform.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\encode.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\JXRTestWrapper.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\_x86\_x86.h">
+      <Filter>Header Files\Jxr\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\priv_guiddef.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\wmsal.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\wmspecstring.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\wmspecstrings_adt.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\wmspecstrings_strict.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\wmspecstrings_undef.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\ansi.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Jxr\jxr_defines.h">
+      <Filter>Header Files\Jxr</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRTest.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="JxrDecode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRGlue.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRGlueJxr.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strcodec.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRGluePFC.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\decode.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRTranscode.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\postprocess.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\segdec.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strdec.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strdec_x86.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strInvTransform.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strPredQuantDec.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strTransform.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strPredQuant.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\perfTimerANSI.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strenc.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strenc_x86.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strFwdTransform.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\strPredQuantEnc.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\encode.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRMeta.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\segenc.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\image.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\adapthuff.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRTestBmp.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRTestPnm.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRTestTif.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRTestYUV.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRTestHdr.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+    <ClCompile Include="Jxr\JXRTestWrapper.c">
+      <Filter>Source Files\Jxr</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
