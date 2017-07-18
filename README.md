@@ -16,7 +16,7 @@ In a nutshell, it offers (almost...) the same functionality as the 2D-viewer in 
 
 ![Testdata Definition](images/czi_github.png)
 
-The code is written in C++11 and (so far) has been successfully compiled with
+The code is written in C++11 and (so far) has been successfully compiled with:
 
 * Visual Studio 2015 (Microsoft C++ v. 19.00.23506)
 * GCC 5.2.1 (on Ubuntu Linux 4.2.0)
