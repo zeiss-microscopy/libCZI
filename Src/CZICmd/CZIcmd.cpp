@@ -97,12 +97,15 @@ int main(int argc, char** _argv)
 		bool cmdLineParsedOk = options.Parse(argc, argv);
 		if (cmdLineParsedOk == true)
 		{
-			// Important: We have to ensure that the object passed in here has a lifetime greater than
-			// any usage of the libCZI.
-			CLibCZISite site(options);
-			libCZI::SetSiteObject(&site);
+			if (options.GetCommand() != Command::Invalid)
+			{
+				// Important: We have to ensure that the object passed in here has a lifetime greater than
+				// any usage of the libCZI.
+				CLibCZISite site(options);
+				libCZI::SetSiteObject(&site);
 
-			execute(options);
+				execute(options);
+			}
 		}
 		else
 		{
