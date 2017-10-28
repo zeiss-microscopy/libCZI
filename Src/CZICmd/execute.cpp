@@ -1153,7 +1153,7 @@ bool execute(const CCmdLineOptions& options)
 			break;
 		}
 	}
-	catch (std::exception excp)
+	catch (std::exception& excp)
 	{
 		wstringstream ss;
 		string what(excp.what() != nullptr ? excp.what() : "");
