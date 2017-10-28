@@ -121,7 +121,7 @@ bool CCmdLineOptions::Parse(int argc, char** argv)
 				return make_tuple(wstring(1, (wchar_t)long_options[idx].val), convertUtf8ToUCS2(long_options[idx].name));
 #endif
 			});
-			return false;
+			return true;
 		case 'p':
 			this->planeCoordinate = this->ParseDimCoordinate(optarg);
 			break;
