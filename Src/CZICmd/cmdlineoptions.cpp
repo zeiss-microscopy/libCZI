@@ -556,9 +556,11 @@ void CCmdLineOptions::SetOutputFilename(const std::wstring& s)
 	std::string sutf8 = convertToUtf8(s);
 	char* dirName = strdup(sutf8.c_str());
 	char* fname = strdup(sutf8.c_str());
-	dirname(dirName);
+
+	// 'dirname' might modify the string passed in, it might also return a pointer to internally allocated memory
+	char* dirNameResult = dirname(dirName);
 	char* filename = basename(fname);
-	this->outputPath = convertUtf8ToUCS2(dirName);
+	this->outputPath = convertUtf8ToUCS2(dirNameResult);
 	this->outputPath += L'/';
 	this->outputFilename = convertUtf8ToUCS2(filename);
 	free(dirName);
