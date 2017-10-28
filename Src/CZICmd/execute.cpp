@@ -1029,6 +1029,7 @@ private:
 		auto spData = attchment->GetRawData(&size);
 
 		std::ofstream  output;
+		output.exceptions(std::ifstream::badbit| std::ifstream::failbit);
 #if defined(WIN32ENV)
 		output.open(filename, ios::out | ios::binary);
 #endif
