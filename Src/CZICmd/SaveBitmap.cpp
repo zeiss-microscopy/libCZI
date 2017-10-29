@@ -23,6 +23,7 @@
 #include "stdafx.h"
 #include "SaveBitmap.h"
 #include <fstream>
+#include <stdexcept>
 
 #if defined(WIN32ENV)
 #include <atlbase.h>
@@ -51,54 +52,10 @@ static void ThrowIfFailed(const char* function, HRESULT hr, std::function<bool(H
 	}
 }
 
-
-
 CSaveData::CSaveData(const wchar_t* fileName, SaveDataFormat dataFormat)
 	: fileName(fileName), format(dataFormat)
 {
 }
-
-//void CSaveData::SaveAsFloat32(std::shared_ptr<IBitmapData> bitmap)
-//{
-//	switch (this->format)
-//	{
-//	case SaveDataFormat::WDP:
-//		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatWmp, GUID_WICPixelFormat32bppGrayFloat, bitmap);
-//		break;
-//	case SaveDataFormat::CSV:
-//		this->SaveAsCSV(this->fileName.c_str(), bitmap);
-//		break;
-//	case SaveDataFormat::BINARY:
-//		this->SaveAsBINARY(this->fileName.c_str(), bitmap);
-//		break;
-//	default:
-//		break;
-//	}
-//}
-//
-//void CSaveData::SaveAsGray16(std::shared_ptr<IBitmapData> bitmap)
-//{
-//	switch (this->format)
-//	{
-//	case SaveDataFormat::PNG:
-//		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat16bppGray, bitmap);
-//		break;
-//	default:
-//		break;
-//	}
-//}
-//
-//void CSaveData::SaveAsGray8(std::shared_ptr<IBitmapData> bitmap)
-//{
-//	switch (this->format)
-//	{
-//	case SaveDataFormat::PNG:
-//		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat8bppGray, bitmap);
-//		break;
-//	default:
-//		break;
-//	}
-//}
 
 void CSaveData::Save(libCZI::IBitmapData* bitmap)
 {
@@ -110,6 +67,14 @@ void CSaveData::Save(libCZI::IBitmapData* bitmap)
 	case libCZI::PixelType::Gray16:
 		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat16bppGray, bitmap);
 		break;
+	case libCZI::PixelType::Gray8:
+		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat8bppGray, bitmap);
+		break;
+	case libCZI::PixelType::Bgr48:
+		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat48bppBGR, bitmap);
+		break;
+	default:
+		throw std::runtime_error("Unsupported pixeltype encountered.");
 	}
 }
 
@@ -137,13 +102,10 @@ void CSaveData::SaveWithWIC(const wchar_t* filename, const GUID encoder, const W
 void CSaveData::SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream, const GUID encoder, const WICPixelFormatGUID& wicPixelFmt, IBitmapData* spBitmap)
 {
 	// cf. http://msdn.microsoft.com/en-us/library/windows/desktop/ee719797(v=vs.85).aspx
-	/*CComPtr<IWICImagingFactory> cpWicImagingFactor;
-	HRESULT hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&cpWicImagingFactor);
-	ThrowIfFailed("Creating WICImageFactory", hr);*/
-
+	
 	CComPtr<IWICBitmapEncoder> wicBitmapEncoder;
 	HRESULT hr = pFactory->CreateEncoder(
-		/*GUID_ContainerFormatPng*//*GUID_ContainerFormatTiff*//*GUID_ContainerFormatWmp*/encoder,
+		encoder,
 		nullptr,    // No preferred codec vendor.
 		&wicBitmapEncoder);
 	ThrowIfFailed("Creating IWICImagingFactory::CreateEncoder", hr);
@@ -162,7 +124,7 @@ void CSaveData::SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream
 	hr = frameEncode->SetSize(spBitmap->GetWidth(), spBitmap->GetHeight());
 	ThrowIfFailed("IWICBitmapFrameEncode::SetSize", hr);
 
-	WICPixelFormatGUID pixelFormat = wicPixelFmt;/*GUID_WICPixelFormat32bppGrayFloat;*/
+	WICPixelFormatGUID pixelFormat = wicPixelFmt;
 	hr = frameEncode->SetPixelFormat(&pixelFormat);
 	ThrowIfFailed("IWICBitmapFrameEncode::SetPixelFormat", hr);
 
@@ -175,8 +137,6 @@ void CSaveData::SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream
 		// TODO
 	}
 
-	//const char* pixelFormatActual = Utils::WICPixelFormatToInformalString(pixelFormat);
-
 	auto bitmapData = spBitmap->Lock();
 	hr = frameEncode->WritePixels(spBitmap->GetHeight(), bitmapData.stride, spBitmap->GetHeight()* bitmapData.stride, (BYTE*)bitmapData.ptrDataRoi);
 	spBitmap->Unlock();
@@ -188,87 +148,6 @@ void CSaveData::SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream
 	hr = wicBitmapEncoder->Commit();
 	ThrowIfFailed("IWICBitmapEncoder::Commit", hr);
 }
-
-void CSaveData::SaveAsCSV(const wchar_t* filename, IBitmapData* bitmap)
-{
-	// Format: # WIDTH HEIGHT TYPE
-	std::ofstream outputFile;
-	outputFile.open(filename, std::ios::out);
-
-	std::string pixeltypeStr;
-	std::string fouriertransformDataLayout;
-	CSaveData::DeterminePixeltypeString(bitmap, pixeltypeStr);
-	//CSaveData::DetermineFourierTransformDataLayoutString(bitmap, fouriertransformDataLayout);
-
-	outputFile << "# " << bitmap->GetWidth() << " " << bitmap->GetHeight() << " " << pixeltypeStr;
-	/*if (!fouriertransformDataLayout.empty())
-	{
-	outputFile << " (" << fouriertransformDataLayout << ")" << std::endl;
-	}
-	else
-	{
-	outputFile << std::endl;
-	}*/
-
-	outputFile.flags(std::ios::scientific);
-	auto bd = bitmap->Lock();
-	PixelType pixelType = bitmap->GetPixelType();
-	if (pixelType == libCZI::PixelType::Gray32Float)
-	{
-		outputFile.precision(std::numeric_limits<float>::max_digits10);
-		for (uint32_t y = 0; y < bitmap->GetHeight(); ++y)
-		{
-			const float* ptr = (const float*)(((char*)bd.ptrDataRoi) + y*bd.stride);
-			for (uint32_t x = 0; x < bitmap->GetWidth(); ++x)
-			{
-				outputFile << ptr[x];
-				if (x + 1 != bitmap->GetWidth())
-				{
-					outputFile << ",  ";
-				}
-			}
-
-			outputFile << std::endl;
-		}
-	}
-	else if (pixelType == libCZI::PixelType::Gray64ComplexFloat)
-	{
-		outputFile.precision(std::numeric_limits<float>::max_digits10);
-		for (uint32_t y = 0; y < bitmap->GetHeight(); ++y)
-		{
-			const double* ptr = (const double*)(((char*)bd.ptrDataRoi) + y*bd.stride);
-			for (uint32_t x = 0; x < bitmap->GetWidth() * 2; ++x)
-			{
-				outputFile << ptr[x];
-				if (x + 1 != 2 * bitmap->GetWidth())
-				{
-					outputFile << ", ";
-				}
-			}
-
-			outputFile << std::endl;
-		}
-	}
-
-	bitmap->Unlock();
-
-	outputFile.close();
-}
-
-/*static*/void CSaveData::DeterminePixeltypeString(IBitmapData* bitmap, std::string& str)
-{
-	switch (bitmap->GetPixelType())
-	{
-	case libCZI::PixelType::Gray64ComplexFloat:
-		str = "COMPLEXDOUBLE";
-		break;
-	case libCZI::PixelType::Gray32Float:
-		str = "FLOAT";
-		break;
-	default:
-		break;
-	}
-}
 #endif
 
 #if defined(LINUXENV)
@@ -277,6 +156,19 @@ using namespace libCZI;
 
 #include <png.h>
 #include "utils.h"
+
+struct PngStructInfoGuard
+{
+	png_structp png_ptr;
+	png_infop info_ptr;
+	PngStructInfoGuard(png_structp png_ptr,png_infop info_ptr):
+			png_ptr(png_ptr),info_ptr(info_ptr){};
+	PngStructInfoGuard():png_ptr(nullptr),info_ptr(nullptr){};
+	~PngStructInfoGuard()
+	{
+		png_destroy_write_struct(&this->png_ptr,&this->info_ptr);
+	}
+};
 
 CSaveData::CSaveData(const wchar_t* fileName, SaveDataFormat dataFormat)
 	: fileName(fileName), format(dataFormat)
@@ -310,11 +202,11 @@ void CSaveData::SaveBgr24(libCZI::IBitmapData* bitmap)
 	   [](std::uint32_t width,void* ptrData)->void
 	   {
 			char* p = (char*)ptrData;
-		   for (std::uint32_t x=0;x<width;++x)
-		   {
-			   std::swap(*p,*(p+2));
-			   p+=3;
-		   }
+		    for (std::uint32_t x=0;x<width;++x)
+		    {
+				std::swap(*p,*(p+2));
+			   	p+=3;
+		    }
 	   });
 }
 
@@ -344,67 +236,85 @@ void CSaveData::SaveGray8(libCZI::IBitmapData* bitmap)
 
 void CSaveData::SavePngTweakLineBeforeWritng(libCZI::IBitmapData* bitmap, int bit_depth, int color_type,std::function<void(std::uint32_t,void*)> tweakLine)
 {
-	FILE* fp = this->OpenDestForWrite();
-	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
-	png_infop info_ptr = png_create_info_struct(png_ptr);
+	std::unique_ptr<FILE,decltype (&fclose)> fp(this->OpenDestForWrite(),&fclose);
 
-	png_init_io(png_ptr,fp);
+	PngStructInfoGuard pngStructInfo;
+	pngStructInfo.png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
+	this->ThrowIfNull(pngStructInfo.png_ptr,"'png_create_write_struct' failed.");
+	pngStructInfo.info_ptr = png_create_info_struct(pngStructInfo.png_ptr);
+	this->ThrowIfNull(pngStructInfo.info_ptr ,"'png_create_info_struct' failed.");
 
-	png_set_IHDR(png_ptr,info_ptr,bitmap->GetWidth(),bitmap->GetHeight(),
+	png_init_io(pngStructInfo.png_ptr,fp.get());
+
+	png_set_IHDR(pngStructInfo.png_ptr,pngStructInfo.info_ptr,bitmap->GetWidth(),bitmap->GetHeight(),
 				 bit_depth,color_type,PNG_INTERLACE_NONE,
 				 PNG_COMPRESSION_TYPE_BASE,PNG_FILTER_TYPE_BASE);
-	png_write_info(png_ptr,info_ptr);
+	png_write_info(pngStructInfo.png_ptr,pngStructInfo.info_ptr);
 
-	auto lck = bitmap->Lock();
-	void* lineToTweak = malloc(lck.stride);
-	for (std::uint32_t h=0;h<bitmap->GetHeight();++h)
 	{
-		void* ptr = (((char*)lck.ptrDataRoi)+h*lck.stride);
-		memcpy(lineToTweak,ptr,lck.stride);
-		tweakLine(bitmap->GetWidth(),lineToTweak);
-		png_write_row(png_ptr,(png_bytep)lineToTweak);
+		libCZI::ScopedBitmapLockerP lckScoped{bitmap};
+		std::unique_ptr<void,decltype(&free)> lineToTweak(malloc(lckScoped.stride),&free);
+		for (std::uint32_t h = 0; h < bitmap->GetHeight(); ++h) {
+			void *ptr = (((char *) lckScoped.ptrDataRoi) + h * lckScoped.stride);
+			memcpy(lineToTweak.get(), ptr, lckScoped.stride);
+			tweakLine(bitmap->GetWidth(), lineToTweak.get());
+			png_write_row(pngStructInfo.png_ptr, (png_bytep) lineToTweak.get());
+		}
 	}
 
-	free(lineToTweak);
-	bitmap->Unlock();
-
-	png_write_end(png_ptr,NULL);
-	png_destroy_write_struct(&png_ptr,&info_ptr);
-	fclose(fp);
+	png_write_end(pngStructInfo.png_ptr,NULL);
 }
 
 void CSaveData::SavePng(libCZI::IBitmapData* bitmap, int bit_depth, int color_type)
 {
-	FILE* fp = this->OpenDestForWrite();
-	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
-	png_infop info_ptr = png_create_info_struct(png_ptr);
+	std::unique_ptr<FILE,decltype (&fclose)> fp(this->OpenDestForWrite(),&fclose);
 
-	png_init_io(png_ptr,fp);
+	PngStructInfoGuard pngStructInfo;
+	pngStructInfo.png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
+	this->ThrowIfNull(pngStructInfo.png_ptr,"'png_create_write_struct' failed.");
+	pngStructInfo.info_ptr = png_create_info_struct(pngStructInfo.png_ptr);
+	this->ThrowIfNull(pngStructInfo.info_ptr ,"'png_create_info_struct' failed.");
 
-	png_set_IHDR(png_ptr,info_ptr,bitmap->GetWidth(),bitmap->GetHeight(),
+	png_init_io(pngStructInfo.png_ptr,fp.get());
+
+	png_set_IHDR(pngStructInfo.png_ptr,pngStructInfo.info_ptr,bitmap->GetWidth(),bitmap->GetHeight(),
 				 bit_depth,color_type,PNG_INTERLACE_NONE,
 				 PNG_COMPRESSION_TYPE_BASE,PNG_FILTER_TYPE_BASE);
-	png_write_info(png_ptr,info_ptr);
+	png_write_info(pngStructInfo.png_ptr,pngStructInfo.info_ptr);
 
-	auto lck = bitmap->Lock();
-	for (std::uint32_t h=0;h<bitmap->GetHeight();++h)
 	{
-		png_bytep ptr = (png_bytep)(((char*)lck.ptrDataRoi)+h*lck.stride);
-		png_write_row(png_ptr,ptr);
+		libCZI::ScopedBitmapLockerP lckScoped{bitmap};
+		for (std::uint32_t h = 0; h < bitmap->GetHeight(); ++h) {
+			png_bytep ptr = (png_bytep) (((char *) lckScoped.ptrDataRoi) + h * lckScoped.stride);
+			png_write_row(pngStructInfo.png_ptr, ptr);
+		}
 	}
 
-	bitmap->Unlock();
-
-	png_write_end(png_ptr,NULL);
-	png_destroy_write_struct(&png_ptr,&info_ptr);
-	fclose(fp);
+	png_write_end(pngStructInfo.png_ptr,NULL);
 }
 
 FILE* CSaveData::OpenDestForWrite()
 {
 	std::string fileNameUtf8 = convertToUtf8(this->fileName);
 	FILE* fp = fopen(fileNameUtf8.c_str(), "wb");
+	this->ThrowIfNull(fp,"fopen failed");
 	return fp;
+}
+
+void CSaveData::ThrowIfNull(const void* p,const char* info)
+{
+	if (p == nullptr)
+	{
+		std::stringstream ss;
+		std::string fileNameUtf8 = convertToUtf8(this->fileName);
+		ss << "Error while writing PNG to \""<<fileNameUtf8<<"\"";
+		if (info!=nullptr)
+		{
+			ss << " ("<<info<<")";
+		}
+
+		throw std::runtime_error(ss.str());
+	}
 }
 //#endif
 #endif
