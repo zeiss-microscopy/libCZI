@@ -80,6 +80,7 @@ private:
 		void 	SavePngTweakLineBeforeWritng(libCZI::IBitmapData* bitmap, int bit_depth, int color_type,
 			std::function<void(std::uint32_t, void*)> tweakLine);
 		FILE*	OpenDestForWrite();
+		void 	ThrowIfNull(const void* p,const char* info);
 	};
 //#else
 //class CSaveData

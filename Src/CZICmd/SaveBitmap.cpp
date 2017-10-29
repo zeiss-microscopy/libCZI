@@ -23,6 +23,7 @@
 #include "stdafx.h"
 #include "SaveBitmap.h"
 #include <fstream>
+#include <stdexcept>
 
 #if defined(WIN32ENV)
 #include <atlbase.h>
@@ -278,6 +279,19 @@ using namespace libCZI;
 #include <png.h>
 #include "utils.h"
 
+struct PngStructInfoGuard
+{
+	png_structp png_ptr;
+	png_infop info_ptr;
+	PngStructInfoGuard(png_structp png_ptr,png_infop info_ptr):
+			png_ptr(png_ptr),info_ptr(info_ptr){};
+	PngStructInfoGuard():png_ptr(nullptr),info_ptr(nullptr){};
+	~PngStructInfoGuard()
+	{
+		png_destroy_write_struct(&this->png_ptr,&this->info_ptr);
+	}
+};
+
 CSaveData::CSaveData(const wchar_t* fileName, SaveDataFormat dataFormat)
 	: fileName(fileName), format(dataFormat)
 {
@@ -310,11 +324,11 @@ void CSaveData::SaveBgr24(libCZI::IBitmapData* bitmap)
 	   [](std::uint32_t width,void* ptrData)->void
 	   {
 			char* p = (char*)ptrData;
-		   for (std::uint32_t x=0;x<width;++x)
-		   {
-			   std::swap(*p,*(p+2));
-			   p+=3;
-		   }
+		    for (std::uint32_t x=0;x<width;++x)
+		    {
+				std::swap(*p,*(p+2));
+			   	p+=3;
+		    }
 	   });
 }
 
@@ -344,67 +358,85 @@ void CSaveData::SaveGray8(libCZI::IBitmapData* bitmap)
 
 void CSaveData::SavePngTweakLineBeforeWritng(libCZI::IBitmapData* bitmap, int bit_depth, int color_type,std::function<void(std::uint32_t,void*)> tweakLine)
 {
-	FILE* fp = this->OpenDestForWrite();
-	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
-	png_infop info_ptr = png_create_info_struct(png_ptr);
+	std::unique_ptr<FILE,decltype (&fclose)> fp(this->OpenDestForWrite(),&fclose);
 
-	png_init_io(png_ptr,fp);
+	PngStructInfoGuard pngStructInfo;
+	pngStructInfo.png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
+	this->ThrowIfNull(pngStructInfo.png_ptr,"'png_create_write_struct' failed.");
+	pngStructInfo.info_ptr = png_create_info_struct(pngStructInfo.png_ptr);
+	this->ThrowIfNull(pngStructInfo.info_ptr ,"'png_create_info_struct' failed.");
 
-	png_set_IHDR(png_ptr,info_ptr,bitmap->GetWidth(),bitmap->GetHeight(),
+	png_init_io(pngStructInfo.png_ptr,fp.get());
+
+	png_set_IHDR(pngStructInfo.png_ptr,pngStructInfo.info_ptr,bitmap->GetWidth(),bitmap->GetHeight(),
 				 bit_depth,color_type,PNG_INTERLACE_NONE,
 				 PNG_COMPRESSION_TYPE_BASE,PNG_FILTER_TYPE_BASE);
-	png_write_info(png_ptr,info_ptr);
+	png_write_info(pngStructInfo.png_ptr,pngStructInfo.info_ptr);
 
-	auto lck = bitmap->Lock();
-	void* lineToTweak = malloc(lck.stride);
-	for (std::uint32_t h=0;h<bitmap->GetHeight();++h)
 	{
-		void* ptr = (((char*)lck.ptrDataRoi)+h*lck.stride);
-		memcpy(lineToTweak,ptr,lck.stride);
-		tweakLine(bitmap->GetWidth(),lineToTweak);
-		png_write_row(png_ptr,(png_bytep)lineToTweak);
+		libCZI::ScopedBitmapLockerP lckScoped{bitmap};
+		std::unique_ptr<void,decltype(&free)> lineToTweak(malloc(lckScoped.stride),&free);
+		for (std::uint32_t h = 0; h < bitmap->GetHeight(); ++h) {
+			void *ptr = (((char *) lckScoped.ptrDataRoi) + h * lckScoped.stride);
+			memcpy(lineToTweak.get(), ptr, lckScoped.stride);
+			tweakLine(bitmap->GetWidth(), lineToTweak.get());
+			png_write_row(pngStructInfo.png_ptr, (png_bytep) lineToTweak.get());
+		}
 	}
 
-	free(lineToTweak);
-	bitmap->Unlock();
-
-	png_write_end(png_ptr,NULL);
-	png_destroy_write_struct(&png_ptr,&info_ptr);
-	fclose(fp);
+	png_write_end(pngStructInfo.png_ptr,NULL);
 }
 
 void CSaveData::SavePng(libCZI::IBitmapData* bitmap, int bit_depth, int color_type)
 {
-	FILE* fp = this->OpenDestForWrite();
-	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
-	png_infop info_ptr = png_create_info_struct(png_ptr);
+	std::unique_ptr<FILE,decltype (&fclose)> fp(this->OpenDestForWrite(),&fclose);
 
-	png_init_io(png_ptr,fp);
+	PngStructInfoGuard pngStructInfo;
+	pngStructInfo.png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
+	this->ThrowIfNull(pngStructInfo.png_ptr,"'png_create_write_struct' failed.");
+	pngStructInfo.info_ptr = png_create_info_struct(pngStructInfo.png_ptr);
+	this->ThrowIfNull(pngStructInfo.info_ptr ,"'png_create_info_struct' failed.");
 
-	png_set_IHDR(png_ptr,info_ptr,bitmap->GetWidth(),bitmap->GetHeight(),
+	png_init_io(pngStructInfo.png_ptr,fp.get());
+
+	png_set_IHDR(pngStructInfo.png_ptr,pngStructInfo.info_ptr,bitmap->GetWidth(),bitmap->GetHeight(),
 				 bit_depth,color_type,PNG_INTERLACE_NONE,
 				 PNG_COMPRESSION_TYPE_BASE,PNG_FILTER_TYPE_BASE);
-	png_write_info(png_ptr,info_ptr);
+	png_write_info(pngStructInfo.png_ptr,pngStructInfo.info_ptr);
 
-	auto lck = bitmap->Lock();
-	for (std::uint32_t h=0;h<bitmap->GetHeight();++h)
 	{
-		png_bytep ptr = (png_bytep)(((char*)lck.ptrDataRoi)+h*lck.stride);
-		png_write_row(png_ptr,ptr);
+		libCZI::ScopedBitmapLockerP lckScoped{bitmap};
+		for (std::uint32_t h = 0; h < bitmap->GetHeight(); ++h) {
+			png_bytep ptr = (png_bytep) (((char *) lckScoped.ptrDataRoi) + h * lckScoped.stride);
+			png_write_row(pngStructInfo.png_ptr, ptr);
+		}
 	}
 
-	bitmap->Unlock();
-
-	png_write_end(png_ptr,NULL);
-	png_destroy_write_struct(&png_ptr,&info_ptr);
-	fclose(fp);
+	png_write_end(pngStructInfo.png_ptr,NULL);
 }
 
 FILE* CSaveData::OpenDestForWrite()
 {
 	std::string fileNameUtf8 = convertToUtf8(this->fileName);
 	FILE* fp = fopen(fileNameUtf8.c_str(), "wb");
+	this->ThrowIfNull(fp,"fopen failed");
 	return fp;
+}
+
+void CSaveData::ThrowIfNull(const void* p,const char* info)
+{
+	if (p == nullptr)
+	{
+		std::stringstream ss;
+		std::string fileNameUtf8 = convertToUtf8(this->fileName);
+		ss << "Error while writing PNG to \""<<fileNameUtf8<<"\"";
+		if (info!=nullptr)
+		{
+			ss << " ("<<info<<")";
+		}
+
+		throw std::runtime_error(ss.str());
+	}
 }
 //#endif
 #endif
