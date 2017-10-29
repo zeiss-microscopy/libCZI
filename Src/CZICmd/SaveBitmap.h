@@ -27,11 +27,7 @@
 enum class SaveDataFormat
 {
 	Invalid,
-	PNG,
-	TIFF,
-	//WDP,	// JPG-XR
-	//CSV,
-	FROM_EXTENSION
+	PNG
 };
 
 #if defined(WIN32ENV)
@@ -50,11 +46,6 @@ public:
 private:
 	void SaveWithWIC(const wchar_t* filename, const GUID encoder, const WICPixelFormatGUID& wicPixelFmt, libCZI::IBitmapData* bitmap);
 	void SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream, const GUID encoder, const WICPixelFormatGUID& wicPixelFmt, libCZI::IBitmapData* bitmap);
-
-	void SaveAsCSV(const wchar_t* filename, libCZI::IBitmapData* bitmap);
-	void SaveAsBINARY(const wchar_t* filename, libCZI::IBitmapData*bitmap);
-
-	static void DeterminePixeltypeString(libCZI::IBitmapData* bitmap, std::string& str);
 };
 
 #endif

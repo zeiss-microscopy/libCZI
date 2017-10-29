@@ -52,54 +52,10 @@ static void ThrowIfFailed(const char* function, HRESULT hr, std::function<bool(H
 	}
 }
 
-
-
 CSaveData::CSaveData(const wchar_t* fileName, SaveDataFormat dataFormat)
 	: fileName(fileName), format(dataFormat)
 {
 }
-
-//void CSaveData::SaveAsFloat32(std::shared_ptr<IBitmapData> bitmap)
-//{
-//	switch (this->format)
-//	{
-//	case SaveDataFormat::WDP:
-//		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatWmp, GUID_WICPixelFormat32bppGrayFloat, bitmap);
-//		break;
-//	case SaveDataFormat::CSV:
-//		this->SaveAsCSV(this->fileName.c_str(), bitmap);
-//		break;
-//	case SaveDataFormat::BINARY:
-//		this->SaveAsBINARY(this->fileName.c_str(), bitmap);
-//		break;
-//	default:
-//		break;
-//	}
-//}
-//
-//void CSaveData::SaveAsGray16(std::shared_ptr<IBitmapData> bitmap)
-//{
-//	switch (this->format)
-//	{
-//	case SaveDataFormat::PNG:
-//		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat16bppGray, bitmap);
-//		break;
-//	default:
-//		break;
-//	}
-//}
-//
-//void CSaveData::SaveAsGray8(std::shared_ptr<IBitmapData> bitmap)
-//{
-//	switch (this->format)
-//	{
-//	case SaveDataFormat::PNG:
-//		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat8bppGray, bitmap);
-//		break;
-//	default:
-//		break;
-//	}
-//}
 
 void CSaveData::Save(libCZI::IBitmapData* bitmap)
 {
@@ -111,6 +67,14 @@ void CSaveData::Save(libCZI::IBitmapData* bitmap)
 	case libCZI::PixelType::Gray16:
 		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat16bppGray, bitmap);
 		break;
+	case libCZI::PixelType::Gray8:
+		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat8bppGray, bitmap);
+		break;
+	case libCZI::PixelType::Bgr48:
+		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat48bppBGR, bitmap);
+		break;
+	default:
+		throw std::runtime_error("Unsupported pixeltype encountered.");
 	}
 }
 
@@ -138,13 +102,10 @@ void CSaveData::SaveWithWIC(const wchar_t* filename, const GUID encoder, const W
 void CSaveData::SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream, const GUID encoder, const WICPixelFormatGUID& wicPixelFmt, IBitmapData* spBitmap)
 {
 	// cf. http://msdn.microsoft.com/en-us/library/windows/desktop/ee719797(v=vs.85).aspx
-	/*CComPtr<IWICImagingFactory> cpWicImagingFactor;
-	HRESULT hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&cpWicImagingFactor);
-	ThrowIfFailed("Creating WICImageFactory", hr);*/
-
+	
 	CComPtr<IWICBitmapEncoder> wicBitmapEncoder;
 	HRESULT hr = pFactory->CreateEncoder(
-		/*GUID_ContainerFormatPng*//*GUID_ContainerFormatTiff*//*GUID_ContainerFormatWmp*/encoder,
+		encoder,
 		nullptr,    // No preferred codec vendor.
 		&wicBitmapEncoder);
 	ThrowIfFailed("Creating IWICImagingFactory::CreateEncoder", hr);
@@ -163,7 +124,7 @@ void CSaveData::SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream
 	hr = frameEncode->SetSize(spBitmap->GetWidth(), spBitmap->GetHeight());
 	ThrowIfFailed("IWICBitmapFrameEncode::SetSize", hr);
 
-	WICPixelFormatGUID pixelFormat = wicPixelFmt;/*GUID_WICPixelFormat32bppGrayFloat;*/
+	WICPixelFormatGUID pixelFormat = wicPixelFmt;
 	hr = frameEncode->SetPixelFormat(&pixelFormat);
 	ThrowIfFailed("IWICBitmapFrameEncode::SetPixelFormat", hr);
 
@@ -176,8 +137,6 @@ void CSaveData::SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream
 		// TODO
 	}
 
-	//const char* pixelFormatActual = Utils::WICPixelFormatToInformalString(pixelFormat);
-
 	auto bitmapData = spBitmap->Lock();
 	hr = frameEncode->WritePixels(spBitmap->GetHeight(), bitmapData.stride, spBitmap->GetHeight()* bitmapData.stride, (BYTE*)bitmapData.ptrDataRoi);
 	spBitmap->Unlock();
@@ -188,87 +147,6 @@ void CSaveData::SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream
 
 	hr = wicBitmapEncoder->Commit();
 	ThrowIfFailed("IWICBitmapEncoder::Commit", hr);
-}
-
-void CSaveData::SaveAsCSV(const wchar_t* filename, IBitmapData* bitmap)
-{
-	// Format: # WIDTH HEIGHT TYPE
-	std::ofstream outputFile;
-	outputFile.open(filename, std::ios::out);
-
-	std::string pixeltypeStr;
-	std::string fouriertransformDataLayout;
-	CSaveData::DeterminePixeltypeString(bitmap, pixeltypeStr);
-	//CSaveData::DetermineFourierTransformDataLayoutString(bitmap, fouriertransformDataLayout);
-
-	outputFile << "# " << bitmap->GetWidth() << " " << bitmap->GetHeight() << " " << pixeltypeStr;
-	/*if (!fouriertransformDataLayout.empty())
-	{
-	outputFile << " (" << fouriertransformDataLayout << ")" << std::endl;
-	}
-	else
-	{
-	outputFile << std::endl;
-	}*/
-
-	outputFile.flags(std::ios::scientific);
-	auto bd = bitmap->Lock();
-	PixelType pixelType = bitmap->GetPixelType();
-	if (pixelType == libCZI::PixelType::Gray32Float)
-	{
-		outputFile.precision(std::numeric_limits<float>::max_digits10);
-		for (uint32_t y = 0; y < bitmap->GetHeight(); ++y)
-		{
-			const float* ptr = (const float*)(((char*)bd.ptrDataRoi) + y*bd.stride);
-			for (uint32_t x = 0; x < bitmap->GetWidth(); ++x)
-			{
-				outputFile << ptr[x];
-				if (x + 1 != bitmap->GetWidth())
-				{
-					outputFile << ",  ";
-				}
-			}
-
-			outputFile << std::endl;
-		}
-	}
-	else if (pixelType == libCZI::PixelType::Gray64ComplexFloat)
-	{
-		outputFile.precision(std::numeric_limits<float>::max_digits10);
-		for (uint32_t y = 0; y < bitmap->GetHeight(); ++y)
-		{
-			const double* ptr = (const double*)(((char*)bd.ptrDataRoi) + y*bd.stride);
-			for (uint32_t x = 0; x < bitmap->GetWidth() * 2; ++x)
-			{
-				outputFile << ptr[x];
-				if (x + 1 != 2 * bitmap->GetWidth())
-				{
-					outputFile << ", ";
-				}
-			}
-
-			outputFile << std::endl;
-		}
-	}
-
-	bitmap->Unlock();
-
-	outputFile.close();
-}
-
-/*static*/void CSaveData::DeterminePixeltypeString(IBitmapData* bitmap, std::string& str)
-{
-	switch (bitmap->GetPixelType())
-	{
-	case libCZI::PixelType::Gray64ComplexFloat:
-		str = "COMPLEXDOUBLE";
-		break;
-	case libCZI::PixelType::Gray32Float:
-		str = "FLOAT";
-		break;
-	default:
-		break;
-	}
 }
 #endif
 
