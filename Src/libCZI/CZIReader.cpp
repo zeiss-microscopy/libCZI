@@ -47,7 +47,7 @@ CCZIReader::~CCZIReader()
 		throw logic_error("CZIReader is already operational.");
 	}
 
-	this->hdrSegmentData = std::move(CCZIParse::ReadFileHeaderSegment(stream.get()));
+	this->hdrSegmentData = CCZIParse::ReadFileHeaderSegment(stream.get());
 	this->subBlkDir = std::move(CCZIParse::ReadSubBlockDirectory(stream.get(), this->hdrSegmentData.GetSubBlockDirectoryPosition()));
 	this->attachmentDir = std::move(CCZIParse::ReadAttachmentsDirectory(stream.get(), this->hdrSegmentData.GetAttachmentDirectoryPosition()));
 	this->stream = stream;

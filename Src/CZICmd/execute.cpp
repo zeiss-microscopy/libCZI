@@ -236,7 +236,7 @@ public:
 			return true;
 		});
 
-		if (mapAttchmntName.size() == 0)
+		if (mapAttchmntName.empty())
 		{
 			options.GetLog()->WriteStdOut(" -> No attachments found.");
 		}
@@ -556,7 +556,7 @@ public:
 			return true;
 		});
 
-		if (sbStatistics.sceneBoundingBoxes.size() > 0)
+		if (!sbStatistics.sceneBoundingBoxes.empty())
 		{
 			ss << endl;
 			ss << "Bounding-Box for scenes:" << endl;

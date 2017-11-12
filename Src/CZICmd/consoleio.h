@@ -51,22 +51,7 @@ public:
 		this->WriteStdErr(str.c_str());
 	}
 
-
-	//virtual void WriteStdErr(const wchar_t* fmt, ...) = 0;
-	//virtual void WriteStdOut(const wchar_t* fmt, ...) = 0;
-	//virtual void WriteStdOutLine(const wchar_t* fmt, ...) = 0;
-	//virtual bool IsInfoEnabled(int level) const = 0;
-	//virtual void WriteInfo(int level, const wchar_t* fmt, ...) = 0;
-	//virtual void WriteInfoString(int level, const wchar_t* fmt) = 0;
-
-	//void WriteInfoString(int level, const std::wstring& str)
-	//{
-	//	this->WriteInfoString(level, str.c_str());
-	//}
-
-	//void WriteStdOutLine(void) { this->WriteStdOutLine(L""); }
-
-	virtual ~ILog() {}
+	virtual ~ILog() = default;
 };
 
 class CConsoleLog : public ILog
@@ -74,17 +59,8 @@ class CConsoleLog : public ILog
 public:
 	static std::shared_ptr<ILog> CreateInstance();
 
-	virtual void WriteStdOut(const char* sz);
-	virtual void WriteStdOut(const wchar_t* sz);
-	virtual void WriteStdErr(const char* sz);
-	virtual void WriteStdErr(const wchar_t* sz);
-/*	virtual void WriteStdErr(const wchar_t* fmt, ...);
-	virtual void WriteStdOut(const wchar_t* fmt, ...);
-	virtual void WriteStdOutLine(const wchar_t* fmt, ...);
-	virtual bool IsInfoEnabled(int level) const;
-	virtual void WriteInfo(int level, const wchar_t* fmt, ...);
-	virtual void WriteInfoString(int level, const wchar_t* fmt);*/
-protected:
-/*	void Write(FILE* fp, const wchar_t* fmt, va_list argptr);
-	void WriteString(FILE* fp, const wchar_t* s);*/
+	void WriteStdOut(const char* sz) override;
+	void WriteStdOut(const wchar_t* sz) override;
+	void WriteStdErr(const char* sz) override;
+	void WriteStdErr(const wchar_t* sz) override;
 };

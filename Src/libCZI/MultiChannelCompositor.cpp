@@ -118,12 +118,12 @@ private:
 	struct CGetTintedBase
 	{
 		Rgb8Color tintingColor;
-		CGetTintedBase(Rgb8Color tintingColor) :tintingColor(tintingColor) {};
+		explicit CGetTintedBase(Rgb8Color tintingColor) :tintingColor(tintingColor) {};
 	};
 
 	struct CGetTintedGray8 : CGetTintedBase, CGray8BytesPerPel
 	{
-		CGetTintedGray8(Rgb8Color tintingColor) :CGetTintedBase(tintingColor) {}
+		explicit CGetTintedGray8(Rgb8Color tintingColor) :CGetTintedBase(tintingColor) {}
 		bgr8 operator()(const uint8_t* p) const
 		{
 			float f = *p;
@@ -134,7 +134,7 @@ private:
 
 	struct CGetTintedGray16 : CGetTintedBase, CGray16BytesPerPel
 	{
-		CGetTintedGray16(Rgb8Color tintingColor) : CGetTintedBase(tintingColor) {}
+		explicit CGetTintedGray16(Rgb8Color tintingColor) : CGetTintedBase(tintingColor) {}
 		bgr8 operator()(const uint8_t* p) const
 		{
 			float f = *((const uint16_t*)p);
@@ -145,7 +145,7 @@ private:
 
 	struct CGetTintedBgr24 : CGetTintedBase, CBgr24BytesPerPel
 	{
-		CGetTintedBgr24(Rgb8Color tintingColor) :CGetTintedBase(tintingColor) {}
+		explicit CGetTintedBgr24(Rgb8Color tintingColor) :CGetTintedBase(tintingColor) {}
 		bgr8 operator()(const uint8_t* p) const
 		{
 			float f = (float)(((int)p[0]) + p[1] + p[2]);
@@ -156,7 +156,7 @@ private:
 
 	struct CGetTintedBgr48 : CGetTintedBase, CBgr48BytesPerPel
 	{
-		CGetTintedBgr48(Rgb8Color tintingColor) :CGetTintedBase(tintingColor) {}
+		explicit CGetTintedBgr48(Rgb8Color tintingColor) :CGetTintedBase(tintingColor) {}
 		bgr8 operator()(const uint8_t* p) const
 		{
 			const uint16_t* puv = (const uint16_t*)p;
@@ -279,12 +279,12 @@ private:
 	struct CStoreWithWeightBase
 	{
 		float weight;
-		CStoreWithWeightBase(float w) :weight(w) {}
+		explicit CStoreWithWeightBase(float w) :weight(w) {}
 	};
 
 	struct CAddWithWeight : protected CStoreWithWeightBase
 	{
-		CAddWithWeight(float weight) : CStoreWithWeightBase(weight) {}
+		explicit CAddWithWeight(float weight) : CStoreWithWeightBase(weight) {}
 		void operator ()(uint8_t* ptrDst, const bgr8& val)
 		{
 			int p = *(ptrDst + 0);
@@ -298,7 +298,7 @@ private:
 
 	struct CStoreWithWeight : protected CStoreWithWeightBase
 	{
-		CStoreWithWeight(float weight) : CStoreWithWeightBase(weight) {}
+		explicit CStoreWithWeight(float weight) : CStoreWithWeightBase(weight) {}
 		void operator ()(uint8_t* ptrDst, const bgr8& val)
 		{
 			*(ptrDst + 0) = (uint8_t)(std::min)(toInt(val.b*this->weight), 0xff);
@@ -427,12 +427,12 @@ private:
 	struct CGetTintedBlackWhitePtBase
 	{
 		Rgb8Color tintingColor;
-		CGetTintedBlackWhitePtBase(Rgb8Color tintingColor) :tintingColor(tintingColor) {}
+		explicit CGetTintedBlackWhitePtBase(Rgb8Color tintingColor) :tintingColor(tintingColor) {}
 	};
 
 	struct CGetBlackWhitePtTintingGray8 :public CGetBlackWhitePtGray8, CGetTintedBlackWhitePtBase
 	{
-		CGetBlackWhitePtTintingGray8(Rgb8Color tintingColor, float blackPt, float whitePt)
+		explicit CGetBlackWhitePtTintingGray8(Rgb8Color tintingColor, float blackPt, float whitePt)
 			: CGetBlackWhitePtGray8(blackPt, whitePt), CGetTintedBlackWhitePtBase(tintingColor)
 		{}
 
@@ -677,7 +677,7 @@ private:
 	struct CGetGray8Lut : CGray8BytesPerPel
 	{
 		const uint8_t* pLut;
-		CGetGray8Lut(const uint8_t* pLut) : pLut(pLut) {}
+		explicit CGetGray8Lut(const uint8_t* pLut) : pLut(pLut) {}
 		bgr8 operator()(const uint8_t* p) const
 		{
 			uint8_t l = *(this->pLut + *p);
@@ -688,7 +688,7 @@ private:
 	struct CGetBgr24Lut : CBgr24BytesPerPel
 	{
 		const uint8_t* pLut;
-		CGetBgr24Lut(const uint8_t* pLut) : pLut(pLut) {}
+		explicit CGetBgr24Lut(const uint8_t* pLut) : pLut(pLut) {}
 		bgr8 operator()(const uint8_t* p) const
 		{
 			return bgr8{ *(this->pLut + *p),*(this->pLut + *(p + 1)),*(this->pLut + *(p + 2)) };
@@ -698,7 +698,7 @@ private:
 	struct CGetGray16Lut : CGray16BytesPerPel
 	{
 		const uint8_t* pLut;
-		CGetGray16Lut(const uint8_t* pLut) : pLut(pLut) {}
+		explicit CGetGray16Lut(const uint8_t* pLut) : pLut(pLut) {}
 		bgr8 operator()(const uint8_t* p) const
 		{
 			uint16_t us = *((const uint16_t*)p);
@@ -710,7 +710,7 @@ private:
 	struct CGetBgr48Lut : CBgr48BytesPerPel
 	{
 		const uint8_t* pLut;
-		CGetBgr48Lut(const uint8_t* pLut) : pLut(pLut) {}
+		explicit CGetBgr48Lut(const uint8_t* pLut) : pLut(pLut) {}
 		bgr8 operator()(const uint8_t* p) const
 		{
 			const uint16_t* puv = (const uint16_t*)p;

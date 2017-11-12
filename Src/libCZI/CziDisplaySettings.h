@@ -41,11 +41,11 @@ public:
 	};
 
 public:
-	CCziDisplaySettings(std::function<bool(int no,int&, ChannelDisplaySetting& dispSetting)> getChannelDisplaySettings);
+	explicit CCziDisplaySettings(std::function<bool(int no,int&, ChannelDisplaySetting& dispSetting)> getChannelDisplaySettings);
 	static std::shared_ptr<libCZI::IDisplaySettings> CreateFromXml(pugi::xml_node node);
 public:	// interface IDisplaySettings
-	virtual void EnumChannels(std::function<bool(int)> func) const override;
-	virtual std::shared_ptr<libCZI::IChannelDisplaySetting> GetChannelDisplaySettings(int chIndex) const override;
+	void EnumChannels(std::function<bool(int)> func) const override;
+	std::shared_ptr<libCZI::IChannelDisplaySetting> GetChannelDisplaySettings(int chIndex) const override;
 private:
 	std::map<int, ChannelDisplaySetting> channelDisplaySettings;
 
@@ -60,16 +60,16 @@ class CCziChannelDisplaySettings : public libCZI::IChannelDisplaySetting
 private:
 	CCziDisplaySettings::ChannelDisplaySetting chDsplSetting;
 public:
-	CCziChannelDisplaySettings(const CCziDisplaySettings::ChannelDisplaySetting& chDsplSetting)
+	explicit CCziChannelDisplaySettings(const CCziDisplaySettings::ChannelDisplaySetting& chDsplSetting)
 		: chDsplSetting(chDsplSetting)
 	{}
 
-	virtual bool	GetIsEnabled() const override;
-	virtual float	GetWeight() const override;
-	virtual bool	TryGetTintingColorRgb8(libCZI::Rgb8Color* pColor) const override;
-	virtual void	GetBlackWhitePoint(float* pBlack, float* pWhite) const override;
-	virtual libCZI::IDisplaySettings::GradationCurveMode GetGradationCurveMode() const override;
-	virtual bool	TryGetGamma(float* gamma) const override;
-	virtual bool	TryGetSplineControlPoints(std::vector<libCZI::IDisplaySettings::SplineControlPoint>* ctrlPts) const override;
-	virtual bool	TryGetSplineData(std::vector<libCZI::IDisplaySettings::SplineData>* data) const override;
+	bool	GetIsEnabled() const override;
+	float	GetWeight() const override;
+	bool	TryGetTintingColorRgb8(libCZI::Rgb8Color* pColor) const override;
+	void	GetBlackWhitePoint(float* pBlack, float* pWhite) const override;
+	libCZI::IDisplaySettings::GradationCurveMode GetGradationCurveMode() const override;
+	bool	TryGetGamma(float* gamma) const override;
+	bool	TryGetSplineControlPoints(std::vector<libCZI::IDisplaySettings::SplineControlPoint>* ctrlPts) const override;
+	bool	TryGetSplineData(std::vector<libCZI::IDisplaySettings::SplineData>* data) const override;
 };

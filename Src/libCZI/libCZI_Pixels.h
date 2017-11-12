@@ -276,13 +276,13 @@ namespace libCZI
 		}
 
 		/// move constructor
-		ScopedBitmapLocker(ScopedBitmapLocker<tBitmap>&& other) : bmData(tBitmap())
+		ScopedBitmapLocker(ScopedBitmapLocker<tBitmap>&& other) noexcept : bmData(tBitmap())
 		{
 			*this = std::move(other);
 		}
 
 		/// move assignment
-		ScopedBitmapLocker<tBitmap>& operator=(ScopedBitmapLocker<tBitmap>&& other)
+		ScopedBitmapLocker<tBitmap>& operator=(ScopedBitmapLocker<tBitmap>&& other) noexcept
 		{
 			if (this != &other)
 			{

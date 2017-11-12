@@ -119,10 +119,10 @@ struct ItemValue
 	};
 
 	ItemValue() : type(Type::Invalid) {}
-	ItemValue(const char* str) : type(Type::String), strValue(str) {}
-	ItemValue(const std::string& str) : type(Type::String), strValue(str) {}
-	ItemValue(double v) : type(Type::Number), doubleValue(v) {}
-	ItemValue(bool b) : type(Type::Boolean), boolValue(b) {}
+	explicit ItemValue(const char* str) : type(Type::String), strValue(str) {}
+	explicit ItemValue(const std::string& str) : type(Type::String), strValue(str) {}
+	explicit ItemValue(double v) : type(Type::Number), doubleValue(v) {}
+	explicit ItemValue(bool b) : type(Type::Boolean), boolValue(b) {}
 
 	Type		type;
 	std::string strValue;
@@ -178,7 +178,7 @@ private:
 	std::map<std::string, ItemValue> mapSelection;
 	std::shared_ptr<libCZI::IIndexSet> sceneIndexSet;
 public:
-	CCmdLineOptions(std::shared_ptr<ILog> log);
+	explicit CCmdLineOptions(std::shared_ptr<ILog> log);
 
 	void Clear();
 

@@ -35,11 +35,11 @@ private:
 	libCZI::SubBlockInfo	info;
 public:
 	CCziSubBlock(const libCZI::SubBlockInfo& info,const CCZIParse::SubBlockData& data, std::function<void(void*)> deleter);
-	virtual ~CCziSubBlock();
+	~CCziSubBlock() override;
 
 	// interface ISubBlock
-	virtual const libCZI::SubBlockInfo& GetSubBlockInfo() const override;
-	virtual void DangerousGetRawData(libCZI::ISubBlock::MemBlkType type, const void*& ptr, size_t& size) const override;
-	virtual std::shared_ptr<const void> GetRawData(MemBlkType type, size_t* ptrSize) override;
-	virtual std::shared_ptr<libCZI::IBitmapData> CreateBitmap() override;
+	const libCZI::SubBlockInfo& GetSubBlockInfo() const override;
+	void DangerousGetRawData(libCZI::ISubBlock::MemBlkType type, const void*& ptr, size_t& size) const override;
+	std::shared_ptr<const void> GetRawData(MemBlkType type, size_t* ptrSize) override;
+	std::shared_ptr<libCZI::IBitmapData> CreateBitmap() override;
 };

@@ -27,7 +27,8 @@
 #include <locale>
 #include <regex>
 #include <iostream>
-#include <string.h>
+#include <utility>
+#include <cstring>
 #if defined(LINUXENV)
 #include <libgen.h>
 #endif
@@ -39,7 +40,7 @@ using namespace std;
 /*static*/const char* ItemValue::SelectionItem_Index = "index";
 
 CCmdLineOptions::CCmdLineOptions(std::shared_ptr<ILog> log)
-	: log(log)
+	: log(std::move(log))
 {
 	this->Clear();
 }
@@ -425,7 +426,7 @@ void CCmdLineOptions::PrintSynopsis(int switchesCnt, std::function<std::tuple<st
 			// subtract 1 in order not to run into trouble if outputing a complete line (80 chars normally), where in the end we get two linefeeds...
 			auto lines = wrap(get<1>(expl).c_str(), 80 - COLUMN_FOR_EXPLANATION - 1);
 			bool isFirstLine = true;
-			for (const auto l : lines)
+			for (const auto& l : lines)
 			{
 				auto line = prefix + l;
 				this->GetLog()->WriteStdOut(line);

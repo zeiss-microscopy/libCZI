@@ -36,9 +36,9 @@ public:
 	virtual ~CCziAttachment();
 
 	// interface IAttachment
-	virtual const libCZI::AttachmentInfo& GetAttachmentInfo() const override;
+	const libCZI::AttachmentInfo& GetAttachmentInfo() const override;
 
-	virtual void DangerousGetRawData(const void*& ptr, size_t& size) const override;
+	void DangerousGetRawData(const void*& ptr, size_t& size) const override;
 
-	virtual std::shared_ptr<const void> GetRawData(size_t* ptrSize) override;
+	std::shared_ptr<const void> GetRawData(size_t* ptrSize) override;
 };

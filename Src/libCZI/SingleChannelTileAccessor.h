@@ -29,12 +29,12 @@
 class CSingleChannelTileAccessor : public CSingleChannelAccessorBase, public libCZI::ISingleChannelTileAccessor
 {
 public:
-	CSingleChannelTileAccessor(std::shared_ptr<libCZI::ISubBlockRepository> sbBlkRepository);
+	explicit CSingleChannelTileAccessor(std::shared_ptr<libCZI::ISubBlockRepository> sbBlkRepository);
 
 public:	// interface ISingleChannelTileAccessor
-	virtual std::shared_ptr<libCZI::IBitmapData> Get(const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate, const libCZI::ISingleChannelTileAccessor::Options* pOptions);
-	virtual std::shared_ptr<libCZI::IBitmapData> Get(libCZI::PixelType pixeltype, const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate, const Options* pOptions);
-	virtual void Get(libCZI::IBitmapData* pDest, int xPos, int yPos, const libCZI::IDimCoordinate* planeCoordinate, const Options* pOptions);
+	std::shared_ptr<libCZI::IBitmapData> Get(const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate, const libCZI::ISingleChannelTileAccessor::Options* pOptions) override;
+	std::shared_ptr<libCZI::IBitmapData> Get(libCZI::PixelType pixeltype, const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate, const Options* pOptions) override;
+	void Get(libCZI::IBitmapData* pDest, int xPos, int yPos, const libCZI::IDimCoordinate* planeCoordinate, const Options* pOptions) override;
 private:
 	void InternalGet(int xPos, int yPos, libCZI::IBitmapData* pBm, const libCZI::IDimCoordinate* planeCoordinate, const libCZI::ISingleChannelTileAccessor::Options* pOptions);
 	//std::shared_ptr<libCZI::IBitmapData> InternalGet(const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate, const ISingleChannelTileAccessor::Options* pOptions);
