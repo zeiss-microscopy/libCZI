@@ -50,7 +50,7 @@ void CIndexSet::ParseString(const std::wstring& str)
 	std::vector<wstring> parts;
 	Utilities::Split(str, L',', [&](const std::wstring p)->bool {parts.push_back(Utilities::Trim(p)); return true; });
 
-	for (const auto part : parts)
+	for (const auto& part : parts)
 	{
 		auto t = ParsePart(part);
 		if (get<0>(t) > get<1>(t))

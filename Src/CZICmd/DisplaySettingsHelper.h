@@ -30,14 +30,14 @@ class ChannelDisplaySettingsWrapper :public libCZI::IChannelDisplaySetting
 private:
 	const ChannelDisplaySettings& chDisplSettings;
 public:
-	ChannelDisplaySettingsWrapper(const ChannelDisplaySettings& dspl)
+	explicit ChannelDisplaySettingsWrapper(const ChannelDisplaySettings& dspl)
 		: chDisplSettings(dspl)
 	{}
 
 public:
-	virtual bool GetIsEnabled()const  override { return true; }
-	virtual float GetWeight() const override { return this->chDisplSettings.weight; }
-	virtual bool TryGetTintingColorRgb8(libCZI::Rgb8Color* pColor) const override
+	bool GetIsEnabled()const  override { return true; }
+	float GetWeight() const override { return this->chDisplSettings.weight; }
+	bool TryGetTintingColorRgb8(libCZI::Rgb8Color* pColor) const override
 	{
 		if (this->chDisplSettings.enableTinting == true)
 		{
@@ -52,13 +52,13 @@ public:
 		return false;
 	}
 
-	virtual void GetBlackWhitePoint(float* pBlack, float* pWhite) const override
+	void GetBlackWhitePoint(float* pBlack, float* pWhite) const override
 	{
 		if (pBlack != nullptr) { *pBlack = this->chDisplSettings.blackPoint; }
 		if (pWhite != nullptr) { *pWhite = this->chDisplSettings.whitePoint; }
 	}
 
-	virtual libCZI::IDisplaySettings::GradationCurveMode GetGradationCurveMode() const override
+	libCZI::IDisplaySettings::GradationCurveMode GetGradationCurveMode() const override
 	{
 		if (this->chDisplSettings.IsGammaValid())
 		{
@@ -73,7 +73,7 @@ public:
 		return libCZI::IDisplaySettings::GradationCurveMode::Linear;
 	}
 
-	virtual bool TryGetGamma(float* gamma)const override
+	bool TryGetGamma(float* gamma)const override
 	{
 		if (this->GetGradationCurveMode() == libCZI::IDisplaySettings::GradationCurveMode::Gamma)
 		{
@@ -84,12 +84,12 @@ public:
 		return false;
 	}
 
-	/*virtual*/bool	TryGetSplineControlPoints(std::vector<libCZI::IDisplaySettings::SplineControlPoint>* ctrlPts) const override
+	bool TryGetSplineControlPoints(std::vector<libCZI::IDisplaySettings::SplineControlPoint>* ctrlPts) const override
 	{
 		throw std::runtime_error("not implemented");
 	}
 
-	virtual bool TryGetSplineData(std::vector<libCZI::IDisplaySettings::SplineData>* data) const override
+	bool TryGetSplineData(std::vector<libCZI::IDisplaySettings::SplineData>* data) const override
 	{
 		if (this->GetGradationCurveMode() == libCZI::IDisplaySettings::GradationCurveMode::Spline)
 		{
@@ -115,7 +115,7 @@ class CDisplaySettingsWrapper : public libCZI::IDisplaySettings
 private:
 	std::map<int, std::shared_ptr<libCZI::IChannelDisplaySetting>> chDsplSettings;
 public:
-	CDisplaySettingsWrapper(const CCmdLineOptions& options)
+	explicit CDisplaySettingsWrapper(const CCmdLineOptions& options)
 	{
 		const auto& cmdLineChDsplSettingsMap = options.GetMultiChannelCompositeChannelInfos();
 		for (std::map<int, ChannelDisplaySettings>::const_iterator it = cmdLineChDsplSettingsMap.cbegin(); it != cmdLineChDsplSettingsMap.cend(); ++it)
@@ -124,7 +124,7 @@ public:
 		}
 	}
 
-	virtual void EnumChannels(std::function<bool(int)> func) const
+	void EnumChannels(std::function<bool(int)> func) const override
 	{
 		for (std::map<int, std::shared_ptr<libCZI::IChannelDisplaySetting>>::const_iterator it = this->chDsplSettings.cbegin();
 			it != this->chDsplSettings.cend(); ++it)
@@ -133,7 +133,7 @@ public:
 		}
 	}
 
-	virtual std::shared_ptr<libCZI::IChannelDisplaySetting> GetChannelDisplaySettings(int chIndex) const
+	std::shared_ptr<libCZI::IChannelDisplaySetting> GetChannelDisplaySettings(int chIndex) const override
 	{
 		return this->chDsplSettings.at(chIndex);
 	}

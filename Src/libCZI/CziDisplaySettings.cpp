@@ -188,7 +188,7 @@ CCziDisplaySettings::CCziDisplaySettings(std::function<bool(int no, int&, Channe
 					{
 						chDsplSetting.splineControlPoints = ParseSplinePoints(subNodePoints.text().as_string());
 					}
-					catch (invalid_argument)
+					catch (invalid_argument&)
 					{
 						GetSite()->Log(LOGLEVEL_WARNING, "Could not parse the content of the 'Point'-field");
 					}

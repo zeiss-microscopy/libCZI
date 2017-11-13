@@ -33,10 +33,10 @@ private:
 public:
 	static std::shared_ptr<CJxrLibDecoder> Create();
 
-	CJxrLibDecoder(JxrDecode::codecHandle handle)
+	explicit CJxrLibDecoder(JxrDecode::codecHandle handle)
 		: handle(handle)
 	{}
 
 public:
-	virtual std::shared_ptr<libCZI::IBitmapData> Decode(const void* ptrData, size_t size);
+	std::shared_ptr<libCZI::IBitmapData> Decode(const void* ptrData, size_t size) override;
 };

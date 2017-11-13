@@ -33,7 +33,7 @@ namespace libCZI
 	public:
 		/// Constructor.
 		/// \param szErrMsg Message describing the error.
-		LibCZIException(const char* szErrMsg)
+		explicit LibCZIException(const char* szErrMsg)
 			: std::runtime_error(szErrMsg)
 		{}
 	};

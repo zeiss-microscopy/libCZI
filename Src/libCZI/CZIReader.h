@@ -38,26 +38,26 @@ private:
 	bool	isOperational;	///<	If true, then stream, hdrSegmentData and subBlkDir can be considered valid and operational
 public:
 	CCZIReader();
-	~CCZIReader();
+	~CCZIReader() override;
 
 	// interface ISubBlockRepository
-	virtual void EnumerateSubBlocks(std::function<bool(int index, const libCZI::SubBlockInfo& info)> funcEnum) override;
-	virtual void EnumSubset(const libCZI::IDimCoordinate* planeCoordinate, const libCZI::IntRect* roi, bool onlyLayer0, std::function<bool(int index, const libCZI::SubBlockInfo& info)> funcEnum) override;
-	virtual std::shared_ptr<libCZI::ISubBlock> ReadSubBlock(int index) override;
-	virtual bool TryGetSubBlockInfoOfArbitrarySubBlockInChannel(int channelIndex, libCZI::SubBlockInfo& info) override;
-	virtual libCZI::SubBlockStatistics GetStatistics() override;
-	virtual libCZI::PyramidStatistics GetPyramidStatistics() override;
+	void EnumerateSubBlocks(std::function<bool(int index, const libCZI::SubBlockInfo& info)> funcEnum) override;
+	void EnumSubset(const libCZI::IDimCoordinate* planeCoordinate, const libCZI::IntRect* roi, bool onlyLayer0, std::function<bool(int index, const libCZI::SubBlockInfo& info)> funcEnum) override;
+	std::shared_ptr<libCZI::ISubBlock> ReadSubBlock(int index) override;
+	bool TryGetSubBlockInfoOfArbitrarySubBlockInChannel(int channelIndex, libCZI::SubBlockInfo& info) override;
+	libCZI::SubBlockStatistics GetStatistics() override;
+	libCZI::PyramidStatistics GetPyramidStatistics() override;
 	
 	// interface ICZIReader
-	virtual void Open(std::shared_ptr<libCZI::IStream> stream) override;
-	virtual std::shared_ptr<libCZI::IMetadataSegment> ReadMetadataSegment() override;
-	virtual std::shared_ptr<libCZI::IAccessor> CreateAccessor(libCZI::AccessorType accessorType) override;
-	virtual void Close() override;
+	void Open(std::shared_ptr<libCZI::IStream> stream) override;
+	std::shared_ptr<libCZI::IMetadataSegment> ReadMetadataSegment() override;
+	std::shared_ptr<libCZI::IAccessor> CreateAccessor(libCZI::AccessorType accessorType) override;
+	void Close() override;
 
 	// interface IAttachmentRepository
-	virtual void EnumerateAttachments(std::function<bool(int index, const libCZI::AttachmentInfo& infi)> funcEnum) override;
-	virtual void EnumerateSubset(const char* contentFileType, const char* name, std::function<bool(int index, const libCZI::AttachmentInfo& infi)> funcEnum) override;
-	virtual std::shared_ptr<libCZI::IAttachment> ReadAttachment(int index) override;
+	void EnumerateAttachments(std::function<bool(int index, const libCZI::AttachmentInfo& infi)> funcEnum) override;
+	void EnumerateSubset(const char* contentFileType, const char* name, std::function<bool(int index, const libCZI::AttachmentInfo& infi)> funcEnum) override;
+	std::shared_ptr<libCZI::IAttachment> ReadAttachment(int index) override;
 
 private:
 	std::shared_ptr<libCZI::ISubBlock> ReadSubBlock(const CCziSubBlockDirectory::SubBlkEntry& entry);

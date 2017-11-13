@@ -33,9 +33,9 @@ private:
 	std::uint32_t	attachmentSize;
 public:
 	CCziMetadataSegment(const CCZIParse::MetadataSegmentData& data, std::function<void(void*)> deleter);
-	~CCziMetadataSegment();
+	~CCziMetadataSegment() override;
 
 	// interface ISubBlock
-	virtual void DangerousGetRawData(MemBlkType type, const void*& ptr, size_t& size) const override;
-	virtual std::shared_ptr<const void> GetRawData(MemBlkType type, size_t* ptrSize) override;
+	void DangerousGetRawData(MemBlkType type, const void*& ptr, size_t& size) const override;
+	std::shared_ptr<const void> GetRawData(MemBlkType type, size_t* ptrSize) override;
 };

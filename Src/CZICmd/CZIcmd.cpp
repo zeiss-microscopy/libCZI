@@ -30,7 +30,7 @@
 #include "inc_libCZI.h"
 
 #if defined(LINUXENV)
-#include <locale.h>
+#include <clocale>
 #endif
 
 class CLibCZISite : public libCZI::ISite
@@ -38,7 +38,7 @@ class CLibCZISite : public libCZI::ISite
 	libCZI::ISite* pSite;
 	const CCmdLineOptions& options;
 public:
-	CLibCZISite(const CCmdLineOptions& opts) : options(opts)
+	explicit CLibCZISite(const CCmdLineOptions& opts) : options(opts)
 	{
 #if defined(WIN32ENV)
 		if (options.GetUseWICJxrDecoder())
@@ -54,22 +54,22 @@ public:
 #endif
 	}
 
-	virtual bool IsEnabled(int logLevel) override
+	bool IsEnabled(int logLevel) override
 	{
 		return this->options.IsLogLevelEnabled(logLevel);
 	}
 
-	virtual void Log(int level, const char* szMsg) override
+	void Log(int level, const char* szMsg) override
 	{
 		this->options.GetLog()->WriteStdOut(szMsg);
 	}
 
-	virtual std::shared_ptr<libCZI::IDecoder> GetDecoder(libCZI::ImageDecoderType type, const char* arguments) override
+	std::shared_ptr<libCZI::IDecoder> GetDecoder(libCZI::ImageDecoderType type, const char* arguments) override
 	{
 		return this->pSite->GetDecoder(type, arguments);
 	}
 
-	virtual std::shared_ptr<libCZI::IBitmapData> CreateBitmap(libCZI::PixelType pixeltype, std::uint32_t width, std::uint32_t height, std::uint32_t stride, std::uint32_t extraRows, std::uint32_t extraColumns) override
+	std::shared_ptr<libCZI::IBitmapData> CreateBitmap(libCZI::PixelType pixeltype, std::uint32_t width, std::uint32_t height, std::uint32_t stride, std::uint32_t extraRows, std::uint32_t extraColumns) override
 	{
 		return this->pSite->CreateBitmap(pixeltype, width, height, stride, extraRows, extraColumns);
 	}

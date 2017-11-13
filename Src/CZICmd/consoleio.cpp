@@ -21,7 +21,7 @@
 //******************************************************************************
 
 #include "stdafx.h"
-#include <stdarg.h>
+#include <cstdarg>
 #include "consoleio.h"
 #include <iostream>
 

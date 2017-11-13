@@ -22,7 +22,7 @@
 
 #include "stdafx.h"
 #include "utils.h"
-#include <wctype.h>
+#include <cwctype>
 #include <iomanip>
 
 #if defined(WIN32ENV)

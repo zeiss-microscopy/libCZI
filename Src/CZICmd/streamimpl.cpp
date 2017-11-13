@@ -22,7 +22,7 @@
 
 #include "stdafx.h"
 #include "streamimpl.h"
-#include <errno.h>
+#include <cerrno>
 #include "utils.h"
 
 CStreamImpl::CStreamImpl(const wchar_t* filename)

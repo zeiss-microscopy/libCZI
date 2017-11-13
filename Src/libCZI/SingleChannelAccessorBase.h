@@ -29,7 +29,7 @@ class CSingleChannelAccessorBase
 protected:
 	std::shared_ptr<libCZI::ISubBlockRepository> sbBlkRepository;
 
-	CSingleChannelAccessorBase(std::shared_ptr<libCZI::ISubBlockRepository> sbBlkRepository)
+	explicit CSingleChannelAccessorBase(std::shared_ptr<libCZI::ISubBlockRepository> sbBlkRepository)
 		: sbBlkRepository(sbBlkRepository)
 	{}
 

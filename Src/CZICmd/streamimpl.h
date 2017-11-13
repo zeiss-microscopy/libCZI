@@ -29,9 +29,9 @@ class CStreamImpl :public  libCZI::IStream
 private:
 	FILE* fp;
 public:
-	CStreamImpl(const wchar_t* filename);
-	CStreamImpl(const std::wstring& filename);
-	virtual ~CStreamImpl();
+	explicit CStreamImpl(const wchar_t* filename);
+	explicit CStreamImpl(const std::wstring& filename);
+	~CStreamImpl() override;
 public:	// interface libCZI::IStream
-	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+	void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead) override;
 };
