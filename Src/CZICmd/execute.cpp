@@ -360,6 +360,12 @@ public:
 
 		auto docInfo = md->GetDocumentInfo();
 		auto dsplSettings = docInfo->GetDisplaySettings();
+    if (!dsplSettings)
+    {
+      options.GetLog()->WriteStdOut("-> No Display-Settings available");
+      return;
+    }
+
 		dsplSettings->EnumChannels(
 			[&](int chIdx)->bool
 		{
@@ -376,6 +382,12 @@ public:
 		options.GetLog()->WriteStdOut("");
 		auto docInfo = md->GetDocumentInfo();
 		auto dsplSettings = docInfo->GetDisplaySettings();
+    if (!dsplSettings)
+    {
+      options.GetLog()->WriteStdOut("-> No Display-Settings available");
+      return;
+    }
+
 		string dsplSettingsJson = CreateJsonForDisplaySettings(dsplSettings.get());
 
 		Document document;
@@ -678,6 +690,12 @@ public:
 			dsplSettings = std::make_shared<CDisplaySettingsWrapper>(options);
 		}
 
+    if (!dsplSettings)
+    {
+      options.GetLog()->WriteStdErr("No Display-Settings available.");
+      return false;
+    }
+
 		activeChannels = libCZI::CDisplaySettingsHelper::GetActiveChannels(dsplSettings.get());
 		channelBitmaps = GetBitmapsFromSpecifiedChannels(
 			spReader.get(),
@@ -834,6 +852,12 @@ public:
 		{
 			dsplSettings = std::make_shared<CDisplaySettingsWrapper>(options);
 		}
+
+    if (!dsplSettings)
+    {
+      options.GetLog()->WriteStdErr("No Display-Settings available.");
+      return false;
+    }
 
 		activeChannels = libCZI::CDisplaySettingsHelper::GetActiveChannels(dsplSettings.get());
 		channelBitmaps = GetBitmapsFromSpecifiedChannels(
