@@ -71,7 +71,7 @@ namespace libCZI
 		static std::vector<int> GetActiveChannels(const libCZI::IDisplaySettings* ptrDspSetting)
 		{
 			std::vector<int> result;
-			EnumEnabledChannels(ptrDspSetting, [&](int chIdx)->bool {result.push_back(chIdx); return true; });
+      CDisplaySettingsHelper::EnumEnabledChannels(ptrDspSetting, [&](int chIdx)->bool {result.push_back(chIdx); return true; });
 			return result;
 		}
 
@@ -89,7 +89,6 @@ namespace libCZI
 				[&](int chIndex)->bool
 			{
 				auto chDsplSetting = ptrDspSetting->GetChannelDisplaySettings(chIndex);
-				libCZI::PixelType pxlType = getPixelTypeForChannelIndex(chIndex);
 				this->AddChannelSetting(chIndex, chDsplSetting.get(), getPixelTypeForChannelIndex);
 				return true;
 			});
@@ -162,6 +161,8 @@ namespace libCZI
 
 		void AddChannelSetting(int chIdx, const libCZI::IChannelDisplaySetting* chDsplSetting, std::function<libCZI::PixelType(int chIndex)> getPixelTypeForChannelIndex)
 		{
+      // Note that we only add this channel IF IT IS ENABLED. If not, we DO NOT and MUST NOT call the 
+      // "getPixelTypeForChannelIndex"-callback!
 			if (chDsplSetting->GetIsEnabled() != true)
 			{
 				return;
