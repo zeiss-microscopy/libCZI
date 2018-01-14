@@ -282,6 +282,16 @@ namespace libCZI
 		std::shared_ptr<ICziMetadata> CreateMetaFromMetadataSegment() { return libCZI::CreateMetaFromMetadataSegment(this); }
 	};
 
+	/// This structure gathers the bounding-boxes determined from all sub-blocks and only be those on pyramid-layer 0.
+	struct BoundingBoxes
+	{
+		/// The bounding-box determined from all sub-blocks.
+		IntRect	boundingBox;
+
+		/// The bounding-boxes determined only from sub-blocks of pyramid-layer 0.
+		IntRect boundingBoxLayer0;
+	};
+
 	/// Statistics about all sub-blocks found in a CZI-document.
 	struct SubBlockStatistics
 	{
@@ -301,14 +311,19 @@ namespace libCZI
 		/// document.
 		IntRect boundingBox;
 
+		/// The bounding box determined only from the sub-blocks of pyramid-layer0 in the 
+		/// document.
+		IntRect boundingBoxLayer0Only;
+
 		/// The dimension bounds - the minimum and maximum dimension index determined
 		/// from all sub-blocks in the CZI-document.
 		CDimBounds dimBounds;
 
 		/// A map with key scene-index and value bounding box of the scene.
-		/// The bounding box of the scene is determined by checking all sub-blocks (with the
-		/// specific scene-index). If no scene-indices are present, this map is empty.
-		std::map<int, IntRect> sceneBoundingBoxes;
+		/// Two bounding-boxes are determined - one from checking all sub-blocks (with the specific scene-index)
+		/// and another one by only considering sub-blocks on pyramid-layer 0.
+		/// If no scene-indices are present, this map is empty.
+		std::map<int, BoundingBoxes> sceneBoundingBoxes;
 
 		/// Query if the members minMindex and maxMindex are valid. They may be
 		/// invalid in the case that the sub-blocks do not define an M-index.
@@ -324,6 +339,7 @@ namespace libCZI
 		{
 			this->subBlockCount = -1;
 			this->boundingBox.Invalidate();
+			this->boundingBoxLayer0Only.Invalidate();
 			this->dimBounds.Clear();
 			this->sceneBoundingBoxes.clear();
 			this->minMindex = (std::numeric_limits<int>::max)();

@@ -47,6 +47,11 @@ public:
 			return this->mIndex != (std::numeric_limits<int>::min)() ? true : false;
 		}
 
+		bool IsStoredSizeEqualLogicalSize() const
+		{
+			return this->width == this->storedWidth && this->height == this->storedHeight;
+		}
+
 		void Invalidate()
 		{
 			this->mIndex = this->x = this->y = this->width = this->height = this->storedWidth = this->storedHeight = (std::numeric_limits<int>::min)();
@@ -73,12 +78,12 @@ public:
 	void AddingFinished();
 
 	void EnumSubBlocks(std::function<bool(int index, const SubBlkEntry&)> func);
-	bool TryGetSubBlock(int index,SubBlkEntry& entry);
+	bool TryGetSubBlock(int index, SubBlkEntry& entry);
 
 private:
 	void UpdateStatistics(const SubBlkEntry& entry);
 	void SortPyramidStatistics();
 	static void UpdateBoundingBox(libCZI::IntRect& rect, const SubBlkEntry& entry);
 	static bool TryToDeterminePyramidLayerInfo(const SubBlkEntry& entry, std::uint8_t* minificationFactor, std::uint8_t* pyramidLayerNo);
-	static void UpdatePyramidLayerStatistics(std::vector<libCZI::PyramidStatistics::PyramidLayerStatistics>& vec,const libCZI::PyramidStatistics::PyramidLayerInfo& pli);
+	static void UpdatePyramidLayerStatistics(std::vector<libCZI::PyramidStatistics::PyramidLayerStatistics>& vec, const libCZI::PyramidStatistics::PyramidLayerInfo& pli);
 };

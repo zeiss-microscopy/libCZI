@@ -41,7 +41,7 @@ void libCZI::GetLibCZIVersion(int* pMajor, int* pMinor)
 
 	if (pMinor != nullptr)
 	{
-		*pMinor = 23;
+		*pMinor = 24;
 	}
 }
 

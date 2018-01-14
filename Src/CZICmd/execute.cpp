@@ -574,7 +574,7 @@ public:
 			ss << "Bounding-Box for scenes:" << endl;
 			for (const auto sceneBb : sbStatistics.sceneBoundingBoxes)
 			{
-				ss << " Scene" << sceneBb.first << " : X=" << sceneBb.second.x << " Y=" << sceneBb.second.y << " W=" << sceneBb.second.w << " H=" << sceneBb.second.h << endl;
+				ss << " Scene" << sceneBb.first << " : X=" << sceneBb.second.boundingBox.x << " Y=" << sceneBb.second.boundingBox.y << " W=" << sceneBb.second.boundingBox.w << " H=" << sceneBb.second.boundingBox.h << endl;
 			}
 		}
 
