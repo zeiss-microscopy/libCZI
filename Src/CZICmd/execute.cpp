@@ -222,6 +222,7 @@ public:
 		return true;
 	}
 
+private:
 	static void PrintAttachmentInfo(ICZIReader* reader, const CCmdLineOptions& options)
 	{
 		options.GetLog()->WriteStdOut("Attachment Info");
@@ -548,8 +549,14 @@ public:
 		ss << "SubBlock-Count: " << sbStatistics.subBlockCount << endl;
 		ss << endl;
 		ss << "Bounding-Box:" << endl;
-		ss << " X=" << sbStatistics.boundingBox.x << " Y=" << sbStatistics.boundingBox.y << " W=" << sbStatistics.boundingBox.w << " H=" << sbStatistics.boundingBox.h << endl;
+		ss << " All:    ";
+		WriteIntRect(ss, sbStatistics.boundingBox);
 		ss << endl;
+		ss << " Layer0: ";
+		WriteIntRect(ss, sbStatistics.boundingBoxLayer0Only);
+		ss << endl;
+		
+		ss << endl;;
 		if (sbStatistics.IsMIndexValid())
 		{
 			ss << "M-Index: min=" << sbStatistics.minMindex << " max=" << sbStatistics.maxMindex << endl;
@@ -574,7 +581,13 @@ public:
 			ss << "Bounding-Box for scenes:" << endl;
 			for (const auto sceneBb : sbStatistics.sceneBoundingBoxes)
 			{
-				ss << " Scene" << sceneBb.first << " : X=" << sceneBb.second.boundingBox.x << " Y=" << sceneBb.second.boundingBox.y << " W=" << sceneBb.second.boundingBox.w << " H=" << sceneBb.second.boundingBox.h << endl;
+				ss << " Scene" << sceneBb.first << ":" << endl;
+				ss << "  All:    ";
+				WriteIntRect(ss, sceneBb.second.boundingBox);
+				ss << endl;
+				ss << "  Layer0: ";
+				WriteIntRect(ss, sceneBb.second.boundingBoxLayer0);
+				ss << endl;
 			}
 		}
 
@@ -629,6 +642,18 @@ public:
 		}
 
 		log->WriteStdOut(ss.str());
+	}
+
+	static void WriteIntRect(stringstream& ss, const IntRect& r)
+	{
+		if (r.IsValid())
+		{
+			ss << "X=" << r.x << " Y=" << r.y << " W=" << r.w << " H=" << r.h;
+		}
+		else
+		{
+			ss << "invalid";
+		}
 	}
 };
 
