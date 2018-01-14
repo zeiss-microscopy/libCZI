@@ -410,7 +410,7 @@ Here we get the complete list of all attachments.
 
 The command 'SingleChannelTileAccessor' will use an accessor of type `SingleChannelTileAccessor` (cf. [accessors](@ref accessors)). It will use the argument
 '-p' or '\--plane-coordinate' in order to specify the plane, and the argument '-r' or '\--rect' in order to specify a rectangular (and axis-aligned) region (or ROI).
-The pixel-type of output is determined automatically (cf. [ISingleChannelTileAccessor](@ref libCZI::ISingleChannelTileAccessor)).
+The pixel-type of the output is determined automatically (cf. [ISingleChannelTileAccessor](@ref libCZI::ISingleChannelTileAccessor)).
 
 The following sample will extract the ROI (x=21300,y=21000,w=4096,h=4096) from channel #0
 
@@ -476,7 +476,7 @@ In order to specify the display-settings on the commandline, a JSON-notation is 
 	  ]
 	}
 
-It is an array "channels", with the following fields are possible:
+It is an array "channels", where the following fields are possible:
 
 field name  |  type   | explanation
 ----------- | ------- | ---------------------------------

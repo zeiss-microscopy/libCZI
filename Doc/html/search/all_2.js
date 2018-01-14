@@ -9,6 +9,9 @@ var searchData=
   ['bgra32',['Bgra32',['../namespacelib_c_z_i.html#abf8ce12ab88b06c8b3b47efbb5e2e834a2c5ed55e4aac8b7ca717880f2267896a',1,'libCZI']]],
   ['bitmaplockinfo',['BitmapLockInfo',['../structlib_c_z_i_1_1_bitmap_lock_info.html',1,'libCZI']]],
   ['blackpoint',['blackPoint',['../structlib_c_z_i_1_1_compositors_1_1_channel_info.html#a108977b9e981ecff39b65add4bceddb2',1,'libCZI::Compositors::ChannelInfo']]],
-  ['boundingbox',['boundingBox',['../structlib_c_z_i_1_1_sub_block_statistics.html#a924c2adf7f3e132470dfeb06ea1e958c',1,'libCZI::SubBlockStatistics']]],
+  ['boundingbox',['boundingBox',['../structlib_c_z_i_1_1_bounding_boxes.html#abc2beea033eba496b26cbfdb4b16ced6',1,'libCZI::BoundingBoxes::boundingBox()'],['../structlib_c_z_i_1_1_sub_block_statistics.html#a924c2adf7f3e132470dfeb06ea1e958c',1,'libCZI::SubBlockStatistics::boundingBox()']]],
+  ['boundingboxes',['BoundingBoxes',['../structlib_c_z_i_1_1_bounding_boxes.html',1,'libCZI']]],
+  ['boundingboxlayer0',['boundingBoxLayer0',['../structlib_c_z_i_1_1_bounding_boxes.html#a6e0e45a2c8bc35fe10463437dc8b9509',1,'libCZI::BoundingBoxes']]],
+  ['boundingboxlayer0only',['boundingBoxLayer0Only',['../structlib_c_z_i_1_1_sub_block_statistics.html#a5256d470970ed24507b6bd1fadf32096',1,'libCZI::SubBlockStatistics']]],
   ['building_20libczi',['Building libCZI',['../buildinglib_c_z_i.html',1,'']]]
 ];

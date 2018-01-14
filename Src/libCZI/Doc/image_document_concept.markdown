@@ -5,10 +5,10 @@ Image Document Concept                 {#imagedocumentconcept}
 
 The sub-blocks contained in a CZI-file are conceptually organized as follows:
 
-- Sub-blocks reside in different "planes", where a plane is given by the discrete coordinates 'Z', 'C', 'T' or 'V'
+- Sub-blocks reside in different "planes", where a plane is given by the discrete coordinates 'Z', 'C', 'T' or 'V'.
 - Each sub-block has an X-Y coordinate (and a width and height) in a 2D-coordinate system (which is common to all planes).
 - Sub-blocks contain images which can be thought to fill an axis-aligned rectangle (specified by its X and Y coordinate, and its width and height).
-- In addition, a sub-block may have a logical size which is different from its physical size (also called a "zoom")
+- In addition, a sub-block may have a logical size which is different from its physical size (also called a "zoom").
 
 
 ![sub-blocks on a plane](image_document_concept1.PNG "image_document_concept1")
@@ -20,7 +20,7 @@ The case where we have different planes in one document is depicted here:
 @image latex image_document_concept2.PNG "sub-blocks on different planes"
 
 Note that:
-- The X-Y positions of sub-blocks on different planes can be different (i. e. same Z-index, same T-index and same M-index does not imply that X and Y is the same for all C-indices). Even the number of sub-blocks on a plane can be different.
+- The X-Y positions of sub-blocks on different planes can be different (i. e. same Z-index, same T-index and same M-index does not imply that X and Y is the same for all C-indices). Even the number of sub-blocks on different planes can be different.
 - The bounding box is defined to contain all sub-blocks on all planes.
 - The 2D-coordinate system is common to all planes.
 - Sub-blocks can be overlapping.
@@ -36,7 +36,7 @@ dimension   |  meaning     | comment
  Z          | z-focus      | plane is from a different Z-plane 
  C          | channel      | different modality 
  T          | time         | different point in time 
- H          | phase        | distinguish the different phases in a SIM-acquisition (structured illumination microscopy)
+ H          | phase        | distinguishes the different phases in a SIM-acquisition (structured illumination microscopy)
  I          | illumination | different directions of illumination (used in SPIM-acquisition)
  V          | view         | used in SPIM for different views
 

@@ -2,6 +2,7 @@ var namespacelib_c_z_i =
 [
     [ "AttachmentInfo", "structlib_c_z_i_1_1_attachment_info.html", "structlib_c_z_i_1_1_attachment_info" ],
     [ "BitmapLockInfo", "structlib_c_z_i_1_1_bitmap_lock_info.html", "structlib_c_z_i_1_1_bitmap_lock_info" ],
+    [ "BoundingBoxes", "structlib_c_z_i_1_1_bounding_boxes.html", "structlib_c_z_i_1_1_bounding_boxes" ],
     [ "CDimBase", "classlib_c_z_i_1_1_c_dim_base.html", null ],
     [ "CDimBounds", "classlib_c_z_i_1_1_c_dim_bounds.html", "classlib_c_z_i_1_1_c_dim_bounds" ],
     [ "CDimCoordinate", "classlib_c_z_i_1_1_c_dim_coordinate.html", "classlib_c_z_i_1_1_c_dim_coordinate" ],
