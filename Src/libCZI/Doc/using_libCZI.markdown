@@ -40,7 +40,7 @@ code can be used to open a CZI-file:
 ~~~~~~~~~~~~~~~~~~~~~
 
 The `SubBlockStatistics` gives information about the sub-blocks in the CZI-file. The coordinates of each sub-block are examined, and
-the mininum of maximum are determined and are available in the struct returned by the method `ISubBlockRepository::GetStatistics()`.
+the mininum and maximum are determined and are available in the struct returned by the method `ISubBlockRepository::GetStatistics()`.
 It is usually important to examine the dimBounds member in order to determine which dimensions are used in the CZI-file.
 
 ## Reading sub-blocks in a CZI-file ##

@@ -287,7 +287,7 @@ std::vector<int> CSingleChannelScalingTileAccessor::DetermineInvolvedScenes(cons
 		// check if the scene is part of the "scene index set" (if this is specified)
 		if (pSceneIndexSet == nullptr || pSceneIndexSet->IsContained(it->first))
 		{
-			if (it->second.IntersectsWith(roi))
+			if (it->second.boundingBox.IntersectsWith(roi))
 			{
 				result.push_back(it->first);
 			}

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['calcmd5sumhash',['CalcMd5SumHash',['../classlib_c_z_i_1_1_utils.html#a1718a9b6cf313114b8c70fd78befcf0a',1,'libCZI::Utils::CalcMd5SumHash(libCZI::IBitmapData *bm, std::uint8_t *ptrHash, int hashSize)'],['../classlib_c_z_i_1_1_utils.html#ae31970caf0590b90fb85d4ff4a88cf1a',1,'libCZI::Utils::CalcMd5SumHash(const void *ptrData, size_t sizeData, std::uint8_t *ptrHash, int hashSize)']]],
-  ['calcsize',['CalcSize',['../classlib_c_z_i_1_1_i_single_channel_scaling_tile_accessor.html#a22abd8e2c6754993e2561f747b3cef42',1,'libCZI::ISingleChannelScalingTileAccessor']]],
+  ['calcsize',['CalcSize',['../classlib_c_z_i_1_1_i_single_channel_scaling_tile_accessor.html#aa7a0c9edcdd3460471edfdbe54fc2f76',1,'libCZI::ISingleChannelScalingTileAccessor']]],
   ['calcsplinedatafrompoints',['CalcSplineDataFromPoints',['../classlib_c_z_i_1_1_utils.html#a1d09549e8c5202874d5adc0cc1baccf7',1,'libCZI::Utils']]],
   ['calczoom',['CalcZoom',['../classlib_c_z_i_1_1_utils.html#a68bf3739b6be924bcdf01664492f0a0a',1,'libCZI::Utils']]],
   ['cdimbounds',['CDimBounds',['../classlib_c_z_i_1_1_c_dim_bounds.html#a86cb06505f8ac0cf75a9258f49ef58dc',1,'libCZI::CDimBounds::CDimBounds()'],['../classlib_c_z_i_1_1_c_dim_bounds.html#aae378201c633fa582d3af0740b1b634a',1,'libCZI::CDimBounds::CDimBounds(std::initializer_list&lt; DimensionAndStartSize &gt; list)']]],

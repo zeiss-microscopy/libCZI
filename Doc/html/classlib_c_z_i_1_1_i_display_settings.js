@@ -9,6 +9,6 @@ var classlib_c_z_i_1_1_i_display_settings =
       [ "Spline", "classlib_c_z_i_1_1_i_display_settings.html#a8e600e80a4999495c1ab1f637ffb94ffa4cff6afc4963881749f7742fbb4d1392", null ]
     ] ],
     [ "~IDisplaySettings", "classlib_c_z_i_1_1_i_display_settings.html#ad4a4581092eae4a24310c16d3af4f13c", null ],
-    [ "EnumChannels", "classlib_c_z_i_1_1_i_display_settings.html#a422a45862378a80b56d572e900d55643", null ],
-    [ "GetChannelDisplaySettings", "classlib_c_z_i_1_1_i_display_settings.html#a6c6c4c0cba917c57124fc43530cd0572", null ]
+    [ "EnumChannels", "classlib_c_z_i_1_1_i_display_settings.html#af19480abbb7905656e5411bd34d0506d", null ],
+    [ "GetChannelDisplaySettings", "classlib_c_z_i_1_1_i_display_settings.html#ad67ab35e429286d38dd11245eda3dc4c", null ]
 ];

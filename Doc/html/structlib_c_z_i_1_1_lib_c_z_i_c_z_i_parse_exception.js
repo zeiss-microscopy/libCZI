@@ -6,5 +6,5 @@ var structlib_c_z_i_1_1_lib_c_z_i_c_z_i_parse_exception =
       [ "InternalError", "structlib_c_z_i_1_1_lib_c_z_i_c_z_i_parse_exception.html#a32a6c8ab31a657e490e5c605c97efb40a8462b58246e70e5c83e5b939a9332cb5", null ]
     ] ],
     [ "LibCZICZIParseException", "structlib_c_z_i_1_1_lib_c_z_i_c_z_i_parse_exception.html#aa5278cd2edeccba4b7cf8dd8f2ff58ef", null ],
-    [ "GetErrorCode", "structlib_c_z_i_1_1_lib_c_z_i_c_z_i_parse_exception.html#a6311eaa5984a69c5b00f93ad5f55d889", null ]
+    [ "GetErrorCode", "structlib_c_z_i_1_1_lib_c_z_i_c_z_i_parse_exception.html#af9f288e1c6b3eea97729bb47b7b61f27", null ]
 ];
