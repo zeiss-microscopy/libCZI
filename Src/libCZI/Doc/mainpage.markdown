@@ -46,7 +46,7 @@ At the start of the file, there is a distinguished data-structure ("the header")
 With the term _sub-block_ we are referring to an entity which contains a 2-dimensional image (or "a bitmap"), some associated metadata in XML-format (which we
 refer to as _sub-block metadata_) and (potentially) some other binary attachment (referred to as _sub-block attachment_).\n
 Do not confuse the terms "sub-block metadata"↔"metadata" and "sub-block attachment"↔"attachment" in this regard.
-Sub-blocks are identified by a something like coordinate - a list of dimensions and for each dimension a value.
+Sub-blocks are identified by something like a coordinate - a list of dimensions and for each dimension a value.
 
 Attachments can contain any sort of binary data (their content is not further defined on the file-format level). They are identified by a string. A naming convention is used to discover their content.
 

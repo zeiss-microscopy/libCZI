@@ -1,7 +1,7 @@
 Multi-channel-composition                 {#multichannelcomposition}
 =========================
 
-Multi-channel-composition is the operation to combine a set of channels (usually grayscale images) into a one colored image.  
+Multi-channel-composition is the operation of combining a set of channels (usually grayscale images) into a one colored image.  
 
 The operation (as implemented by the function Compositors::ComposeMultiChannel) is controlled by the following options:
 
@@ -31,15 +31,15 @@ up a value:
 ![linear gradation curve](gradationcurve_1.PNG "gradation_curve_linear")
 @image latex gradationcurve_1.PNG "linear gradation curve"
 
-Above is shown a linear gradation curve. There are three ways commonly used to define the gradation curve:
-- linear (a straigt line from the point [black point,0] to [white point,255] - as shown above)
+Above a linear gradation curve is shown. There are three ways commonly used to define the gradation curve:
+- linear (a straight line from the point [black point,0] to [white point,255] - as shown above)
 - gamma (instead of a straight line we use an exponential with the exponent gamma as a parameter)
 - defined by a spline
 
 In the function Compositors::ComposeMultiChannel the gradation curve is given as an array of bytes. Those bytes give the RGB-value at 
 uniformly distributed points between black point and white point. Values between those points are interpolated linearly.
 
-For example, the parameteres white_point=0.2, black_point=1.0 and lookupTable={0, 66, 100, 166, 255} will result in this gradation curve:
+For example, the parameters white_point=0.2, black_point=1.0 and lookupTable={0, 66, 100, 166, 255} will result in this gradation curve:
 
 ![gradation curve sample](gradationcurve_2.PNG "gradation_curve_sample")
 @image latex gradationcurve_2.PNG "gradation curve sample"

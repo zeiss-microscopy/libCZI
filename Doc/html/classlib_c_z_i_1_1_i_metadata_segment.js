@@ -6,6 +6,6 @@ var classlib_c_z_i_1_1_i_metadata_segment =
     ] ],
     [ "~IMetadataSegment", "classlib_c_z_i_1_1_i_metadata_segment.html#a9c07f18ed0cb14d6909ad5f50c9c17af", null ],
     [ "CreateMetaFromMetadataSegment", "classlib_c_z_i_1_1_i_metadata_segment.html#a62a0e7c30613b6f4dac3bf1ca80ab8bc", null ],
-    [ "DangerousGetRawData", "classlib_c_z_i_1_1_i_metadata_segment.html#af207b770e14042b88c7db336af51fd15", null ],
+    [ "DangerousGetRawData", "classlib_c_z_i_1_1_i_metadata_segment.html#a749349eab738a5fd7e5bce2e67440953", null ],
     [ "GetRawData", "classlib_c_z_i_1_1_i_metadata_segment.html#a5e6fd2f7ce81245075df9bc6a522a325", null ]
 ];

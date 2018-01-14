@@ -4,6 +4,7 @@ var hierarchy =
     [ "libCZI::BitmapLockInfo", "structlib_c_z_i_1_1_bitmap_lock_info.html", [
       [ "libCZI::ScopedBitmapLocker< tBitmap >", "classlib_c_z_i_1_1_scoped_bitmap_locker.html", null ]
     ] ],
+    [ "libCZI::BoundingBoxes", "structlib_c_z_i_1_1_bounding_boxes.html", null ],
     [ "libCZI::CDimBase", "classlib_c_z_i_1_1_c_dim_base.html", [
       [ "libCZI::CDimBounds", "classlib_c_z_i_1_1_c_dim_bounds.html", null ],
       [ "libCZI::CDimCoordinate", "classlib_c_z_i_1_1_c_dim_coordinate.html", null ]
@@ -51,9 +52,9 @@ var hierarchy =
     [ "nested_exception", null, [
       [ "libCZI::LibCZIIOException", "classlib_c_z_i_1_1_lib_c_z_i_i_o_exception.html", null ]
     ] ],
+    [ "libCZI::ISingleChannelPyramidLayerTileAccessor::Options", "structlib_c_z_i_1_1_i_single_channel_pyramid_layer_tile_accessor_1_1_options.html", null ],
     [ "libCZI::ISingleChannelTileAccessor::Options", "structlib_c_z_i_1_1_i_single_channel_tile_accessor_1_1_options.html", null ],
     [ "libCZI::ISingleChannelScalingTileAccessor::Options", "structlib_c_z_i_1_1_i_single_channel_scaling_tile_accessor_1_1_options.html", null ],
-    [ "libCZI::ISingleChannelPyramidLayerTileAccessor::Options", "structlib_c_z_i_1_1_i_single_channel_pyramid_layer_tile_accessor_1_1_options.html", null ],
     [ "libCZI::PyramidStatistics::PyramidLayerInfo", "structlib_c_z_i_1_1_pyramid_statistics_1_1_pyramid_layer_info.html", null ],
     [ "libCZI::ISingleChannelPyramidLayerTileAccessor::PyramidLayerInfo", "structlib_c_z_i_1_1_i_single_channel_pyramid_layer_tile_accessor_1_1_pyramid_layer_info.html", null ],
     [ "libCZI::PyramidStatistics::PyramidLayerStatistics", "structlib_c_z_i_1_1_pyramid_statistics_1_1_pyramid_layer_statistics.html", null ],

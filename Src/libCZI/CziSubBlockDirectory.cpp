@@ -29,8 +29,6 @@ using namespace libCZI;
 CCziSubBlockDirectory::CCziSubBlockDirectory() : state(State::AddingAllowed)
 {
 	this->statistics.Invalidate();
-	this->statistics.boundingBox.x = this->statistics.boundingBox.y = (std::numeric_limits<int>::max)();
-	this->statistics.boundingBox.w = this->statistics.boundingBox.h = 0;
 	this->statistics.subBlockCount = 0;
 }
 
@@ -88,28 +86,10 @@ bool CCziSubBlockDirectory::TryGetSubBlock(int index, SubBlkEntry& entry)
 void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 {
 	// TODO: check validity of x,y etc.
-	if (this->statistics.boundingBox.x > entry.x)
+	CCziSubBlockDirectory::UpdateBoundingBox(this->statistics.boundingBox, entry);
+	if (entry.IsStoredSizeEqualLogicalSize())
 	{
-		int diff = (this->statistics.boundingBox.x != (std::numeric_limits<int>::max)()) ? this->statistics.boundingBox.x - entry.x : 0;
-		this->statistics.boundingBox.x = entry.x;
-		this->statistics.boundingBox.w += diff;
-	}
-
-	if (this->statistics.boundingBox.y > entry.y)
-	{
-		int diff = (this->statistics.boundingBox.y != (std::numeric_limits<int>::max)()) ? this->statistics.boundingBox.y - entry.y : 0;
-		this->statistics.boundingBox.y = entry.y;
-		this->statistics.boundingBox.h += diff;
-	}
-
-	if (this->statistics.boundingBox.x + this->statistics.boundingBox.w < (entry.x + entry.width))
-	{
-		this->statistics.boundingBox.w = (entry.x + entry.width) - this->statistics.boundingBox.x;
-	}
-
-	if (this->statistics.boundingBox.y + this->statistics.boundingBox.h < (entry.y + entry.height))
-	{
-		this->statistics.boundingBox.h = (entry.y + entry.height) - this->statistics.boundingBox.y;
+		CCziSubBlockDirectory::UpdateBoundingBox(this->statistics.boundingBoxLayer0Only, entry);
 	}
 
 	entry.coordinate.EnumValidDimensions(
@@ -166,11 +146,29 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 		auto it = this->statistics.sceneBoundingBoxes.find(sceneIndex);
 		if (it != this->statistics.sceneBoundingBoxes.end())
 		{
-			CCziSubBlockDirectory::UpdateBoundingBox(it->second, entry);
+			CCziSubBlockDirectory::UpdateBoundingBox(it->second.boundingBox, entry);
+			if (entry.IsStoredSizeEqualLogicalSize() == true)
+			{
+				CCziSubBlockDirectory::UpdateBoundingBox(it->second.boundingBoxLayer0, entry);
+			}
 		}
 		else
 		{
-			this->statistics.sceneBoundingBoxes.insert(std::pair<int, IntRect>(sceneIndex, IntRect{ entry.x,entry.y,entry.width,entry.height }));
+			BoundingBoxes boundingBoxes;
+			boundingBoxes.boundingBox.x = entry.x;
+			boundingBoxes.boundingBox.y = entry.y;
+			boundingBoxes.boundingBox.w = entry.width;
+			boundingBoxes.boundingBox.h = entry.height;
+			if (entry.IsStoredSizeEqualLogicalSize() == true)
+			{
+				boundingBoxes.boundingBoxLayer0 = boundingBoxes.boundingBox;
+			}
+			else
+			{
+				boundingBoxes.boundingBoxLayer0.Invalidate();
+			}
+
+			this->statistics.sceneBoundingBoxes.insert(std::pair<int, BoundingBoxes>(sceneIndex, boundingBoxes));
 		}
 	}
 
@@ -205,28 +203,38 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 
 /*static*/void CCziSubBlockDirectory::UpdateBoundingBox(libCZI::IntRect& rect, const SubBlkEntry& entry)
 {
-	if (rect.x > entry.x)
+	if (rect.IsValid() == true)
 	{
-		int diff = (rect.x != (std::numeric_limits<int>::max)()) ? rect.x - entry.x : 0;
+		if (rect.x > entry.x)
+		{
+			int diff = rect.x - entry.x;
+			rect.x = entry.x;
+			rect.w += diff;
+		}
+
+		if (rect.y > entry.y)
+		{
+			int diff = rect.y - entry.y;
+			rect.y = entry.y;
+			rect.h += diff;
+		}
+
+		if (rect.x + rect.w < entry.x + entry.width)
+		{
+			rect.w = (entry.x + entry.width) - rect.x;
+		}
+
+		if (rect.y + rect.h < entry.y + entry.height)
+		{
+			rect.h = (entry.y + entry.height) - rect.y;
+		}
+	}
+	else
+	{
 		rect.x = entry.x;
-		rect.w += diff;
-	}
-
-	if (rect.y > entry.y)
-	{
-		int diff = (rect.y != (std::numeric_limits<int>::max)()) ? rect.y - entry.y : 0;
 		rect.y = entry.y;
-		rect.h += diff;
-	}
-
-	if (rect.x + rect.w < entry.x + entry.width)
-	{
-		rect.w = (entry.x + entry.width) - rect.x;
-	}
-
-	if (rect.y + rect.h < entry.y + entry.height)
-	{
-		rect.h = (entry.y + entry.height) - rect.y;
+		rect.w = entry.width;
+		rect.h = entry.height;
 	}
 }
 

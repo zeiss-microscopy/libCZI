@@ -2,7 +2,7 @@
 =========
 
 The bitmaps from the individual sub-blocks are logically arranged as tiles on a plane. In order to get a bitmap containing
-the tile-composite (or a part of it) the use of accessor is required.  
+the tile-composite (or a part of it) the use of a accessor is required.  
 In this example, we have three tiles on a plane and request to get a certain section (aka region-of-interest ROI):
 
 ![multi-tile accessor: mode of operation](compositors_1.png "multi-tile_compositor_1")
