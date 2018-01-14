@@ -39,6 +39,9 @@ namespace libCZI
 		/// Invalidates this object.
 		void Invalidate() { this->w = this->h = -1; }
 
+		/// Returns a boolean indicating whether this rectangle contains valid information.
+		bool IsValid() const { return this->w >= 0 && this->h >= 0; }
+
 		/// Determine whether this rectangle intersects with the specified one.
 		/// \param r The other rectangle.
 		/// \return True if the two rectangles intersect, false otherwise.
