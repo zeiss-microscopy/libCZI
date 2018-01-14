@@ -311,7 +311,7 @@ namespace libCZI
 		/// document.
 		IntRect boundingBox;
 
-		/// The bounding box determined only from the sub-blocks of pyramid-layer0 in the 
+		/// The bounding box determined from all sub-blocks in the 
 		/// document.
 		IntRect boundingBoxLayer0Only;
 
