@@ -29,12 +29,6 @@
 
 using namespace JxrDecode;
 
-ERR CreateEncodeWrapper(PKImageEncode** ppIE)
-{
-	return PKImageEncode_Create_Wrapper(ppIE);
-}
-
-
 //================================================================
 // Encoder factory on file extension
 //================================================================
@@ -54,7 +48,7 @@ ERR WmpDecAppCreateEncoderFromExt(
 	// Create encoder
 	PKTestFactory_CreateCodec(pIID, (void**)ppIE);
 
-//Cleanup:
+	//Cleanup:
 	return err;
 }
 //**********************************************************************************
@@ -232,8 +226,8 @@ void JxrDecode::Decode(codecHandle h, const WMPDECAPPARGS* decArgs, const void* 
 	{
 		if (selectDestPixFmt)
 		{
-			PI.pGUIDPixFmt = &pDecoder->guidPixFormat;
-			PixelFormat pixFmtFromDecoder = PixelFormatFromPkPixelFormat(pDecoder->guidPixFormat);
+			PI.pGUIDPixFmt = &upDecoder->guidPixFormat;
+			PixelFormat pixFmtFromDecoder = PixelFormatFromPkPixelFormat(upDecoder->guidPixFormat);
 			PixelFormat destFmtChosen = selectDestPixFmt(pixFmtFromDecoder);
 
 			args_guidPixFormat = *PkPixelFormatFromPixelFormat(destFmtChosen);
@@ -244,7 +238,7 @@ void JxrDecode::Decode(codecHandle h, const WMPDECAPPARGS* decArgs, const void* 
 			// take decoder color format and try to look up better one
 			// (e.g. 32bppBGR -> 24bppBGR etc.)
 			PKPixelInfo newPI;
-			newPI.pGUIDPixFmt = PI.pGUIDPixFmt = &pDecoder->guidPixFormat;
+			newPI.pGUIDPixFmt = PI.pGUIDPixFmt = &upDecoder->guidPixFormat;
 			PixelFormatLookup(&newPI, LOOKUP_FORWARD);
 			PixelFormatLookup(&newPI, LOOKUP_BACKWARD_TIF);
 			args_guidPixFormat = *newPI.pGUIDPixFmt;
@@ -258,13 +252,13 @@ void JxrDecode::Decode(codecHandle h, const WMPDECAPPARGS* decArgs, const void* 
 
 	// == color transcoding,
 	if (IsEqualGUID(args_guidPixFormat, GUID_PKPixelFormat8bppGray) || IsEqualGUID(args_guidPixFormat, GUID_PKPixelFormat16bppGray)) { // ** => Y transcoding
-		pDecoder->guidPixFormat = args_guidPixFormat;
-		pDecoder->WMP.wmiI.cfColorFormat = Y_ONLY;
+		upDecoder->guidPixFormat = args_guidPixFormat;
+		upDecoder->WMP.wmiI.cfColorFormat = Y_ONLY;
 	}
-	else if (IsEqualGUID(args_guidPixFormat, GUID_PKPixelFormat24bppRGB) && pDecoder->WMP.wmiI.cfColorFormat == CMYK) { // CMYK = > RGB
-		pDecoder->WMP.wmiI.cfColorFormat = CF_RGB;
-		pDecoder->guidPixFormat = args_guidPixFormat;
-		pDecoder->WMP.wmiI.bRGB = 1; //RGB
+	else if (IsEqualGUID(args_guidPixFormat, GUID_PKPixelFormat24bppRGB) && upDecoder->WMP.wmiI.cfColorFormat == CMYK) { // CMYK = > RGB
+		upDecoder->WMP.wmiI.cfColorFormat = CF_RGB;
+		upDecoder->guidPixFormat = args_guidPixFormat;
+		upDecoder->WMP.wmiI.bRGB = 1; //RGB
 	}
 
 	PixelFormatLookup(&PI, LOOKUP_FORWARD);
@@ -278,22 +272,22 @@ void JxrDecode::Decode(codecHandle h, const WMPDECAPPARGS* decArgs, const void* 
 			args_uAlphaMode = 0;//otherwise, 0
 	}
 
-	pDecoder->WMP.wmiSCP.bfBitstreamFormat = BITSTREAMFORMAT::SPATIAL;// args.bfBitstreamFormat;	only used for transcoding?
+	upDecoder->WMP.wmiSCP.bfBitstreamFormat = BITSTREAMFORMAT::SPATIAL;// args.bfBitstreamFormat;	only used for transcoding?
 
-	pDecoder->WMP.wmiSCP.uAlphaMode = args_uAlphaMode;
+	upDecoder->WMP.wmiSCP.uAlphaMode = args_uAlphaMode;
 
-	pDecoder->WMP.wmiSCP.sbSubband = (SUBBAND)(std::underlying_type<Subband>::type)decArgs->sbSubband;
-	pDecoder->WMP.bIgnoreOverlap = decArgs->bIgnoreOverlap ? 1 : 0;
+	upDecoder->WMP.wmiSCP.sbSubband = (SUBBAND)(std::underlying_type<Subband>::type)decArgs->sbSubband;
+	upDecoder->WMP.bIgnoreOverlap = decArgs->bIgnoreOverlap ? 1 : 0;
 
-	pDecoder->WMP.wmiI.cfColorFormat = PI.cfColorFormat;
+	upDecoder->WMP.wmiI.cfColorFormat = PI.cfColorFormat;
 
-	pDecoder->WMP.wmiI.bdBitDepth = PI.bdBitDepth;
-	pDecoder->WMP.wmiI.cBitsPerUnit = PI.cbitUnit;
+	upDecoder->WMP.wmiI.bdBitDepth = PI.bdBitDepth;
+	upDecoder->WMP.wmiI.cBitsPerUnit = PI.cbitUnit;
 
 	//==== Validate thumbnail decode parameters =====
-	pDecoder->WMP.wmiI.cThumbnailWidth = pDecoder->WMP.wmiI.cWidth;
-	pDecoder->WMP.wmiI.cThumbnailHeight = pDecoder->WMP.wmiI.cHeight;
-	pDecoder->WMP.wmiI.bSkipFlexbits = FALSE;
+	upDecoder->WMP.wmiI.cThumbnailWidth = upDecoder->WMP.wmiI.cWidth;
+	upDecoder->WMP.wmiI.cThumbnailHeight = upDecoder->WMP.wmiI.cHeight;
+	upDecoder->WMP.wmiI.bSkipFlexbits = FALSE;
 	/*if (args.tThumbnailFactor > 0 && args.tThumbnailFactor != SKIPFLEXBITS) {
 		size_t tSize = ((size_t)1 << args.tThumbnailFactor);
 
@@ -310,35 +304,32 @@ void JxrDecode::Decode(codecHandle h, const WMPDECAPPARGS* decArgs, const void* 
 
 	if (decArgs->rWidth == 0 || decArgs->rHeight == 0)
 	{ // no region decode
-		pDecoder->WMP.wmiI.cROILeftX = 0;
-		pDecoder->WMP.wmiI.cROITopY = 0;
-		pDecoder->WMP.wmiI.cROIWidth = pDecoder->WMP.wmiI.cThumbnailWidth;
-		pDecoder->WMP.wmiI.cROIHeight = pDecoder->WMP.wmiI.cThumbnailHeight;
+		upDecoder->WMP.wmiI.cROILeftX = 0;
+		upDecoder->WMP.wmiI.cROITopY = 0;
+		upDecoder->WMP.wmiI.cROIWidth = upDecoder->WMP.wmiI.cThumbnailWidth;
+		upDecoder->WMP.wmiI.cROIHeight = upDecoder->WMP.wmiI.cThumbnailHeight;
 	}
 	else
 	{
-		pDecoder->WMP.wmiI.cROILeftX = decArgs->rLeftX;
-		pDecoder->WMP.wmiI.cROITopY = decArgs->rTopY;
-		pDecoder->WMP.wmiI.cROIWidth = decArgs->rWidth;
-		pDecoder->WMP.wmiI.cROIHeight = decArgs->rHeight;
+		upDecoder->WMP.wmiI.cROILeftX = decArgs->rLeftX;
+		upDecoder->WMP.wmiI.cROITopY = decArgs->rTopY;
+		upDecoder->WMP.wmiI.cROIWidth = decArgs->rWidth;
+		upDecoder->WMP.wmiI.cROIHeight = decArgs->rHeight;
 	}
 
-	pDecoder->WMP.wmiI.oOrientation = (ORIENTATION)decArgs->oOrientation;
+	upDecoder->WMP.wmiI.oOrientation = (ORIENTATION)decArgs->oOrientation;
 
-	pDecoder->WMP.wmiI.cPostProcStrength = decArgs->cPostProcStrength;
+	upDecoder->WMP.wmiI.cPostProcStrength = decArgs->cPostProcStrength;
 
-	pDecoder->WMP.wmiSCP.bVerbose = 0;// args.bVerbose;
+	upDecoder->WMP.wmiSCP.bVerbose = 0;// args.bVerbose;
 
 	U32 cFrame;
-	err = pDecoder->GetFrameCount(pDecoder, &cFrame);
+	err = upDecoder->GetFrameCount(upDecoder.get(), &cFrame);
 	if (Failed(err)) { ThrowError("GetFrameCount failed", err); }
 	if (cFrame != 1)
 	{
 		throw std::logic_error("Not expecting to find more than one image here.");
 	}
-
-	struct WMPStream* pEncodeStream = nullptr;
-	PKImageEncode* pEncoder = nullptr;
 
 	Float rX = 0, rY = 0;
 	PKRect rect = { 0, 0, 0, 0 };
@@ -349,28 +340,26 @@ void JxrDecode::Decode(codecHandle h, const WMPDECAPPARGS* decArgs, const void* 
 	if (Failed(err)) { ThrowError("CreateFormatConverter failed", err); }
 	std::unique_ptr<PKFormatConverter, void(*)(PKFormatConverter*)> upConverter(pConverter, [](PKFormatConverter* p)->void {p->Release(&p); });
 
-	err = upConverter->Initialize(pConverter, pDecoder, nullptr/*pExt*/, args_guidPixFormat);
+	err = upConverter->Initialize(upConverter.get(), upDecoder.get(), nullptr/*pExt*/, args_guidPixFormat);
 	if (Failed(err)) { ThrowError("Initialize failed", err); }
-	err = CreateEncodeWrapper(&pEncoder);
-	if (Failed(err)) { ThrowError("CreateEncodeWrapper failed", err); }
 
-	//ch->pFactory->CreateStreamFromFilename(&pEncodeStream, "E:\\test.tiff", "wb");
-	//WmpDecAppCreateEncoderFromExt(ch->pCodecFactory, ".tif", &pEncoder);
+	PKImageEncode* pEncoder;
 	err = WmpDecAppCreateEncoderFromExt(ch->pCodecFactory, "wrapper", &pEncoder);
 	if (Failed(err)) { ThrowError("WmpDecAppCreateEncoderFromExt failed", err); }
+	std::unique_ptr<PKImageEncode, void(*)(PKImageEncode*)> upEncoder(pEncoder, [](PKImageEncode* p)->void {p->Release(&p); });
 
 	struct tagJxrTestWrapperInitializeInfo wrapperInfo;
 	wrapperInfo.userParamPutData = &deliverData;
 	wrapperInfo.pfnPutData = DeliverData;
 
-	err = pEncoder->Initialize(pEncoder, nullptr/*pEncodeStream*/, &wrapperInfo, sizeof(wrapperInfo));
+	err = upEncoder->Initialize(upEncoder.get(), nullptr, &wrapperInfo, sizeof(wrapperInfo));
 	if (Failed(err)) { ThrowError("Encoder::Initialize failed", err); }
-	err = pEncoder->SetPixelFormat(pEncoder, args_guidPixFormat);
+	err = upEncoder->SetPixelFormat(upEncoder.get(), args_guidPixFormat);
 	if (Failed(err)) { ThrowError("SetPixelFormat failed", err); }
-	pEncoder->WMP.wmiSCP.bBlackWhite = pDecoder->WMP.wmiSCP.bBlackWhite;
+	upEncoder->WMP.wmiSCP.bBlackWhite = upDecoder->WMP.wmiSCP.bBlackWhite;
 
-	rect.Width = (I32)(pDecoder->WMP.wmiI.cROIWidth);
-	rect.Height = (I32)(pDecoder->WMP.wmiI.cROIHeight);
+	rect.Width = (I32)(upDecoder->WMP.wmiI.cROIWidth);
+	rect.Height = (I32)(upDecoder->WMP.wmiI.cROIHeight);
 
 	if ((std::underlying_type<Orientation>::type)decArgs->oOrientation > (std::underlying_type<Orientation>::type)Orientation::O_FLIPVH) { // allocate memory for rotated image!
 		I32 bah = rect.Width;
@@ -379,27 +368,30 @@ void JxrDecode::Decode(codecHandle h, const WMPDECAPPARGS* decArgs, const void* 
 		rect.Height = bah;
 	}
 
-	err = pEncoder->SetSize(pEncoder, rect.Width, rect.Height);
+	err = upEncoder->SetSize(upEncoder.get(), rect.Width, rect.Height);
 	if (Failed(err)) { ThrowError("SetSize failed", err); }
-	err = pDecoder->GetResolution(pDecoder, &rX, &rY);
+	err = upDecoder->GetResolution(upDecoder.get(), &rX, &rY);
 	if (Failed(err)) { ThrowError("GetResolution failed", err); }
 
 	if ((std::underlying_type<Orientation>::type)decArgs->oOrientation > (std::underlying_type<Orientation>::type)O_FLIPVH)
-		pEncoder->SetResolution(pEncoder, rY, rX);
+	{
+		upEncoder->SetResolution(upEncoder.get(), rY, rX);
+	}
 	else
-		pEncoder->SetResolution(pEncoder, rX, rY);
+	{
+		upEncoder->SetResolution(upEncoder.get(), rX, rY);
+	}
 
 	//================================
-	pEncoder->WriteSource = PKImageEncode_Transcode;
-	err = pEncoder->WriteSource(pEncoder, pConverter, &rect);
+	upEncoder->WriteSource = PKImageEncode_Transcode;
+	err = upEncoder->WriteSource(upEncoder.get(), upConverter.get(), &rect);
 	if (Failed(err)) { ThrowError("WriteSource failed", err); }
 
 	//================================
-	//        Call(pEncoder->Terminate(pEncoder));
-	err = pEncoder->Release(&pEncoder);
+	err = upEncoder->Terminate(upEncoder.get());
 	if (Failed(err)) { ThrowError("Release (encoder) failed", err); }
 
-	pDecoder->SelectFrame(pDecoder, 1);
+	upDecoder->SelectFrame(upDecoder.get(), 1);
 	if (Failed(err)) { ThrowError("SelectFrame failed", err); }
 }
 
