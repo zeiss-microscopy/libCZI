@@ -101,7 +101,7 @@ DCV_30MB_gamma_spline-weight_Out
 218515CEE6C6319A7BCF8AFEAD672E90
 
 #Testcase 15
---command SingleChannelPyramidTileAccessor --plane-coordinate C0 -y 2,6 --rect abs(-311094,160920,272377,268056) -f 1-2,5
+--command SingleChannelPyramidTileAccessor --plane-coordinate C0 -y 2,6 --rect abs(-311094,160920,272377,268056) -f 1-2,5 -b 0.804,0.804,0.804
 BF.czi
 bf_3scenes
 43AD7F3CA3BCB4B7A1C7D382731C2F90
@@ -111,4 +111,3 @@ bf_3scenes
 BF.czi
 thumbnail_BF_
 30A3564442F9ABC75ED6784332F36660
-
