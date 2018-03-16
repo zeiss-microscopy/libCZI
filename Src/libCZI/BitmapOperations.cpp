@@ -136,7 +136,7 @@ using namespace std;
 		case PixelType::Gray32Float:break;
 		case PixelType::Bgr24:break;
 		case PixelType::Bgr48:
-			Copy<PixelType::Bgr24, PixelType::Bgr24>(srcPtr, srcStride, dstPtr, dstStride, width, height, drawTileBorder);
+			Copy<PixelType::Bgr48, PixelType::Bgr48>(srcPtr, srcStride, dstPtr, dstStride, width, height, drawTileBorder);
 			return;
 		default:break;
 		}
