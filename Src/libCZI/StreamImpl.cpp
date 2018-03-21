@@ -26,6 +26,7 @@
 #include <sstream>
 #include <codecvt>
 #include <iomanip>
+#include <cstring>
 
 using namespace std;
 
@@ -161,3 +162,22 @@ void CSimpleStreamImplWindows::Read(std::uint64_t offset, void *pv, std::uint64_
 	}
 }
 #endif
+
+CSimpleStreamImplInMemory::CSimpleStreamImplInMemory(const void * const ptr)
+{
+	_ptr = ptr;
+}
+
+CSimpleStreamImplInMemory::~CSimpleStreamImplInMemory()
+{
+}
+
+void CSimpleStreamImplInMemory::Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead)
+{
+	void* offsetPtr = (void*)((char*)_ptr + offset);
+	std::memcpy(pv, offsetPtr, size);
+	if (ptrBytesRead != nullptr)
+	{
+		*ptrBytesRead = size;
+	}
+}

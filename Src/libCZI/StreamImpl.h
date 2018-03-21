@@ -64,3 +64,16 @@ public:	// interface libCZI::IStream
 	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 };
 #endif
+
+/// <summary>	A simplistic stream implementation (based on in-memory copy). Note that this implementation is NOT thread-safe.</summary>
+class CSimpleStreamImplInMemory : public libCZI::IStream
+{
+private:
+	const void* _ptr;
+public:
+	CSimpleStreamImplInMemory() = delete;
+	CSimpleStreamImplInMemory(const void * const ptr);
+	~CSimpleStreamImplInMemory();
+public:	// interface libCZI::IStream
+	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+};

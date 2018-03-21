@@ -108,6 +108,10 @@ namespace libCZI
 	/// \return The new stream object.
 	LIBCZI_API std::shared_ptr<IStream> CreateStreamFromFile(const wchar_t* szFilename);
 
+	/// Creates a stream-object for another stream in memory.
+	/// \param ptr	Pointer to another stream
+	/// \return			The new stream object.
+	LIBCZI_API std::shared_ptr<IStream> CreateStreamFromMemory(const void * const ptr);
 
 	/// Interface used for accessing the data-stream.
 	///
