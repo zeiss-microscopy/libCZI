@@ -78,8 +78,11 @@ std::shared_ptr<IStream> libCZI::CreateStreamFromFile(const wchar_t* szFilename)
 	return make_shared<CSimpleStreamImpl>(szFilename);
 #endif
 }
-
-std::shared_ptr<IStream> libCZI::CreateStreamFromMemory(const void * const ptr)
+std::shared_ptr<IStream> libCZI::CreateStreamFromMemory(std::shared_ptr<const void> ptr, std::uint64_t dataSize)
 {
-	return make_shared<CSimpleStreamImplInMemory>(ptr);
+	return make_shared<CSimpleStreamImplInMemory>(ptr, dataSize);
+}
+std::shared_ptr<IStream> libCZI::CreateStreamFromMemory(std::shared_ptr<libCZI::IAttachment> attachement)
+{
+	return make_shared<CSimpleStreamImplInMemory>(attachement);
 }

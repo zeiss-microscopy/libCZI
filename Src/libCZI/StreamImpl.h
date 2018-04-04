@@ -69,10 +69,12 @@ public:	// interface libCZI::IStream
 class CSimpleStreamImplInMemory : public libCZI::IStream
 {
 private:
-	const void* _ptr;
+	std::shared_ptr<const void> rawData;
+	std::uint64_t dataBufferSize;
 public:
 	CSimpleStreamImplInMemory() = delete;
-	CSimpleStreamImplInMemory(const void * const ptr);
+	CSimpleStreamImplInMemory(std::shared_ptr<const void> ptr, std::uint64_t dataSize);
+	CSimpleStreamImplInMemory(std::shared_ptr<libCZI::IAttachment> attachement);
 	~CSimpleStreamImplInMemory();
 public:	// interface libCZI::IStream
 	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
