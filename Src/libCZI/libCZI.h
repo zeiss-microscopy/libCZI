@@ -75,6 +75,7 @@ namespace libCZI
 	class ISubBlock;
 	class IMetadataSegment;
 	class ISubBlockRepository;
+	class IAttachment;
 
 	/// Gets the version of the library.
 	///
@@ -107,6 +108,18 @@ namespace libCZI
 	/// \param szFilename Filename of the file.
 	/// \return The new stream object.
 	LIBCZI_API std::shared_ptr<IStream> CreateStreamFromFile(const wchar_t* szFilename);
+
+	/// Creates a stream-object on a memory-block.
+	/// \param ptr	Shared pointer to a memory-block.
+	/// \param dataSize Size of the memory-block.
+	/// \return			The new stream object.
+	LIBCZI_API std::shared_ptr<IStream> CreateStreamFromMemory(std::shared_ptr<const void> ptr, size_t dataSize);
+
+	/// Creates a stream-object on the memory-block in an attachment.
+	/// \param attachment	Pointer to attachment.
+	/// \return			The new stream object.
+	LIBCZI_API std::shared_ptr<IStream> CreateStreamFromMemory(IAttachment* attachment);
+
 
 
 	/// Interface used for accessing the data-stream.
