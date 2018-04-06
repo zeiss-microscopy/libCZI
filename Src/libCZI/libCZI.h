@@ -97,10 +97,10 @@ namespace libCZI
 	/// \return The newly created metadata object.
 	LIBCZI_API std::shared_ptr<ICziMetadata> CreateMetaFromMetadataSegment(IMetadataSegment* metadataSegment);
 
-	/// Creates an accesor of the specified type which uses the specified sub-block repository.
+	/// Creates an accessor of the specified type which uses the specified sub-block repository.
 	/// \param repository   The sub-block repository.
 	/// \param accessorType Type of the accessor.
-	/// \return The newly creted accesor object.
+	/// \return The newly created accessor object.
 	LIBCZI_API std::shared_ptr<IAccessor> CreateAccesor(std::shared_ptr<ISubBlockRepository> repository, AccessorType accessorType);
 
 	/// Creates a stream-object for the specified file.
