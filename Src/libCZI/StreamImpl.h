@@ -64,3 +64,17 @@ public:	// interface libCZI::IStream
 	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 };
 #endif
+
+/// <summary>	A stream implementation (based on a memory-block). </summary>
+class CStreamImplInMemory : public libCZI::IStream
+{
+private:
+	std::shared_ptr<const void> rawData;
+	size_t dataBufferSize;
+public:
+	CStreamImplInMemory() = delete;
+	CStreamImplInMemory(std::shared_ptr<const void> ptr, std::size_t dataSize);
+	CStreamImplInMemory(libCZI::IAttachment* attachement);
+public:	// interface libCZI::IStream
+	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+};
