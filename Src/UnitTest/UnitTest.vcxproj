@@ -335,6 +335,7 @@
     <ClCompile Include="test_multichannelcomposite.cpp" />
     <ClCompile Include="test_reader.cpp" />
     <ClCompile Include="test_Splines.cpp" />
+    <ClCompile Include="test_StreamImplementations.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

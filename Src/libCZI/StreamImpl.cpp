@@ -161,3 +161,38 @@ void CSimpleStreamImplWindows::Read(std::uint64_t offset, void *pv, std::uint64_
 	}
 }
 #endif
+
+//----------------------------------------------------------------------------
+CStreamImplInMemory::CStreamImplInMemory(std::shared_ptr<const void> ptr, std::size_t dataSize)
+	: rawData(ptr), dataBufferSize(dataSize)
+{
+}
+
+CStreamImplInMemory::CStreamImplInMemory(libCZI::IAttachment* attachement)
+{
+	this->rawData = attachement->GetRawData(&this->dataBufferSize);
+}
+
+/*virtual*/void CStreamImplInMemory::Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead)
+{
+	if (pv == nullptr)
+	{
+		throw std::invalid_argument("Pointer cannot be null");
+	}
+
+	if (offset >= this->dataBufferSize)
+	{
+		std::stringstream ss;
+		ss << "Error reading from memory at offset " << offset << " -> requested size: " << size << " bytes, which exceeds actual data size " << this->dataBufferSize << " bytes.";
+		throw std::runtime_error(ss.str());
+	}
+
+	// Read only to the end of buffer size
+	size_t sizeToCopy = (std::min)((size_t)size, (size_t)(this->dataBufferSize - offset));
+
+	std::memcpy(pv, static_cast<const char*>(rawData.get()) + offset, sizeToCopy);
+	if (ptrBytesRead != nullptr)
+	{
+		*ptrBytesRead = sizeToCopy;
+	}
+}
