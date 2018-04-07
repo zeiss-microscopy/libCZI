@@ -412,6 +412,13 @@ namespace libCZI
 			libCZI::IBitmapData*const* srcBitmaps,
 			const ChannelInfo* channelInfos);
 
+		static void ComposeMultiChannel_Bgr32(
+			libCZI::IBitmapData* dest,
+			std::uint8_t alphaVal,
+			int channelCount,
+			libCZI::IBitmapData*const* srcBitmaps,
+			const ChannelInfo* channelInfos);
+
 		/// Create the multi-channel-composite - applying tinting or gradation to the specified
 		/// bitmaps and write the result to the specified destination bitmap.
 		/// All source bitmaps must have same width and height, and the destination bitmap also
@@ -443,6 +450,12 @@ namespace libCZI
 		///
 		///  \return A std::shared_ptr&lt;IBitmapData&gt;.
 		static std::shared_ptr<IBitmapData> ComposeMultiChannel_Bgr24(
+			int channelCount,
+			libCZI::IBitmapData*const* srcBitmaps,
+			const ChannelInfo* channelInfos);
+
+		static std::shared_ptr<IBitmapData> ComposeMultiChannel_Bgr32(
+			std::uint8_t alphaVal,
 			int channelCount,
 			libCZI::IBitmapData*const* srcBitmaps,
 			const ChannelInfo* channelInfos);
