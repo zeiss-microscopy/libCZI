@@ -45,7 +45,7 @@ namespace libCZI
 	class IAccessor
 	{
 	protected:
-		virtual ~IAccessor(){}
+		virtual ~IAccessor() {}
 	};
 
 	/// This accessor creates a multi-tile composite of a single channel (and a single plane).
@@ -412,6 +412,13 @@ namespace libCZI
 			libCZI::IBitmapData*const* srcBitmaps,
 			const ChannelInfo* channelInfos);
 
+		static void ComposeMultiChannel_Bgr32(
+			libCZI::IBitmapData* dest,
+			std::uint8_t alphaVal,
+			int channelCount,
+			libCZI::IBitmapData*const* srcBitmaps,
+			const ChannelInfo* channelInfos);
+
 		/// Create the multi-channel-composite - applying tinting or gradation to the specified
 		/// bitmaps and write the result to a newly allocated destination bitmap.
 		/// All source bitmaps must have same width and height, and the destination bitmap will also
@@ -422,6 +429,12 @@ namespace libCZI
 		/// \param srcBitmaps    An array of source bitmaps. The array must contain as many elements as specified by \c channelCount.
 		/// \param channelInfos  An array of \c channelInfo for the source channels. The array must contain as many elements as specified by \c channelCount.
 		static std::shared_ptr<IBitmapData> ComposeMultiChannel_Bgr24(
+			int channelCount,
+			libCZI::IBitmapData*const* srcBitmaps,
+			const ChannelInfo* channelInfos);
+
+		static std::shared_ptr<IBitmapData> ComposeMultiChannel_Bgr32(
+			std::uint8_t alphaVal,
 			int channelCount,
 			libCZI::IBitmapData*const* srcBitmaps,
 			const ChannelInfo* channelInfos);
@@ -449,6 +462,22 @@ namespace libCZI
 			}
 
 			return ComposeMultiChannel_Bgr24(channelCount, &vecBm[0], channelInfos);
+		}
+
+		static std::shared_ptr<IBitmapData> ComposeMultiChannel_Bgr32(
+			std::uint8_t alphaVal,
+			int channelCount,
+			std::vector<std::shared_ptr<libCZI::IBitmapData>>::iterator srcBitmapsIterator,
+			const ChannelInfo* channelInfos)
+		{
+			std::vector<IBitmapData*> vecBm; vecBm.reserve(channelCount);
+			for (int i = 0; i < channelCount; ++i)
+			{
+				vecBm.emplace_back((*srcBitmapsIterator).get());
+				++srcBitmapsIterator;
+			}
+
+			return ComposeMultiChannel_Bgr32(alphaVal, channelCount, &vecBm[0], channelInfos);
 		}
 	};
 }
