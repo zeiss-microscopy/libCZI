@@ -73,6 +73,9 @@ void CSaveData::Save(libCZI::IBitmapData* bitmap)
 	case libCZI::PixelType::Bgr48:
 		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat48bppBGR, bitmap);
 		break;
+	case libCZI::PixelType::Bgra32:
+		this->SaveWithWIC(this->fileName.c_str(), GUID_ContainerFormatPng, GUID_WICPixelFormat32bppBGRA, bitmap);
+		break;
 	default:
 		throw std::runtime_error("Unsupported pixeltype encountered.");
 	}
@@ -191,6 +194,9 @@ void CSaveData::Save(libCZI::IBitmapData* bitmap)
 	case libCZI::PixelType::Gray8:
 		this->SaveGray8(bitmap);
 		break;
+	case libCZI::PixelType:Bgra32:
+		this->SaveBgra32(bitmap);
+		break;
 	default:
 		throw std::logic_error("pixeltype not implemented");
 	}
@@ -208,6 +214,20 @@ void CSaveData::SaveBgr24(libCZI::IBitmapData* bitmap)
 			   	p+=3;
 		    }
 	   });
+}
+
+void CSaveData::SaveBgra32(libCZI::IBitmapData* bitmap)
+{
+	this->SavePngTweakLineBeforeWritng(bitmap, 8, PNG_COLOR_TYPE_RGB_ALPHA,
+		[](std::uint32_t width, void* ptrData)->void
+	{
+		char* p = (char*)ptrData;
+		for (std::uint32_t x = 0; x<width; ++x)
+		{
+			std::swap(*p, *(p + 2));
+			p += 4;
+		}
+	});
 }
 
 void CSaveData::SaveBgr48(libCZI::IBitmapData* bitmap)

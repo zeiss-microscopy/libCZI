@@ -313,10 +313,10 @@ private:
 		explicit CStoreWithWeightBase(float w) :weight(w) {}
 	};
 
-	struct CAddWithWeight : protected CStoreWithWeightBase
+	struct CAddWithWeightRgb : protected CStoreWithWeightBase
 	{
 		const int bytesPerPel = 3;
-		explicit CAddWithWeight(float weight) : CStoreWithWeightBase(weight) {}
+		explicit CAddWithWeightRgb(float weight) : CStoreWithWeightBase(weight) {}
 		void operator ()(uint8_t* ptrDst, const bgr8& val)
 		{
 			int p = *(ptrDst + 0);
@@ -343,10 +343,10 @@ private:
 		}
 	};
 
-	struct CStoreWithWeight : protected CStoreWithWeightBase
+	struct CStoreWithWeightRgb : protected CStoreWithWeightBase
 	{
 		const int bytesPerPel = 3;
-		explicit CStoreWithWeight(float weight) : CStoreWithWeightBase(weight) {}
+		explicit CStoreWithWeightRgb(float weight) : CStoreWithWeightBase(weight) {}
 		void operator ()(uint8_t* ptrDst, const bgr8& val)
 		{
 			*(ptrDst + 0) = (uint8_t)(std::min)(toInt(val.b*this->weight), 0xff);
@@ -395,8 +395,8 @@ private:
 
 	static void DoTintingCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
 	{
-		CStoreWithWeight store(weight);
-		DoTinting<CStoreWithWeight>(store, dest, lckDst, src, chInfo);
+		CStoreWithWeightRgb store(weight);
+		DoTinting<CStoreWithWeightRgb>(store, dest, lckDst, src, chInfo);
 	}
 
 	static void DoTintingCopyBgra32(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo, std::uint8_t alphaVal)
@@ -407,8 +407,8 @@ private:
 
 	static void DoTintingAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
 	{
-		CAddWithWeight store(weight);
-		DoTinting<CAddWithWeight>(store, dest, lckDst, src, chInfo);
+		CAddWithWeightRgb store(weight);
+		DoTinting<CAddWithWeightRgb>(store, dest, lckDst, src, chInfo);
 	}
 
 	static void DoTintingAddBgra32(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
@@ -747,8 +747,8 @@ private:
 
 	static void DoTintingBlackWhitePtCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
 	{
-		CStoreWithWeight store(weight);
-		DoTintingBlackWhitePt<CStoreWithWeight >(store, dest, lckDst, src, chInfo);
+		CStoreWithWeightRgb store(weight);
+		DoTintingBlackWhitePt<CStoreWithWeightRgb>(store, dest, lckDst, src, chInfo);
 	}
 
 	static void DoTintingBlackWhitePtCopyBgra32(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo, std::uint8_t alphaVal)
@@ -759,8 +759,8 @@ private:
 
 	static void DoTintingBlackWhitePtAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
 	{
-		CAddWithWeight store(weight);
-		DoTintingBlackWhitePt<CAddWithWeight>(store, dest, lckDst, src, chInfo);
+		CAddWithWeightRgb store(weight);
+		DoTintingBlackWhitePt<CAddWithWeightRgb>(store, dest, lckDst, src, chInfo);
 	}
 
 	static void DoTintingBlackWhitePtAddBgra32(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
@@ -974,8 +974,8 @@ private:
 
 	static void DoLutCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
 	{
-		CStoreWithWeight store(weight);
-		DoLut<CStoreWithWeight>(store, dest, lckDst, src, chInfo);
+		CStoreWithWeightRgb store(weight);
+		DoLut<CStoreWithWeightRgb>(store, dest, lckDst, src, chInfo);
 	}
 
 	static void DoLutCopyBgra32(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo, std::uint8_t alphaVal)
@@ -986,8 +986,8 @@ private:
 
 	static void DoLutAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
 	{
-		CAddWithWeight store(weight);
-		DoLut<CAddWithWeight>(store, dest, lckDst, src, chInfo);
+		CAddWithWeightRgb store(weight);
+		DoLut<CAddWithWeightRgb>(store, dest, lckDst, src, chInfo);
 	}
 
 	static void DoLutAddBgra32(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
@@ -1132,109 +1132,38 @@ private:
 	struct FunctionsBgr24
 	{
 		static const PixelType expectedDestPixelType = PixelType::Bgr24;
-		void fDoLutCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoLutCopy(dest, lckDst, src, chInfo);
-		}
-		void fDoLutAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoLutAdd(dest, lckDst, src, chInfo);
-		}
-		void fDoTintingBlackWhitePtCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingBlackWhitePtCopy(dest, lckDst, src, chInfo);
-		}
-		void fDoTintingBlackWhitePtAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingBlackWhitePtAdd(dest, lckDst, src, chInfo);
-		}
-		void fDoTintingCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingCopy(dest, lckDst, src, chInfo);
-		}
-		void fDoTintingAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingAdd(dest, lckDst, src, chInfo);
-		}
-		void fDoLutCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoLutCopy(weight, dest, lckDst, src, chInfo);
-		}
-		void fDoLutAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoLutAdd(dest, lckDst, src, chInfo);
-		}
-		void fDoTintingBlackWhitePtCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingBlackWhitePtCopy(weight, dest, lckDst, src, chInfo);
-		}
-		void fDoTintingBlackWhitePtAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingBlackWhitePtAdd(weight, dest, lckDst, src, chInfo);
-		}
-		void fDoTintingCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingCopy(weight, dest, lckDst, src, chInfo);
-		}
-		void fDoTintingAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingAdd(weight, dest, lckDst, src, chInfo);
-		}
+		void fDoLutCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoLutCopy(dest, lckDst, src, chInfo); }
+		void fDoLutAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoLutAdd(dest, lckDst, src, chInfo); }
+		void fDoTintingBlackWhitePtCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingBlackWhitePtCopy(dest, lckDst, src, chInfo); }
+		void fDoTintingBlackWhitePtAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingBlackWhitePtAdd(dest, lckDst, src, chInfo); }
+		void fDoTintingCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingCopy(dest, lckDst, src, chInfo); }
+		void fDoTintingAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingAdd(dest, lckDst, src, chInfo); }
+		void fDoLutCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoLutCopy(weight, dest, lckDst, src, chInfo); }
+		void fDoLutAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoLutAdd(weight, dest, lckDst, src, chInfo); }
+		void fDoTintingBlackWhitePtCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingBlackWhitePtCopy(weight, dest, lckDst, src, chInfo); }
+		void fDoTintingBlackWhitePtAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingBlackWhitePtAdd(weight, dest, lckDst, src, chInfo); }
+		void fDoTintingCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingCopy(weight, dest, lckDst, src, chInfo); }
+		void fDoTintingAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingAdd(weight, dest, lckDst, src, chInfo); }
 	};
 
 	struct FunctionsBgra32
 	{
 		static const PixelType expectedDestPixelType = PixelType::Bgra32;
 		std::uint8_t alphaVal;
-		FunctionsBgra32(std::uint8_t alphaVal) :alphaVal(alphaVal) {}
-		void fDoLutCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoLutCopyBgra32(dest, lckDst, src, chInfo, this->alphaVal);
-		}
-		void fDoLutAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoLutAddBgra32(dest, lckDst, src, chInfo);
-		}
-		void fDoTintingBlackWhitePtCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingBlackWhitePtCopyBgra32(dest, lckDst, src, chInfo, this->alphaVal);
-		}
-		void fDoTintingBlackWhitePtAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingBlackWhitePtAddBgra32(dest, lckDst, src, chInfo);
-		}
-		void fDoTintingCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingCopyBgra32(dest, lckDst, src, chInfo, this->alphaVal);
-		}
-		void fDoTintingAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingAddBgra32(dest, lckDst, src, chInfo);
-		}
-		void fDoLutCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoLutCopyBgra32(weight, dest, lckDst, src, chInfo, this->alphaVal);
-		}
-		void fDoLutAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoLutAddBgra32(dest, lckDst, src, chInfo);
-		}
-		void fDoTintingBlackWhitePtCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingBlackWhitePtCopyBgra32(weight, dest, lckDst, src, chInfo, this->alphaVal);
-		}
-		void fDoTintingBlackWhitePtAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingBlackWhitePtAddBgra32(weight, dest, lckDst, src, chInfo);
-		}
-		void fDoTintingCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingCopyBgra32(weight, dest, lckDst, src, chInfo, this->alphaVal);
-		}
-		void fDoTintingAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo)
-		{
-			DoTintingAddBgra32(weight, dest, lckDst, src, chInfo);
-		}
+		FunctionsBgra32() = delete;
+		explicit FunctionsBgra32(std::uint8_t alphaVal) :alphaVal(alphaVal) {}
+		void fDoLutCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoLutCopyBgra32(dest, lckDst, src, chInfo, this->alphaVal); }
+		void fDoLutAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoLutAddBgra32(dest, lckDst, src, chInfo); }
+		void fDoTintingBlackWhitePtCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingBlackWhitePtCopyBgra32(dest, lckDst, src, chInfo, this->alphaVal); }
+		void fDoTintingBlackWhitePtAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingBlackWhitePtAddBgra32(dest, lckDst, src, chInfo); }
+		void fDoTintingCopy(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingCopyBgra32(dest, lckDst, src, chInfo, this->alphaVal); }
+		void fDoTintingAdd(libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingAddBgra32(dest, lckDst, src, chInfo); }
+		void fDoLutCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoLutCopyBgra32(weight, dest, lckDst, src, chInfo, this->alphaVal); }
+		void fDoLutAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoLutAddBgra32(weight, dest, lckDst, src, chInfo); }
+		void fDoTintingBlackWhitePtCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingBlackWhitePtCopyBgra32(weight, dest, lckDst, src, chInfo, this->alphaVal); }
+		void fDoTintingBlackWhitePtAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingBlackWhitePtAddBgra32(weight, dest, lckDst, src, chInfo); }
+		void fDoTintingCopy(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingCopyBgra32(weight, dest, lckDst, src, chInfo, this->alphaVal); }
+		void fDoTintingAdd(float weight, libCZI::IBitmapData* dest, const BitmapLockInfo& lckDst, libCZI::IBitmapData* src, const Compositors::ChannelInfo* chInfo) { DoTintingAddBgra32(weight, dest, lckDst, src, chInfo); }
 	};
 
 	template <typename tFuncs>
@@ -1310,7 +1239,6 @@ private:
 			}
 		}
 	}
-
 public:
 	static void ComposeMultiChannel_Bgr24(
 		libCZI::IBitmapData* dest,
@@ -1343,7 +1271,7 @@ public:
 	CMultiChannelCompositor2::ComposeMultiChannel_Bgr24(dest, channelCount, srcBitmaps, channelInfos);
 }
 
-/*static*/void Compositors::ComposeMultiChannel_Bgr32(
+/*static*/void Compositors::ComposeMultiChannel_Bgra32(
 	libCZI::IBitmapData* dest,
 	std::uint8_t alphaVal,
 	int channelCount,
@@ -1363,13 +1291,13 @@ public:
 	return bmDest;
 }
 
-/*static*/std::shared_ptr<IBitmapData> Compositors::ComposeMultiChannel_Bgr32(
+/*static*/std::shared_ptr<IBitmapData> Compositors::ComposeMultiChannel_Bgra32(
 	std::uint8_t alphaVal,
 	int channelCount,
 	libCZI::IBitmapData*const* srcBitmaps,
 	const ChannelInfo* channelInfos)
 {
 	auto bmDest = GetSite()->CreateBitmap(PixelType::Bgra32, (*srcBitmaps)->GetWidth(), (*srcBitmaps)->GetHeight());
-	Compositors::ComposeMultiChannel_Bgr32(bmDest.get(), alphaVal, channelCount, srcBitmaps, channelInfos);
+	Compositors::ComposeMultiChannel_Bgra32(bmDest.get(), alphaVal, channelCount, srcBitmaps, channelInfos);
 	return bmDest;
 }
