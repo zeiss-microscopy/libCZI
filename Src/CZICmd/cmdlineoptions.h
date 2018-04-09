@@ -175,6 +175,9 @@ private:
 
 	InfoLevel infoLevel;
 
+	libCZI::PixelType channelCompositePixelType;
+	std::uint8_t channelCompositeAlphaValue;
+
 	std::map<std::string, ItemValue> mapSelection;
 	std::shared_ptr<libCZI::IIndexSet> sceneIndexSet;
 public:
@@ -225,6 +228,9 @@ public:
 	ItemValue GetSelectionItemValue(const char* sz) const;
 
 	std::shared_ptr<libCZI::IIndexSet> GetSceneIndexSet() const;
+
+	libCZI::PixelType GetChannelCompositeOutputPixelType() const { return this->channelCompositePixelType; }
+	std::uint8_t GetChannelCompositeOutputAlphaValue() const { return this->channelCompositeAlphaValue; }
 private:
 	void PrintUsage(int switchesCnt, std::function<std::tuple<std::wstring, std::wstring>(int idx)> getSwitch);
 	bool CheckArgumentConsistency() const;
@@ -267,4 +273,9 @@ private:
 
 	void ParseTileFilter(const wchar_t* s);
 	void ParseTileFilter(const std::string& s) { auto sucs2 = convertUtf8ToUCS2(s); this->ParseTileFilter(sucs2.c_str()); }
+
+	void ParseChannelCompositionFormat(const wchar_t* s);
+	void ParseChannelCompositionFormat(const std::string& s) { auto sucs2 = convertUtf8ToUCS2(s); this->ParseChannelCompositionFormat(sucs2.c_str()); }
+
+	static bool TryParseChannelCompositionFormatWithAlphaValue(const std::wstring& s, libCZI::PixelType& channelCompositePixelType, std::uint8_t& channelCompositeAlphaValue);
 };
