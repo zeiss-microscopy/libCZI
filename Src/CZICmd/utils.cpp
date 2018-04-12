@@ -144,6 +144,42 @@ std::uint8_t HexCharToInt(char c)
 	return 0xff;
 }
 
+bool ConvertHexStringToInteger(const char* cp, std::uint32_t* value)
+{
+	if (*cp=='\0')
+	{
+		return false;
+	}
+
+	std::uint32_t v = 0;
+	int cntOfSignificantDigits = 0;
+	for (; *cp != '\0'; ++cp)
+	{
+		std::uint8_t x = HexCharToInt(*cp);
+		if (x == 0xff)
+		{
+			return false;
+		}
+
+		if (v > 0)
+		{
+			if (++cntOfSignificantDigits > 7)
+			{
+				return false;
+			}
+		}
+
+		v = v * 16 + x;
+	}
+
+	if (value != nullptr)
+	{
+		*value = v;
+	}
+
+	return true;
+}
+
 char LowerNibbleToHexChar(std::uint8_t v)
 {
 	static char Hex[16] = { '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F' };
@@ -231,7 +267,7 @@ const wchar_t* skipWhiteSpaceAndOneOfThese(const wchar_t* s, const wchar_t* char
 			continue;
 		}
 
-		if (delimiteralreadyskipped == false && charsToSkipOnce!=nullptr && std::wcschr(charsToSkipOnce, *s) != nullptr)
+		if (delimiteralreadyskipped == false && charsToSkipOnce != nullptr && std::wcschr(charsToSkipOnce, *s) != nullptr)
 		{
 			delimiteralreadyskipped = true;
 			continue;
@@ -243,7 +279,7 @@ const wchar_t* skipWhiteSpaceAndOneOfThese(const wchar_t* s, const wchar_t* char
 	return s;
 }
 
-std::ostream& operator<<(std::ostream& os, const GUID& guid) 
+std::ostream& operator<<(std::ostream& os, const GUID& guid)
 {
 	os << std::uppercase;
 	os.width(8);
@@ -256,7 +292,7 @@ std::ostream& operator<<(std::ostream& os, const GUID& guid)
 	os.width(4);
 	os << std::hex << guid.Data3 << '-';
 
-	os << std::hex  
+	os << std::hex
 		<< std::setw(2) << static_cast<short>(guid.Data4[0])
 		<< std::setw(2) << static_cast<short>(guid.Data4[1])
 		<< '-'

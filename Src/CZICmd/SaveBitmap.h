@@ -67,6 +67,7 @@ private:
 		void 	SaveBgr48(libCZI::IBitmapData* bitmap);
 		void 	SaveGray16(libCZI::IBitmapData* bitmap);
 		void 	SaveGray8(libCZI::IBitmapData* bitmap);
+		void 	SaveBgra32(libCZI::IBitmapData* bitmap);
 		void 	SavePng(libCZI::IBitmapData* bitmap, int bit_depth, int color_type);
 		void 	SavePngTweakLineBeforeWritng(libCZI::IBitmapData* bitmap, int bit_depth, int color_type,
 			std::function<void(std::uint32_t, void*)> tweakLine);

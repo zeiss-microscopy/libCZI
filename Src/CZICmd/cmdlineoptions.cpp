@@ -61,23 +61,24 @@ bool CCmdLineOptions::Parse(int argc, char** argv)
 		static const struct option long_options[] =
 #endif
 	{
-		{ OPTTEXTSPEC("help"),				 no_argument,		0, OPTTEXTSPEC('?') },
-		{ OPTTEXTSPEC("command"),			 required_argument, 0, OPTTEXTSPEC('c') },
-		{ OPTTEXTSPEC("source"),			 required_argument, 0, OPTTEXTSPEC('s') },
-		{ OPTTEXTSPEC("output"),			 required_argument, 0, OPTTEXTSPEC('o') },
-		{ OPTTEXTSPEC("plane-coordinate"),   required_argument, 0, OPTTEXTSPEC('p') },
-		{ OPTTEXTSPEC("rect"),				 required_argument, 0, OPTTEXTSPEC('r') },
-		{ OPTTEXTSPEC("display-settings"),	 required_argument, 0, OPTTEXTSPEC('d') },
-		{ OPTTEXTSPEC("calc-hash"),			 no_argument,		0, OPTTEXTSPEC('h') },
-		{ OPTTEXTSPEC("drawtileboundaries"), no_argument,		0, OPTTEXTSPEC('t') },
-		{ OPTTEXTSPEC("jpgxrcodec"),         required_argument, 0, OPTTEXTSPEC('j') },
-		{ OPTTEXTSPEC("verbosity"),          required_argument, 0, OPTTEXTSPEC('v') },
-		{ OPTTEXTSPEC("background"),		 required_argument, 0, OPTTEXTSPEC('b') },
-		{ OPTTEXTSPEC("pyramidinfo"),		 required_argument, 0, OPTTEXTSPEC('y') },
-		{ OPTTEXTSPEC("zoom"),				 required_argument, 0, OPTTEXTSPEC('z') },
-		{ OPTTEXTSPEC("info-level"),		 required_argument, 0, OPTTEXTSPEC('i') },
-		{ OPTTEXTSPEC("selection"),		     required_argument, 0, OPTTEXTSPEC('e') },
-		{ OPTTEXTSPEC("tile-filter"),		 required_argument, 0, OPTTEXTSPEC('f') },
+		{ OPTTEXTSPEC("help"),						 no_argument,		0, OPTTEXTSPEC('?') },
+		{ OPTTEXTSPEC("command"),					 required_argument, 0, OPTTEXTSPEC('c') },
+		{ OPTTEXTSPEC("source"),					 required_argument, 0, OPTTEXTSPEC('s') },
+		{ OPTTEXTSPEC("output"),					 required_argument, 0, OPTTEXTSPEC('o') },
+		{ OPTTEXTSPEC("plane-coordinate"),			 required_argument, 0, OPTTEXTSPEC('p') },
+		{ OPTTEXTSPEC("rect"),						 required_argument, 0, OPTTEXTSPEC('r') },
+		{ OPTTEXTSPEC("display-settings"),			 required_argument, 0, OPTTEXTSPEC('d') },
+		{ OPTTEXTSPEC("calc-hash"),					 no_argument,		0, OPTTEXTSPEC('h') },
+		{ OPTTEXTSPEC("drawtileboundaries"),		 no_argument,		0, OPTTEXTSPEC('t') },
+		{ OPTTEXTSPEC("jpgxrcodec"),				 required_argument, 0, OPTTEXTSPEC('j') },
+		{ OPTTEXTSPEC("verbosity"),					 required_argument, 0, OPTTEXTSPEC('v') },
+		{ OPTTEXTSPEC("background"),				 required_argument, 0, OPTTEXTSPEC('b') },
+		{ OPTTEXTSPEC("pyramidinfo"),				 required_argument, 0, OPTTEXTSPEC('y') },
+		{ OPTTEXTSPEC("zoom"),						 required_argument, 0, OPTTEXTSPEC('z') },
+		{ OPTTEXTSPEC("info-level"),				 required_argument, 0, OPTTEXTSPEC('i') },
+		{ OPTTEXTSPEC("selection"),					 required_argument, 0, OPTTEXTSPEC('e') },
+		{ OPTTEXTSPEC("tile-filter"),				 required_argument, 0, OPTTEXTSPEC('f') },
+		{ OPTTEXTSPEC("channelcompositionformat"),	 required_argument, 0, OPTTEXTSPEC('m') },
 		{ 0, 0, 0, 0 }
 	};
 
@@ -87,10 +88,10 @@ bool CCmdLineOptions::Parse(int argc, char** argv)
 	{
 		int option_index;
 #if defined(WIN32ENV)
-		int c = getoptW_long(argc, argv, L"?v:j:s:c:p:r:o:d:htb:y:z:i:e:f:", long_options, &option_index);
+		int c = getoptW_long(argc, argv, L"?v:j:s:c:p:r:o:d:htb:y:z:i:e:f:m:", long_options, &option_index);
 #endif
 #if defined(LINUXENV)
-		int c = getopt_long(argc, argv, "?v:j:s:c:p:r:o:d:htb:y:z:i:e:f:", long_options, &option_index);
+		int c = getopt_long(argc, argv, "?v:j:s:c:p:r:o:d:htb:y:z:i:e:f:m:", long_options, &option_index);
 #endif
 		if (c == -1)
 		{
@@ -166,6 +167,9 @@ bool CCmdLineOptions::Parse(int argc, char** argv)
 		case 'f':
 			this->ParseTileFilter(optarg);
 			break;
+		case 'm':
+			this->ParseChannelCompositionFormat(optarg);
+			break;
 		default:
 			break;
 		}
@@ -220,6 +224,8 @@ void CCmdLineOptions::Clear()
 	this->useWicJxrDecoder = false;
 	this->backGroundColor.r = this->backGroundColor.g = this->backGroundColor.b = numeric_limits<float>::quiet_NaN();
 	this->infoLevel = InfoLevel::Statistics;
+	this->channelCompositePixelType = libCZI::PixelType::Bgr24;
+	this->channelCompositeAlphaValue = 0xff;
 }
 
 void CCmdLineOptions::PrintUsage(int switchesCnt, std::function<std::tuple<std::wstring, std::wstring>(int idx)> getSwitch)
@@ -231,7 +237,7 @@ void CCmdLineOptions::PrintUsage(int switchesCnt, std::function<std::tuple<std::
 	static const char* Synopsis3 =
 		"                 [-v VERBOSITYLEVEL] [-y PYRAMIDINFO] [-z ZOOM] [-i INFOLEVEL]";
 	static const char* Synopsis4 =
-		"                 [-e SELECTION] [-f FILTER]";
+		"                 [-e SELECTION] [-f FILTER] [-p CHANNELCOMPOSITIONFORMAT]";
 	this->GetLog()->WriteStdOut(Synopsis1);
 	this->GetLog()->WriteStdOut(Synopsis2);
 	this->GetLog()->WriteStdOut(Synopsis3);
@@ -371,6 +377,12 @@ void CCmdLineOptions::PrintUsage(int switchesCnt, std::function<std::tuple<std::
 			L"FILTER",
 			LR"(Specify to filter subblocks according to the scene-index. A comma seperated list of either an interval or a single
 			integer may be given here, e.g. "2,3" or "2-4,6" or "0-3,5-8".)"
+		},
+		{
+			L"m",
+			L"CHANNELCOMPOSITIONFORMAT",
+			LR"_(In case of a channel-composition, specifies the pixeltype of the output. Possible values are "bgr24" (the default) and "bgra32".
+			If specifying "bgra32" it is possible to give the value of the alpha-pixels in the form "bgra32(128)" - for an alpha-value of 128.)_"
 		}
 	};
 
@@ -964,4 +976,67 @@ void CCmdLineOptions::ParseTileFilter(const wchar_t* s)
 std::shared_ptr<libCZI::IIndexSet> CCmdLineOptions::GetSceneIndexSet() const
 {
 	return this->sceneIndexSet;
+}
+
+void CCmdLineOptions::ParseChannelCompositionFormat(const wchar_t* s)
+{
+	auto arg = trim(s);
+	if (__wcasecmp(arg.c_str(), L"bgr24"))
+	{
+		this->channelCompositePixelType = libCZI::PixelType::Bgr24;
+		return;
+	}
+	else if (__wcasecmp(arg.c_str(), L"bgra32"))
+	{
+		this->channelCompositePixelType = libCZI::PixelType::Bgra32;
+		this->channelCompositeAlphaValue = 0xff;
+		return;
+	}
+	else if (TryParseChannelCompositionFormatWithAlphaValue(arg, this->channelCompositePixelType, this->channelCompositeAlphaValue))
+	{
+		return;
+	}
+
+	throw std::invalid_argument("Invalid channel-composition-format.");
+}
+
+/*static*/bool CCmdLineOptions::TryParseChannelCompositionFormatWithAlphaValue(const std::wstring& s, libCZI::PixelType& channelCompositePixelType, std::uint8_t& channelCompositeAlphaValue)
+{
+	std::wregex regex(LR"_(bgra32\((\d+|0x[\d|a-f|A-F]+)\))_", regex_constants::ECMAScript | regex_constants::icase);
+	std::wsmatch pieces_match;
+	if (std::regex_match(s, pieces_match, regex))
+	{
+		if (pieces_match.size() == 2)
+		{
+			std::wssub_match sub_match = pieces_match[1];
+			if (sub_match.length() > 2)
+			{
+				if (sub_match.str()[0] == L'0' && (sub_match.str()[1] == L'x' || sub_match.str()[0] == L'X'))
+				{
+					auto hexStr = convertToUtf8(sub_match);
+					std::uint32_t value;
+					if (!ConvertHexStringToInteger(hexStr.c_str() + 2, &value) || value > 0xff)
+					{
+						return false;;
+					}
+
+					channelCompositePixelType = libCZI::PixelType::Bgra32;
+					channelCompositeAlphaValue = static_cast<std::uint8_t>(value);
+					return true;
+				}
+			}
+
+			int i = std::stoi(sub_match);
+			if (i < 0 || i > 255)
+			{
+				return false;
+			}
+
+			channelCompositePixelType = libCZI::PixelType::Bgra32;
+			channelCompositeAlphaValue = static_cast<std::uint8_t>(i);
+			return true;
+		}
+	}
+
+	return false;
 }
