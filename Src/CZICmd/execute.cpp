@@ -758,6 +758,8 @@ public:
 				std::begin(channelBitmaps),
 				dsplHlp.GetChannelInfosArray());
 			break;
+		default:
+			break;
 		}
 
 		if (!mcComposite)
@@ -939,6 +941,8 @@ public:
 				(int)channelBitmaps.size(),
 				std::begin(channelBitmaps),
 				dsplHlp.GetChannelInfosArray());
+			break;
+		default:
 			break;
 		}
 

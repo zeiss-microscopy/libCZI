@@ -194,7 +194,7 @@ void CSaveData::Save(libCZI::IBitmapData* bitmap)
 	case libCZI::PixelType::Gray8:
 		this->SaveGray8(bitmap);
 		break;
-	case libCZI::PixelType:Bgra32:
+	case libCZI::PixelType::Bgra32:
 		this->SaveBgra32(bitmap);
 		break;
 	default:
