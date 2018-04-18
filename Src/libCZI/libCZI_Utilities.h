@@ -108,7 +108,7 @@ namespace libCZI
 		//// Calculate a zoom-factor from the physical- and logical size.
 		/// \remark
 		/// This calculation not really well-defined.
-		/// \param logicalRect  The logigal rectangle.
+		/// \param logicalRect  The logical rectangle.
 		/// \param physicalSize Physical size.
 		/// \return The calculated zoom.
 		static float CalcZoom(const libCZI::IntRect& logicalRect, const libCZI::IntSize& physicalSize)
