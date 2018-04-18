@@ -125,7 +125,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:af19f5d15750c0949f3dd4ebb5684c7d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d56f447db1707083cb47042729bfabf"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classlib_c_z_i_1_1_i_bitmap_data.html">libCZI::IBitmapData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlib_c_z_i_1_1_utils.html#a6d56f447db1707083cb47042729bfabf">NearestNeighborResize</a> (<a class="el" href="classlib_c_z_i_1_1_i_bitmap_data.html">libCZI::IBitmapData</a> *bmSrc, int dstWidth, int dstHeight, const <a class="el" href="structlib_c_z_i_1_1_dbl_rect.html">DblRect</a> &amp;roiSrc, const <a class="el" href="structlib_c_z_i_1_1_dbl_rect.html">DblRect</a> &amp;roiDest)</td></tr>
 <tr class="separator:a6d56f447db1707083cb47042729bfabf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68bf3739b6be924bcdf01664492f0a0a"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlib_c_z_i_1_1_utils.html#a68bf3739b6be924bcdf01664492f0a0a">CalcZoom</a> (const <a class="el" href="structlib_c_z_i_1_1_int_rect.html">libCZI::IntRect</a> &amp;logigalRect, const <a class="el" href="structlib_c_z_i_1_1_int_size.html">libCZI::IntSize</a> &amp;physicalSize)</td></tr>
+<tr class="memitem:a68bf3739b6be924bcdf01664492f0a0a"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlib_c_z_i_1_1_utils.html#a68bf3739b6be924bcdf01664492f0a0a">CalcZoom</a> (const <a class="el" href="structlib_c_z_i_1_1_int_rect.html">libCZI::IntRect</a> &amp;logicalRect, const <a class="el" href="structlib_c_z_i_1_1_int_size.html">libCZI::IntSize</a> &amp;physicalSize)</td></tr>
 <tr class="separator:a68bf3739b6be924bcdf01664492f0a0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00d20fac95c23043438c9326eb10bf53"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlib_c_z_i_1_1_utils.html#a00d20fac95c23043438c9326eb10bf53">PixelTypeToInformalString</a> (<a class="el" href="namespacelib_c_z_i.html#abf8ce12ab88b06c8b3b47efbb5e2e834">libCZI::PixelType</a> pxltp)</td></tr>
 <tr class="separator:a00d20fac95c23043438c9326eb10bf53"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -305,7 +305,7 @@ Static Public Member Functions</h2></td></tr>
           <td class="memname">static float libCZI::Utils::CalcZoom </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structlib_c_z_i_1_1_int_rect.html">libCZI::IntRect</a> &amp;&#160;</td>
-          <td class="paramname"><em>logigalRect</em>, </td>
+          <td class="paramname"><em>logicalRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -328,7 +328,7 @@ Static Public Member Functions</h2></td></tr>
 <p>Calculate a zoom-factor from the physical- and logical size. </p><dl class="section remark"><dt>Remarks</dt><dd>This calculation not really well-defined. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">logigalRect</td><td>The logigal rectangle. </td></tr>
+    <tr><td class="paramname">logicalRect</td><td>The logigal rectangle. </td></tr>
     <tr><td class="paramname">physicalSize</td><td>Physical size. </td></tr>
   </table>
   </dd>

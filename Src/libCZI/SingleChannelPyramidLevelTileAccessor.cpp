@@ -155,7 +155,7 @@ std::map<int, CSingleChannelPyramidLevelTileAccessor::SbByLayer> CSingleChannelP
 	for (size_t i = 0; i < sbinfos.size(); ++i)
 	{
 		const SbInfo& sbinfo = sbinfos.at(i);
-		int pyrLayer = this->CalcPyramidLayerNo(sbinfo.logigalRect, sbinfo.physicalSize, minificationFactor);
+		int pyrLayer = this->CalcPyramidLayerNo(sbinfo.logicalRect, sbinfo.physicalSize, minificationFactor);
 		result[pyrLayer].indices.push_back((int)i);
 	}
 
@@ -239,7 +239,7 @@ void CSingleChannelPyramidLevelTileAccessor::GetAllSubBlocks(const libCZI::IntRe
 		if (Utilities::DoIntersect(roi, info.logicalRect))
 		{
 			SbInfo sbinfo;
-			sbinfo.logigalRect = info.logicalRect;
+			sbinfo.logicalRect = info.logicalRect;
 			sbinfo.physicalSize = info.physicalSize;
 			sbinfo.mIndex = info.mIndex;
 			sbinfo.index = idx;
