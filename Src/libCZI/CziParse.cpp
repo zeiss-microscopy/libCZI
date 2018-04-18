@@ -253,14 +253,14 @@ using namespace libCZI;
 			}
 			else if (IsXDimension(dimEntry->Dimension, sizeof(dimEntry->Dimension)))
 			{
-				sbd.logigalRect.x = dimEntry->Start;
-				sbd.logigalRect.w = dimEntry->Size;
+				sbd.logicalRect.x = dimEntry->Start;
+				sbd.logicalRect.w = dimEntry->Size;
 				sbd.physicalSize.w = dimEntry->StoredSize;
 			}
 			else if (IsYDimension(dimEntry->Dimension, sizeof(dimEntry->Dimension)))
 			{
-				sbd.logigalRect.y = dimEntry->Start;
-				sbd.logigalRect.h = dimEntry->Size;
+				sbd.logicalRect.y = dimEntry->Start;
+				sbd.logicalRect.h = dimEntry->Size;
 				sbd.physicalSize.h = dimEntry->StoredSize;
 			}
 			else

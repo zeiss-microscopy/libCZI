@@ -64,7 +64,7 @@ public:
 		int						compression;
 		int						pixelType;
 		libCZI::CDimCoordinate	coordinate;
-		libCZI::IntRect			logigalRect;
+		libCZI::IntRect			logicalRect;
 		libCZI::IntSize			physicalSize;
 		int						mIndex;
 		double					zoom;
