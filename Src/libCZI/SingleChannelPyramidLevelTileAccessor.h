@@ -31,7 +31,7 @@ class CSingleChannelPyramidLevelTileAccessor : public CSingleChannelAccessorBase
 private:
 	struct SbInfo
 	{
-		libCZI::IntRect			logigalRect;
+		libCZI::IntRect			logicalRect;
 		libCZI::IntSize			physicalSize;
 		int						mIndex;
 		int						index;
@@ -65,7 +65,7 @@ private:
 
 	void GetAllSubBlocks(const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate, const libCZI::IIndexSet* sceneFilter, std::function<void(const SbInfo& info)> appender);
 
-	int CalcPyramidLayerNo(const libCZI::IntRect& logigalRect, const libCZI::IntSize& physicalSize, int minificationFactor);
+	int CalcPyramidLayerNo(const libCZI::IntRect& logicalRect, const libCZI::IntSize& physicalSize, int minificationFactor);
 
 	void ComposeTiles(libCZI::IBitmapData* bm, int xPos, int yPos, int sizeOfPixel, int bitmapCnt, const Options& options, std::function<SbInfo(int)> getSbInfo);
 

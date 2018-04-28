@@ -248,7 +248,7 @@ std::shared_ptr<ISubBlock> CCZIReader::ReadSubBlock(const CCziSubBlockDirectory:
 	info.mode = CziUtils::CompressionModeFromInt(subBlkData.compression);
 	info.coordinate = subBlkData.coordinate;
 	info.mIndex = subBlkData.mIndex;
-	info.logicalRect = subBlkData.logigalRect;
+	info.logicalRect = subBlkData.logicalRect;
 	info.physicalSize = subBlkData.physicalSize;
 
 	return std::make_shared<CCziSubBlock>(info, subBlkData, free);

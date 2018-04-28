@@ -86,12 +86,12 @@ CSingleChannelScalingTileAccessor::CSingleChannelScalingTileAccessor(std::shared
 void CSingleChannelScalingTileAccessor::ScaleBlt(libCZI::IBitmapData* bmDest, float zoom, const libCZI::IntRect&  roi, const SbInfo& sbInfo)
 {
 	// calculate the intersection of the with the subblock (logical rect) and the destination
-	auto intersect = Utilities::Intersect(sbInfo.logigalRect, roi);
+	auto intersect = Utilities::Intersect(sbInfo.logicalRect, roi);
 
-	double roiSrcTopLeftX = double(intersect.x - sbInfo.logigalRect.x) / sbInfo.logigalRect.w;
-	double roiSrcTopLeftY = double(intersect.y - sbInfo.logigalRect.y) / sbInfo.logigalRect.h;
-	double roiSrcBttmRightX = double(intersect.x + intersect.w - sbInfo.logigalRect.x) / sbInfo.logigalRect.w;
-	double roiSrcBttmRightY = double(intersect.y + intersect.h - sbInfo.logigalRect.y) / sbInfo.logigalRect.h;
+	double roiSrcTopLeftX = double(intersect.x - sbInfo.logicalRect.x) / sbInfo.logicalRect.w;
+	double roiSrcTopLeftY = double(intersect.y - sbInfo.logicalRect.y) / sbInfo.logicalRect.h;
+	double roiSrcBttmRightX = double(intersect.x + intersect.w - sbInfo.logicalRect.x) / sbInfo.logicalRect.w;
+	double roiSrcBttmRightY = double(intersect.y + intersect.h - sbInfo.logicalRect.y) / sbInfo.logicalRect.h;
 
 	double destTopLeftX = double(intersect.x - roi.x) / roi.w;
 	double destTopLeftY = double(intersect.y - roi.y) / roi.h;
@@ -166,7 +166,7 @@ std::vector<CSingleChannelScalingTileAccessor::SbInfo> CSingleChannelScalingTile
 		[&](int idx, const SubBlockInfo& info)->bool
 	{
 		SbInfo sbinfo;
-		sbinfo.logigalRect = info.logicalRect;
+		sbinfo.logicalRect = info.logicalRect;
 		sbinfo.physicalSize = info.physicalSize;
 		sbinfo.mIndex = info.mIndex;
 		sbinfo.index = idx;
@@ -260,7 +260,7 @@ void CSingleChannelScalingTileAccessor::Paint(libCZI::IBitmapData* bmDest, const
 		if (GetSite()->IsEnabled(LOGLEVEL_CHATTYINFORMATION))
 		{
 			stringstream ss;
-			ss << " Drawing subblock: idx=" << sbInfo.index << " Log.: " << sbInfo.logigalRect << " Phys.Size: " << sbInfo.physicalSize;
+			ss << " Drawing subblock: idx=" << sbInfo.index << " Log.: " << sbInfo.logicalRect << " Phys.Size: " << sbInfo.physicalSize;
 			GetSite()->Log(LOGLEVEL_CHATTYINFORMATION, ss);
 		}
 
