@@ -332,6 +332,7 @@ private:
 
 			ss << " logical=" << info.logicalRect << " phys.=" << info.physicalSize;
 			ss << " pixeltype=" << Utils::PixelTypeToInformalString(info.pixelType);
+			ss << " comp.mode=" << Utils::CompressionModeToInformalString(info.mode);
 			options.GetLog()->WriteStdOut(ss.str());
 			return true;
 		});
