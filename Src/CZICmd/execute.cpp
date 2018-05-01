@@ -332,6 +332,7 @@ private:
 
 			ss << " logical=" << info.logicalRect << " phys.=" << info.physicalSize;
 			ss << " pixeltype=" << Utils::PixelTypeToInformalString(info.pixelType);
+			ss << " comp.mode=" << Utils::CompressionModeToInformalString(info.mode);
 			options.GetLog()->WriteStdOut(ss.str());
 			return true;
 		});
@@ -361,11 +362,11 @@ private:
 
 		auto docInfo = md->GetDocumentInfo();
 		auto dsplSettings = docInfo->GetDisplaySettings();
-    if (!dsplSettings)
-    {
-      options.GetLog()->WriteStdOut("-> No Display-Settings available");
-      return;
-    }
+		if (!dsplSettings)
+		{
+			options.GetLog()->WriteStdOut("-> No Display-Settings available");
+			return;
+		}
 
 		dsplSettings->EnumChannels(
 			[&](int chIdx)->bool
@@ -383,11 +384,11 @@ private:
 		options.GetLog()->WriteStdOut("");
 		auto docInfo = md->GetDocumentInfo();
 		auto dsplSettings = docInfo->GetDisplaySettings();
-    if (!dsplSettings)
-    {
-      options.GetLog()->WriteStdOut("-> No Display-Settings available");
-      return;
-    }
+		if (!dsplSettings)
+		{
+			options.GetLog()->WriteStdOut("-> No Display-Settings available");
+			return;
+		}
 
 		string dsplSettingsJson = CreateJsonForDisplaySettings(dsplSettings.get());
 
@@ -555,7 +556,7 @@ private:
 		ss << " Layer0: ";
 		WriteIntRect(ss, sbStatistics.boundingBoxLayer0Only);
 		ss << endl;
-		
+
 		ss << endl;;
 		if (sbStatistics.IsMIndexValid())
 		{
@@ -715,11 +716,11 @@ public:
 			dsplSettings = std::make_shared<CDisplaySettingsWrapper>(options);
 		}
 
-    if (!dsplSettings)
-    {
-      options.GetLog()->WriteStdErr("No Display-Settings available.");
-      return false;
-    }
+		if (!dsplSettings)
+		{
+			options.GetLog()->WriteStdErr("No Display-Settings available.");
+			return false;
+		}
 
 		activeChannels = libCZI::CDisplaySettingsHelper::GetActiveChannels(dsplSettings.get());
 		channelBitmaps = GetBitmapsFromSpecifiedChannels(
@@ -742,10 +743,31 @@ public:
 			return channelBitmaps[idx]->GetPixelType();
 		});
 
-		shared_ptr<IBitmapData> mcComposite = libCZI::Compositors::ComposeMultiChannel_Bgr24(
-			(int)channelBitmaps.size(),
-			std::begin(channelBitmaps),
-			dsplHlp.GetChannelInfosArray());
+		shared_ptr<IBitmapData> mcComposite;
+		switch (options.GetChannelCompositeOutputPixelType())
+		{
+		case libCZI::PixelType::Bgr24:
+			mcComposite = libCZI::Compositors::ComposeMultiChannel_Bgr24(
+				(int)channelBitmaps.size(),
+				std::begin(channelBitmaps),
+				dsplHlp.GetChannelInfosArray());
+			break;
+		case libCZI::PixelType::Bgra32:
+			mcComposite = libCZI::Compositors::ComposeMultiChannel_Bgra32(
+				options.GetChannelCompositeOutputAlphaValue(),
+				(int)channelBitmaps.size(),
+				std::begin(channelBitmaps),
+				dsplHlp.GetChannelInfosArray());
+			break;
+		default:
+			break;
+		}
+
+		if (!mcComposite)
+		{
+			options.GetLog()->WriteStdErr("Unknown output pixeltype.");
+			return false;
+		}
 
 		DoCalcHashOfResult(mcComposite, options);
 		std::wstring outputfilename = options.MakeOutputFilename(L"", L"PNG");
@@ -878,11 +900,11 @@ public:
 			dsplSettings = std::make_shared<CDisplaySettingsWrapper>(options);
 		}
 
-    if (!dsplSettings)
-    {
-      options.GetLog()->WriteStdErr("No Display-Settings available.");
-      return false;
-    }
+		if (!dsplSettings)
+		{
+			options.GetLog()->WriteStdErr("No Display-Settings available.");
+			return false;
+		}
 
 		activeChannels = libCZI::CDisplaySettingsHelper::GetActiveChannels(dsplSettings.get());
 		channelBitmaps = GetBitmapsFromSpecifiedChannels(
@@ -905,10 +927,31 @@ public:
 			return channelBitmaps[idx]->GetPixelType();
 		});
 
-		shared_ptr<IBitmapData> mcComposite = libCZI::Compositors::ComposeMultiChannel_Bgr24(
-			(int)channelBitmaps.size(),
-			std::begin(channelBitmaps),
-			dsplHlp.GetChannelInfosArray());
+		shared_ptr<IBitmapData> mcComposite;
+		switch (options.GetChannelCompositeOutputPixelType())
+		{
+		case libCZI::PixelType::Bgr24:
+			mcComposite = libCZI::Compositors::ComposeMultiChannel_Bgr24(
+				(int)channelBitmaps.size(),
+				std::begin(channelBitmaps),
+				dsplHlp.GetChannelInfosArray());
+			break;
+		case libCZI::PixelType::Bgra32:
+			mcComposite = libCZI::Compositors::ComposeMultiChannel_Bgra32(
+				options.GetChannelCompositeOutputAlphaValue(),
+				(int)channelBitmaps.size(),
+				std::begin(channelBitmaps),
+				dsplHlp.GetChannelInfosArray());
+			break;
+		default:
+			break;
+		}
+
+		if (!mcComposite)
+		{
+			options.GetLog()->WriteStdErr("Unknown output pixeltype.");
+			return false;
+		}
 
 		DoCalcHashOfResult(mcComposite, options);
 		std::wstring outputfilename = options.MakeOutputFilename(L"", L"PNG");
@@ -1078,7 +1121,7 @@ private:
 		auto spData = attchment->GetRawData(&size);
 
 		std::ofstream  output;
-		output.exceptions(std::ifstream::badbit| std::ifstream::failbit);
+		output.exceptions(std::ifstream::badbit | std::ifstream::failbit);
 #if defined(WIN32ENV)
 		output.open(filename, ios::out | ios::binary);
 #endif

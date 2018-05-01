@@ -35,6 +35,7 @@ bool icasecmp(const std::string& l, const std::string& r);
 bool icasecmp(const std::wstring& l, const std::wstring& r);
 bool __wcasecmp(const wchar_t* l, const wchar_t* r);
 std::uint8_t HexCharToInt(char c);
+bool ConvertHexStringToInteger(const char* cp, std::uint32_t* value);
 char LowerNibbleToHexChar(std::uint8_t v);
 char UpperNibbleToHexChar(std::uint8_t v);
 

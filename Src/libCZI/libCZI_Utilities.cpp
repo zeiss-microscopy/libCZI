@@ -352,6 +352,23 @@ std::vector<std::uint8_t> InternalCreate8BitLookUpTableFromGamma(int tableElemen
 	return "illegal value";
 }
 
+/*static*/const char* Utils::CompressionModeToInformalString(libCZI::CompressionMode compressionMode)
+{
+	switch (compressionMode)
+	{
+	case CompressionMode::UnCompressed:
+		return "uncompressed";
+	case CompressionMode::Jpg:
+		return "jpg";
+	case CompressionMode::JpgXr:
+		return "jpgxr";
+	case CompressionMode::Invalid:
+		return "invalid";
+	}
+
+	return "illegal value";
+}
+
 /*static*/std::string Utils::DimCoordinateToString(const libCZI::IDimCoordinate* coord)
 {
 	stringstream ss;

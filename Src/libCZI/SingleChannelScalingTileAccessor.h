@@ -33,12 +33,12 @@ class CSingleChannelScalingTileAccessor : public CSingleChannelAccessorBase, pub
 private:
 	struct SbInfo
 	{
-		libCZI::IntRect			logigalRect;
+		libCZI::IntRect			logicalRect;
 		libCZI::IntSize			physicalSize;
 		int						mIndex;
 		int						index;
 
-		float	GetZoom() const { return libCZI::Utils::CalcZoom(this->logigalRect, this->physicalSize); }
+		float	GetZoom() const { return libCZI::Utils::CalcZoom(this->logicalRect, this->physicalSize); }
 	};
 
 public:

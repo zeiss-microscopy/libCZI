@@ -81,11 +81,12 @@ CCZIReader::~CCZIReader()
 		[&](int index, const CCziSubBlockDirectory::SubBlkEntry& entry)->bool
 	{
 		SubBlockInfo info;
+		info.mode = CziUtils::CompressionModeFromInt(entry.Compression);
+		info.pixelType = CziUtils::PixelTypeFromInt(entry.PixelType);
 		info.coordinate = entry.coordinate;
 		info.logicalRect = IntRect{ entry.x,entry.y,entry.width,entry.height };
-		info.physicalSize = IntSize{ (std::uint32_t)entry.storedWidth, (std::uint32_t)entry.storedHeight };
+		info.physicalSize = IntSize{ std::uint32_t(entry.storedWidth), std::uint32_t(entry.storedHeight) };
 		info.mIndex = entry.mIndex;
-		info.pixelType = CziUtils::PixelTypeFromInt(entry.PixelType);
 		return funcEnum(index, info);
 	});
 }
@@ -247,7 +248,7 @@ std::shared_ptr<ISubBlock> CCZIReader::ReadSubBlock(const CCziSubBlockDirectory:
 	info.mode = CziUtils::CompressionModeFromInt(subBlkData.compression);
 	info.coordinate = subBlkData.coordinate;
 	info.mIndex = subBlkData.mIndex;
-	info.logicalRect = subBlkData.logigalRect;
+	info.logicalRect = subBlkData.logicalRect;
 	info.physicalSize = subBlkData.physicalSize;
 
 	return std::make_shared<CCziSubBlock>(info, subBlkData, free);

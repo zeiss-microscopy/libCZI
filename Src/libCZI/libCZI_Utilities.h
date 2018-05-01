@@ -108,18 +108,18 @@ namespace libCZI
 		//// Calculate a zoom-factor from the physical- and logical size.
 		/// \remark
 		/// This calculation not really well-defined.
-		/// \param logigalRect  The logigal rectangle.
+		/// \param logicalRect  The logical rectangle.
 		/// \param physicalSize Physical size.
 		/// \return The calculated zoom.
-		static float CalcZoom(const libCZI::IntRect& logigalRect, const libCZI::IntSize& physicalSize)
+		static float CalcZoom(const libCZI::IntRect& logicalRect, const libCZI::IntSize& physicalSize)
 		{
 			if (physicalSize.w > physicalSize.h)
 			{
-				return float(physicalSize.w) / logigalRect.w;
+				return float(physicalSize.w) / logicalRect.w;
 			}
 			else
 			{
-				return float(physicalSize.h) / logigalRect.h;
+				return float(physicalSize.h) / logicalRect.h;
 			}
 		}
 
@@ -129,6 +129,13 @@ namespace libCZI
 		///
 		/// \return A pointer to a static string. Will always be non-null (even in case of an invalid value for <tt>pxltp</tt>.
 		static const char* PixelTypeToInformalString(libCZI::PixelType pxltp);
+
+		/// Retrieves an informal string representing the specified compression mode. 
+		///
+		/// \param compressionMode The pixel-type.
+		///
+		/// \return A pointer to a static string. Will always be non-null (even in case of an invalid value for <tt>compressionMode</tt>.
+		static const char* CompressionModeToInformalString(libCZI::CompressionMode compressionMode);
 
 		/// Get a string representation of the specified coordinate.
 		/// \param coord The coordinate.
