@@ -432,25 +432,6 @@ namespace libCZI
 			const ChannelInfo* channelInfos);
 
 		/// Create the multi-channel-composite - applying tinting or gradation to the specified
-		/// bitmaps and write the result to the specified destination bitmap.
-		/// All source bitmaps must have same width and height, and the destination bitmap also
-		/// has to have this same width/height. The pixeltype of the destination bitmap must be
-		/// Bgra32. The value of the parameter 'alphaVal' is written to all alpha-pixels in the
-		/// destination.
-		///
-		/// \param [in] dest		The destination bitmap - must have same width/height as the source bitmaps and must be Bgra32.
-		/// \param alphaVal			The alpha value.
-		/// \param channelCount		The number of channels.
-		/// \param srcBitmaps		An array of source bitmaps. The array must contain as many elements as specified by \c channelCount.
-		/// \param channelInfos		An array of \c channelInfo for the source channels. The array must contain as many elements as specified by \c channelCount.
-		static void ComposeMultiChannel_Bgra32(
-			libCZI::IBitmapData* dest,
-			std::uint8_t alphaVal,
-			int channelCount,
-			libCZI::IBitmapData*const* srcBitmaps,
-			const ChannelInfo* channelInfos);
-
-		/// Create the multi-channel-composite - applying tinting or gradation to the specified
 		/// bitmaps and write the result to a newly allocated destination bitmap.
 		/// All source bitmaps must have same width and height, and the destination bitmap will also
 		/// have this same width/height. The pixeltype of the destination bitmap will be
@@ -462,24 +443,6 @@ namespace libCZI
 		///
 		///  \return A std::shared_ptr&lt;IBitmapData&gt;.
 		static std::shared_ptr<IBitmapData> ComposeMultiChannel_Bgr24(
-			int channelCount,
-			libCZI::IBitmapData*const* srcBitmaps,
-			const ChannelInfo* channelInfos);
-
-		/// Create the multi-channel-composite - applying tinting or gradation to the specified
-		/// bitmaps and write the result to a newly allocated destination bitmap.
-		/// All source bitmaps must have same width and height, and the destination bitmap will also
-		/// have this same width/height. The pixeltype of the destination bitmap will be
-		/// Bgra32, and each alpha-pixel-value will be set to 'alphaVal'.
-		///
-		/// \param alphaVal	    The alpha value.
-		/// \param channelCount The number of channels.
-		/// \param srcBitmaps   An array of source bitmaps. The array must contain as many elements as specified by \c channelCount.
-		/// \param channelInfos An array of \c channelInfo for the source channels. The array must contain as many elements as specified by \c channelCount.
-		///
-		/// \return A std::shared_ptr&lt;IBitmapData&gt;.
-		static std::shared_ptr<IBitmapData> ComposeMultiChannel_Bgra32(
-			std::uint8_t alphaVal,
 			int channelCount,
 			libCZI::IBitmapData*const* srcBitmaps,
 			const ChannelInfo* channelInfos);
