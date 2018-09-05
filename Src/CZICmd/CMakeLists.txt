@@ -12,4 +12,9 @@ target_link_libraries(CZIcmd ${PNG_LIBRARIES} ${ZLIB_LIBRARIES})
 include_directories(${ZLIB_INCLUDE_DIR} ${PNG_INCLUDE_DIR})
 ENDIF(UNIX)
 
+install(TARGETS CZIcmd
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
 
