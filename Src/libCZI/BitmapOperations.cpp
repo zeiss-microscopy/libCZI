@@ -312,6 +312,19 @@ using namespace std;
 	}
 }
 
+/*static*/void CBitmapOperations::RGB48ToBGR48(int w, int h, std::uint16_t* ptr, int stride)
+{
+	for (int y = 0; y < h; ++y)
+	{
+		std::uint16_t* ptrLine = (std::uint16_t*)(((char*)ptr) + y * ((ptrdiff_t)stride));
+		for (int x = 0; x < w; ++x)
+		{
+			std::swap(ptrLine[0], ptrLine[2]);
+			ptrLine += 3;
+		}
+	}
+}
+
 /*static*/void CBitmapOperations::ThrowUnsupportedConversion(libCZI::PixelType srcPixelType, libCZI::PixelType dstPixelType)
 {
 	stringstream ss;

@@ -25,6 +25,7 @@
 #include "../JxrDecode/JxrDecode.h"
 #include "bitmapData.h"
 #include "stdAllocator.h"
+#include "BitmapOperations.h"
 #include "Site.h"
 
 using namespace libCZI;
@@ -148,6 +149,12 @@ using namespace std;
 			else
 			{
 				memcpy(bmLckInfo.ptrDataRoi, ptrData, stride*linesCount);
+			}
+
+			// since BGR48 is not available as output, we need to convert (#36)
+			if (px_type == PixelType::Bgr48)
+			{
+				CBitmapOperations::RGB48ToBGR48(width, height, (uint16_t*)bmLckInfo.ptrDataRoi, bmLckInfo.stride);
 			}
 		});
 	}
