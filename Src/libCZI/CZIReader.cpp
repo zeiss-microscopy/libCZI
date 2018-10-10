@@ -49,10 +49,16 @@ CCZIReader::~CCZIReader()
 
 	this->hdrSegmentData = CCZIParse::ReadFileHeaderSegment(stream.get());
 	this->subBlkDir = std::move(CCZIParse::ReadSubBlockDirectory(stream.get(), this->hdrSegmentData.GetSubBlockDirectoryPosition()));
-	this->attachmentDir = std::move(CCZIParse::ReadAttachmentsDirectory(stream.get(), this->hdrSegmentData.GetAttachmentDirectoryPosition()));
+	auto attachmentPos = this->hdrSegmentData.GetAttachmentDirectoryPosition();
+	if (attachmentPos != 0)
+	{
+		// we should be operational without an attachment-directory as well I suppose.
+		// TODO: how to determine whether there is "no attachment-directory" - is the check for 0 sufficient?
+		this->attachmentDir = std::move(CCZIParse::ReadAttachmentsDirectory(stream.get(), attachmentPos));
+	}
+
 	this->stream = stream;
 	this->SetOperationalState(true);
-
 }
 
 /*virtual*/std::shared_ptr<libCZI::IMetadataSegment> CCZIReader::ReadMetadataSegment()

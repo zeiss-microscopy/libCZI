@@ -104,6 +104,13 @@ using namespace libCZI;
 		subBlkDirSize = subBlckDirSegment.header.AllocatedSize;
 	}
 
+	if (subBlkDirSize < sizeof(SubBlockDirectorySegmentData))
+	{
+		CCZIParse::ThrowIllegalData(offset, "Invalid SubBlkDirectory-Allocated-Size");
+	}
+
+	subBlkDirSize -= sizeof(SubBlockDirectorySegmentData);
+
 	// now read the used-size from stream
 	std::unique_ptr<void, decltype(free)*> pBuffer(malloc((size_t)subBlkDirSize), free);
 	try
