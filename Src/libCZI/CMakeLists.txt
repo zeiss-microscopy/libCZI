@@ -87,6 +87,10 @@ set(LIBCZI_SRCS
 file(GLOB_RECURSE LIBCZI_EIGEN_HDRS "eigen/*")
 
 add_library(libCZI SHARED ${LIBCZI_PUBLIC_HDRS} ${LIBCZI_SRCS} ${LIBCZI_EIGEN_HDRS})
+target_include_directories(libCZI
+                           PUBLIC
+                           $<INSTALL_INTERFACE:include/libCZI>
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 set_target_properties(libCZI PROPERTIES DEFINE_SYMBOL "LIBCZI_EXPORTS")
 set_target_properties(libCZI PROPERTIES PUBLIC_HEADER "${LIBCZI_PUBLIC_HDRS}")
@@ -94,6 +98,10 @@ set_target_properties(libCZI PROPERTIES PUBLIC_HEADER "${LIBCZI_PUBLIC_HDRS}")
 target_link_libraries (libCZI PRIVATE JxrDecodeStatic)
 
 add_library(libCZIStatic STATIC ${LIBCZI_PUBLIC_HDRS} ${LIBCZI_SRCS} ${LIBCZI_EIGEN_HDRS})
+target_include_directories(libCZIStatic
+                           PUBLIC
+                           $<INSTALL_INTERFACE:include/libCZI>
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 set_target_properties(libCZIStatic PROPERTIES DEFINE_SYMBOL "LIBCZI_EXPORTS")
 set_target_properties(libCZIStatic PROPERTIES PUBLIC_HEADER "${LIBCZI_PUBLIC_HDRS}")
@@ -102,4 +110,4 @@ install(TARGETS libCZI libCZIStatic
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
-        PUBLIC_HEADER DESTINATION include)
+        PUBLIC_HEADER DESTINATION include/libCZI)
