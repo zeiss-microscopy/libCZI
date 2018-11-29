@@ -92,7 +92,7 @@ target_include_directories(libCZI
                            $<INSTALL_INTERFACE:include/libCZI>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
-set_target_properties(libCZI PROPERTIES DEFINE_SYMBOL "LIBCZI_EXPORTS")
+target_compile_definitions(libCZI PRIVATE "LIBCZI_EXPORTS")
 set_target_properties(libCZI PROPERTIES PUBLIC_HEADER "${LIBCZI_PUBLIC_HDRS}")
 
 target_link_libraries (libCZI PRIVATE JxrDecodeStatic)
@@ -103,8 +103,10 @@ target_include_directories(libCZIStatic
                            $<INSTALL_INTERFACE:include/libCZI>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
-set_target_properties(libCZIStatic PROPERTIES DEFINE_SYMBOL "LIBCZI_EXPORTS")
+target_compile_definitions(libCZIStatic PUBLIC "LIBCZI_EXPORTS")
 set_target_properties(libCZIStatic PROPERTIES PUBLIC_HEADER "${LIBCZI_PUBLIC_HDRS}")
+
+target_link_libraries (libCZIStatic PRIVATE JxrDecodeStatic)
 
 install(TARGETS libCZI libCZIStatic
         RUNTIME DESTINATION bin
