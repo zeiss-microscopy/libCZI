@@ -134,8 +134,6 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 			}
 		}
 
-		++this->statistics.subBlockCount;
-
 		return true;
 	});
 
@@ -198,6 +196,8 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 		this->UpdatePyramidLayerStatistics(vecPs, pli);
 		this->pyramidStatistics.scenePyramidStatistics.insert(std::pair<int, std::vector<PyramidStatistics::PyramidLayerStatistics>>(sceneIndex, vecPs));
 	}
+
+	this->statistics.subBlockCount = this->subBlks.size();
 
 }
 
