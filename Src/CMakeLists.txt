@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(libCZI)
+# allow version specification in call to project()
+cmake_policy(SET CMP0048 NEW)
+
+project(libCZI VERSION 0.0.0)
 
 IF(UNIX)
 # linking with 'thread' is necessary if we use std::thread and related under Linux it seems
