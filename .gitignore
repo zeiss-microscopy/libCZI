@@ -298,4 +298,10 @@ __pycache__/
 
 # exclude "cmake-directory"
 cmake-build-debug/
-
+Src/Build/VS/Win32/Debug
+Src/Build/VS/Win32/static Debug
+Src/Build/VS/x64/Debug
+Src/Build/VS/x64/static Debug
+Src/Build/VS/Win32/static Release/*.lib
+Src/Build/VS/Win32/static Release/*.dll
+Src/Build/VS/Win32/static Release/*.exp
