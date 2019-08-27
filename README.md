@@ -12,7 +12,7 @@ It features:
 * composing multi-channel images with tinting and applying a gradation curve
 * access metadata
 
-In a nutshell, it offers (almost...) the same functionality as the 2D-viewer in ZEN - in terms of composing the image (including display-settings) and managing the data found in a CZI-file.
+In a nutshell, it offers (almost...) the same functionality as the 2D-viewer in ZEN - in terms of composing the image (including display-settings) and managing the data found in a CZI-file. The libCZI libary is part of the Open Application Development Concept of Zeiss Microscopy. More information on OAD can be found here: https://github.com/zeiss-microscopy/OAD
 
 ![Testdata Definition](images/czi_github.png)
 

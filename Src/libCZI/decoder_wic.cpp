@@ -23,6 +23,7 @@
 #include "stdafx.h"
 #if defined(_WIN32)
 #include "decoder_wic.h"
+#include "BitmapOperations.h"
 #include <wincodec.h>
 
 #include <atlbase.h>
@@ -299,6 +300,12 @@ static bool DeterminePixelType(const WICPixelFormatGUID& wicPxlFmt, GUID* destPi
 		ThrowIfFailed("pFormatConverter->Initialize", hr);
 		hr = pFormatConverter->CopyPixels(NULL, bmLckInfo.stride, bmLckInfo.stride*sizeBitmap.h, (BYTE*)bmLckInfo.ptrDataRoi);
 		ThrowIfFailed("pFormatConverter->CopyPixels", hr);
+	}
+
+	// WIC-codec does not directly support "BGR48", so we need to convert (#36)
+	if (px_type == PixelType::Bgr48)
+	{
+		CBitmapOperations::RGB48ToBGR48(sizeBitmap.w, sizeBitmap.h, (uint16_t*)bmLckInfo.ptrDataRoi, bmLckInfo.stride);
 	}
 
 	if (GetSite()->IsEnabled(LOGLEVEL_CHATTYINFORMATION))
