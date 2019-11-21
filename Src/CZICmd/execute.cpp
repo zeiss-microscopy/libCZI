@@ -698,8 +698,6 @@ class CExecuteChannelComposite : CExecuteBase
 public:
 	static bool execute(const CCmdLineOptions& options)
 	{
-//printf("LEO %70s @ %4d::%30s() \n", __FILE__ , __LINE__, __FUNCTION__ );
-printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 		auto spReader = CreateAndOpenCziReader(options);
 
 		libCZI::CDisplaySettingsHelper dsplHlp;
@@ -718,54 +716,43 @@ printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 			dsplSettings = std::make_shared<CDisplaySettingsWrapper>(options);
 		}
 
-//printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 		if (!dsplSettings)
 		{
 			options.GetLog()->WriteStdErr("No Display-Settings available.");
 			return false;
 		}
 
-//printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 		activeChannels = libCZI::CDisplaySettingsHelper::GetActiveChannels(dsplSettings.get());
-printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 		channelBitmaps = GetBitmapsFromSpecifiedChannels(
 			spReader.get(),
 			options,
 			[&](int idx, int& chNo)->bool
 		{
-//printf("LEO %s @ %d :: %s(idx %d) \n", __FILE__ , __LINE__, __FUNCTION__, idx );
 			if (idx < (int)activeChannels.size())
 			{
-//printf("LEO %s @ %d :: %s(idx %d) \n", __FILE__ , __LINE__, __FUNCTION__, idx );
 				chNo = activeChannels.at(idx);
-//printf("LEO %s @ %d :: %s(idx %d) \n", __FILE__ , __LINE__, __FUNCTION__, idx );
 				return true;
 			}
 
-//printf("LEO %s @ %d :: %s(idx %d) \n", __FILE__ , __LINE__, __FUNCTION__, idx );
 			return false;
 		});
 
-printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 		dsplHlp.Initialize(dsplSettings.get(), [&](int chIndx)->libCZI::PixelType
 		{
 			int idx = (int)std::distance(activeChannels.cbegin(), std::find(activeChannels.cbegin(), activeChannels.cend(), chIndx));
 			return channelBitmaps[idx]->GetPixelType();
 		});
 
-//printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 		shared_ptr<IBitmapData> mcComposite;
 		switch (options.GetChannelCompositeOutputPixelType())
 		{
 		case libCZI::PixelType::Bgr24:
-printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 			mcComposite = libCZI::Compositors::ComposeMultiChannel_Bgr24(
 				(int)channelBitmaps.size(),
 				std::begin(channelBitmaps),
 				dsplHlp.GetChannelInfosArray());
 			break;
 		case libCZI::PixelType::Bgra32:
-printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 			mcComposite = libCZI::Compositors::ComposeMultiChannel_Bgra32(
 				options.GetChannelCompositeOutputAlphaValue(),
 				(int)channelBitmaps.size(),
@@ -793,7 +780,6 @@ printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 private:
 	static std::vector<shared_ptr<IBitmapData>> GetBitmapsFromSpecifiedChannels(ICZIReader* reader, const CCmdLineOptions& options, std::function<bool(int index, int& channelNo)> getChannelNo)
 	{
-//printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 		std::vector<shared_ptr<IBitmapData>> chBitmaps;
 		libCZI::CDimCoordinate coordinate = options.GetPlaneCoordinate();
 
@@ -803,19 +789,6 @@ private:
 		sctaOptions.sortByM = true;
 		sctaOptions.drawTileBorder = options.GetDrawTileBoundaries();
 		sctaOptions.backGroundColor = GetBackgroundColorFromOptions(options);
-printf("LEO %s @ %d :: %s(), backGroundColor R[%f] G[%f] B[%f]  \n",
-	   __FILE__ , __LINE__, __FUNCTION__,
-	   sctaOptions.backGroundColor.r,
-	   sctaOptions.backGroundColor.g,
-	   sctaOptions.backGroundColor.b);
-//  sctaOptions.backGroundColor.r = 0.5f;
-//  sctaOptions.backGroundColor.g = 0.5f;
-//  sctaOptions.backGroundColor.b = 0.5f;
-// printf("LEO %s @ %d :: %s(), backGroundColor R[%f] G[%f] B[%f]  \n",
-// 	   __FILE__ , __LINE__, __FUNCTION__,
-// 	   sctaOptions.backGroundColor.r,
-// 	   sctaOptions.backGroundColor.g,
-// 	   sctaOptions.backGroundColor.b);
 		IntRect roi{ options.GetRectX() ,options.GetRectY() ,options.GetRectW(),options.GetRectH() };
 		if (options.GetIsRelativeRectCoordinate())
 		{
@@ -825,17 +798,14 @@ printf("LEO %s @ %d :: %s(), backGroundColor R[%f] G[%f] B[%f]  \n",
 
 		auto accessor = reader->CreateSingleChannelTileAccessor();
 
-//printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 		for (int i = 0;; ++i)
 		{
-//printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 			int chNo;
 			if (getChannelNo(i, chNo) == false)
 			{
 				break;
 			}
 
-//printf("LEO %s @ %d :: %s(), i %d  chNo %d \n", __FILE__ , __LINE__, __FUNCTION__, i, chNo );
 			if (subBlockStatistics.dimBounds.IsValid(DimensionIndex::C))
 			{
 				// That's a cornerstone case - or a loophole in the specification: if the document
@@ -845,11 +815,8 @@ printf("LEO %s @ %d :: %s(), backGroundColor R[%f] G[%f] B[%f]  \n",
 				coordinate.Set(DimensionIndex::C, chNo);
 			}
 
-printf("LEO %s @ %d :: %s(), i %d  chNo %d \n", __FILE__ , __LINE__, __FUNCTION__, i, chNo );
 			chBitmaps.emplace_back(accessor->Get(roi, &coordinate, &sctaOptions));
-printf("LEO %s @ %d :: %s(), i %d  chNo %d \n", __FILE__ , __LINE__, __FUNCTION__, i, chNo );
 		}
-//printf("LEO %s @ %d :: %s() \n", __FILE__ , __LINE__, __FUNCTION__ );
 
 		return chBitmaps;
 	}
