@@ -26,6 +26,7 @@
 
 void* CHeapAllocator::Allocate(std::uint64_t size)
 {
+printf("LEO %s @ %d :: %s(size %lu) \n", __FILE__ , __LINE__, __FUNCTION__, size );
 	if (size > (std::numeric_limits<size_t>::max)())
 	{
 		throw std::out_of_range("The requested size for allocation is out-of-range.");
@@ -44,9 +45,10 @@ void* CHeapAllocator::Allocate(std::uint64_t size)
 	void* pv = aligned_alloc(32, size);
 	//if (pv) memset(pv, 0x7f, size);
 	//if (pv) memset(pv, 0xcf, size);
-	if (pv) memset(pv, 0xdf, size);
-	//if (pv) memset(pv, 0xef, size);
-	// TODO(Leo) Find where pv is returned to, try to do the memset() up the chain rather than here.
+	//	if (pv) memset(pv, 0xdf, size);  // This is pretty good.
+	if (pv) memset(pv, 0xef, size);  // This is pretty good.
+	//if (pv) memset(pv, 0xff, size);  // Too bright.
+	// TODO(Leo) Find where pv is returned to, try to do the memset() up the chain rather than here. 
 	return pv;
 #else
 	void* pv = _aligned_malloc((size_t)size, 32);
