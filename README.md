@@ -1,5 +1,6 @@
-# libCZI
-***Open Source Cross-Platform C++ library to read CZI image files***
+## libCZI
+
+### *Open Source Cross-Platform C++ library to read CZI image files*
 ---------------------------------------------------------------------
 
 ***libCZI*** is a library intended for providing read-only access to the information contained in CZI-documents.
@@ -26,7 +27,7 @@ It is intended to be easily portable to other platforms.
 
 ---------------------------------------------------------------------------------
 
-***Licensing***
+### ***Licensing***
 
 ******************************************************************************
  
@@ -46,8 +47,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
-To obtain a commercial version please contact Zeiss Microscopy GmbH.
+**To obtain a commercial version please contact Zeiss Microscopy GmbH.**
  
-******************************************************************************
+***
 
+### *Python Wrapper for libCZI*
 
+There are at least two python wrappers available for libCZI. They provide easy access to CZI image data from python. Those wrappers were created by the community and therefore is by no means responsible for their functionality and their maintenance. Feel free to use them at your own risk.
+
+***
+
+#### AICSImageIO
+
+This library from the Allen Cell Institute for Cell Science uses libCZI among other tools to read CZI, OME-TIFF and TIFF images and can be found here: [AICSimageIO](https://allencellmodeling.github.io/aicsimageio/)
+
+#### pylibCZI
+
+This is a python module for reading Zeiss CZI files by utilizing libCZI and can be found here: [pylibCZI](https://github.com/elhuhdron/pylibczi)
