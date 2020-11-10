@@ -81,7 +81,8 @@ CSingleChannelScalingTileAccessor::CSingleChannelScalingTileAccessor(std::shared
 
 /*static*/libCZI::IntSize CSingleChannelScalingTileAccessor::InternalCalcSize(const libCZI::IntRect& roi, float zoom)
 {
-	return IntSize{ (uint32_t)ceil(roi.w*zoom),(uint32_t)ceil(roi.h*zoom) };
+    // return IntSize{ (uint32_t)ceil(roi.w*zoom),(uint32_t)ceil(roi.h*zoom) };
+    return IntSize{ (uint32_t)(roi.w*zoom),(uint32_t)(roi.h*zoom) };
 }
 
 void CSingleChannelScalingTileAccessor::ScaleBlt(libCZI::IBitmapData* bmDest, float zoom, const libCZI::IntRect&  roi, const SbInfo& sbInfo)
