@@ -1,23 +1,23 @@
 //******************************************************************************
-// 
+//
 // libCZI is a reader for the CZI fileformat written in C++
 // Copyright (C) 2017  Zeiss Microscopy GmbH
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // To obtain a commercial version please contact Zeiss Microscopy GmbH.
-// 
+//
 //******************************************************************************
 
 #include "stdafx.h"
@@ -25,6 +25,7 @@
 #include "utilities.h"
 #include "BitmapOperations.h"
 #include "Site.h"
+#include <cmath>
 
 using namespace libCZI;
 using namespace std;
@@ -80,7 +81,7 @@ CSingleChannelScalingTileAccessor::CSingleChannelScalingTileAccessor(std::shared
 
 /*static*/libCZI::IntSize CSingleChannelScalingTileAccessor::InternalCalcSize(const libCZI::IntRect& roi, float zoom)
 {
-	return IntSize{ (uint32_t)(roi.w*zoom),(uint32_t)(roi.h*zoom) };
+	return IntSize{ (uint32_t)ceil(roi.w*zoom),(uint32_t)ceil(roi.h*zoom) };
 }
 
 void CSingleChannelScalingTileAccessor::ScaleBlt(libCZI::IBitmapData* bmDest, float zoom, const libCZI::IntRect&  roi, const SbInfo& sbInfo)
@@ -138,12 +139,12 @@ int CSingleChannelScalingTileAccessor::GetIdxOf1stSubBlockWithZoomGreater(const 
 	return -1;
 }
 
-/// <summary>	
-/// Create an vector with indices (into the specified vector with SubBlock-infos) so that the indices give 
+/// <summary>
+/// Create an vector with indices (into the specified vector with SubBlock-infos) so that the indices give
 /// the items sorted by their "zoom"-factor. (A zoom of "1" means that the subblock is on layer-0). Subblocks of
 /// a higher pyramid-layer are at the end of the list.
 /// </summary>
-/// <remarks>	
+/// <remarks>
 /// TODO: within a pyramid-layer, the subblocks should be sorted according to their M-index. The problem is (once again...)
 /// to define a "pyramid-layer". Since, currently, only layer-0 may have overlapping tiles, it is only relevant for layer-0,
 /// and layer-0 can be easily defined by physical_size==logical_size.
