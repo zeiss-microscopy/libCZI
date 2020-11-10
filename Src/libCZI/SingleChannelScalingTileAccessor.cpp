@@ -25,7 +25,7 @@
 #include "utilities.h"
 #include "BitmapOperations.h"
 #include "Site.h"
-//#include <math.h>
+#include <cmath>
 
 using namespace libCZI;
 using namespace std;
