@@ -246,6 +246,7 @@ using namespace libCZI;
 		CCZIParse::ThrowIllegalData(offset, "Invalid SubBlockk-magic");
 	}
 
+	uint32_t lengthSubblockSegmentData = 0;
 	SubBlockData sbd;
 	if (subBlckSegment.data.entrySchema[0] == 'D' && subBlckSegment.data.entrySchema[1] == 'V')
 	{
@@ -276,18 +277,27 @@ using namespace libCZI;
 				sbd.coordinate.Set(dim, dimEntry->Start);
 			}
 		}
+
+		// calculate the "actual size" of the "entryDV" struct
+		lengthSubblockSegmentData = 32 + subBlckSegment.data.entryDV.DimensionCount * sizeof(DimensionEntryDV);
 	}
 	else if (subBlckSegment.data.entrySchema[0] == 'D' && subBlckSegment.data.entrySchema[1] == 'E')
 	{
 		sbd.compression = subBlckSegment.data.entryDE.Compression;
 		sbd.pixelType = subBlckSegment.data.entryDE.PixelType;
 
+		lengthSubblockSegmentData = sizeof(SubBlockDirectoryEntryDE);
 		// TODO...
 	}
 	else
 	{
 		CCZIParse::ThrowIllegalData(offset, "Invalid schema");
 	}
+
+	// the reserved size of the "subblock-segment-data" is given by "SIZE_SUBBLOCKDATA_MINIMUM", but the actual size of the
+	//  data-structure (SubBlockDirectoryEntryDV) may be larger than that - so we need to take the max of the actual size and
+	//  the reserved (minimal) size here
+	lengthSubblockSegmentData = max(lengthSubblockSegmentData + SIZE_SUBBLOCKDATA_FIXEDPART, SIZE_SUBBLOCKDATA_MINIMUM);
 
 	// TODO: if subBlckSegment.data.DataSize > size_t (=4GB for 32Bit) then bail out gracefully
 	auto deleter = [&](void* ptr) -> void {allocateInfo.free(ptr); };
@@ -301,16 +311,16 @@ using namespace libCZI;
 	{
 		try
 		{
-			str->Read(offset + 256 + sizeof(SegmentHeader), pMetadataBuffer.get(), subBlckSegment.data.MetadataSize, &bytesRead);
+			str->Read(offset + lengthSubblockSegmentData + sizeof(SegmentHeader), pMetadataBuffer.get(), subBlckSegment.data.MetadataSize, &bytesRead);
 		}
 		catch (const std::exception&)
 		{
-			std::throw_with_nested(LibCZIIOException("Error reading FileHeaderSegement", offset + 256 + sizeof(SegmentHeader), subBlckSegment.data.MetadataSize));
+			std::throw_with_nested(LibCZIIOException("Error reading FileHeaderSegement", offset + lengthSubblockSegmentData + sizeof(SegmentHeader), subBlckSegment.data.MetadataSize));
 		}
 
 		if (bytesRead != subBlckSegment.data.MetadataSize)
 		{
-			CCZIParse::ThrowNotEnoughDataRead(offset + 256 + sizeof(SegmentHeader), subBlckSegment.data.MetadataSize, bytesRead);
+			CCZIParse::ThrowNotEnoughDataRead(offset + lengthSubblockSegmentData + sizeof(SegmentHeader), subBlckSegment.data.MetadataSize, bytesRead);
 		}
 	}
 
@@ -318,16 +328,16 @@ using namespace libCZI;
 	{
 		try
 		{
-			str->Read(offset + 256 + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize, pDataBuffer.get(), subBlckSegment.data.DataSize, &bytesRead);
+			str->Read(offset + lengthSubblockSegmentData + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize, pDataBuffer.get(), subBlckSegment.data.DataSize, &bytesRead);
 		}
 		catch (const std::exception&)
 		{
-			std::throw_with_nested(LibCZIIOException("Error reading FileHeaderSegement", offset + 256 + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize, subBlckSegment.data.DataSize));
+			std::throw_with_nested(LibCZIIOException("Error reading FileHeaderSegement", offset + lengthSubblockSegmentData + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize, subBlckSegment.data.DataSize));
 		}
 
 		if (bytesRead != subBlckSegment.data.DataSize)
 		{
-			CCZIParse::ThrowNotEnoughDataRead(offset + 256 + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize, subBlckSegment.data.DataSize, bytesRead);
+			CCZIParse::ThrowNotEnoughDataRead(offset + lengthSubblockSegmentData + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize, subBlckSegment.data.DataSize, bytesRead);
 		}
 	}
 
@@ -335,16 +345,16 @@ using namespace libCZI;
 	{
 		try
 		{
-			str->Read(offset + 256 + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize + subBlckSegment.data.DataSize, pAttachmentBuffer.get(), subBlckSegment.data.AttachmentSize, &bytesRead);
+			str->Read(offset + lengthSubblockSegmentData + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize + subBlckSegment.data.DataSize, pAttachmentBuffer.get(), subBlckSegment.data.AttachmentSize, &bytesRead);
 		}
 		catch (const std::exception&)
 		{
-			std::throw_with_nested(LibCZIIOException("Error reading FileHeaderSegement", offset + 256 + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize + subBlckSegment.data.DataSize, subBlckSegment.data.AttachmentSize));
+			std::throw_with_nested(LibCZIIOException("Error reading FileHeaderSegement", offset + lengthSubblockSegmentData + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize + subBlckSegment.data.DataSize, subBlckSegment.data.AttachmentSize));
 		}
 
 		if (bytesRead != subBlckSegment.data.AttachmentSize)
 		{
-			CCZIParse::ThrowNotEnoughDataRead(offset + 256 + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize + subBlckSegment.data.DataSize, subBlckSegment.data.AttachmentSize, bytesRead);
+			CCZIParse::ThrowNotEnoughDataRead(offset + lengthSubblockSegmentData + sizeof(SegmentHeader) + subBlckSegment.data.MetadataSize + subBlckSegment.data.DataSize, subBlckSegment.data.AttachmentSize, bytesRead);
 		}
 	}
 
