@@ -297,7 +297,7 @@ using namespace libCZI;
 	// the reserved size of the "subblock-segment-data" is given by "SIZE_SUBBLOCKDATA_MINIMUM", but the actual size of the
 	//  data-structure (SubBlockDirectoryEntryDV) may be larger than that - so we need to take the max of the actual size and
 	//  the reserved (minimal) size here
-	lengthSubblockSegmentData = max(lengthSubblockSegmentData + SIZE_SUBBLOCKDATA_FIXEDPART, SIZE_SUBBLOCKDATA_MINIMUM);
+	lengthSubblockSegmentData = max(lengthSubblockSegmentData + SIZE_SUBBLOCKDATA_FIXEDPART, (uint32_t)SIZE_SUBBLOCKDATA_MINIMUM);
 
 	// TODO: if subBlckSegment.data.DataSize > size_t (=4GB for 32Bit) then bail out gracefully
 	auto deleter = [&](void* ptr) -> void {allocateInfo.free(ptr); };
