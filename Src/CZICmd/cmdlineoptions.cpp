@@ -267,20 +267,28 @@ void CCmdLineOptions::PrintUsage(int switchesCnt, std::function<std::tuple<std::
 			L"COMMAND",
 			LR"(COMMAND can be any of 'PrintInformation', 'ExtractSubBlock', 'SingleChannelTileAccessor', 'ChannelComposite', 
                 'SingleChannelPyramidTileAccessor', 'SingleChannelScalingTileAccessor', 'ScalingChannelComposite' and 'ExtractAttachment'. 
+				\n-
 				\n'PrintInformation' will print information about the CZI-file to the console. The argument 'info-level' can be used
 				to specify which information is to be printed. 
+				\n-
                 \n'ExtractSubBlock' will write the bitmap contained in the specified sub-block to the OUTPUTFILE. 
+				\n-
 				\n'ChannelComposite' will create a 
 				channel-composite of the specified region and plane and apply display-settings to it. The resulting bitmap will be written
 				to the specified OUTPUTFILE. 
+				\n-
 				\n'SingleChannelTileAccessor' will create a tile-composite (only from sub-blocks on pyramid-layer 0) of the specified region and plane.
                 The resulting bitmap will be written to the specified OUTPUTFILE. 
+				\n-
 				\n'SingleChannelPyramidTileAccessor' adds to the previous command the ability to explictely address a specific pyramid-layer (which must
 				exist in the CZI-document). 
+				\n-
 				\n'SingleChannelScalingTileAccessor' gets the specified region with an arbitrary zoom factor. It uses the pyramid-layers in the CZI-document
 				and scales the bitmap if neccessary. The resulting bitmap will be written to the specified OUTPUTFILE. 
+				\n-
 				\n'ScalingChannelComposite' operates like the previous command, but in addition gets all channels and creates a multi-channel-composite from them
                 using display-settings.
+				\n-
 				\n'ExtractAttachment' allows to extract (and save to a file) the contents of attachments.)"
 		},
 		{
@@ -319,11 +327,13 @@ void CCmdLineOptions::PrintUsage(int switchesCnt, std::function<std::tuple<std::
 			L"",
 			LR"(Calculate a hash for the output-picture. The MD5Sum-algorithm is used for this.)"
 		},
+#if 0  // Remove this help text, which masks the background color option help text.
 		{
 			L"b",
 			L"",
 			LR"(Draw a one-pixel black line around each tile.)"
 		},
+#endif // Remove this help text, which masks the background color option help text.
 		{
 			L"j",
 			L"DECODERNAME",

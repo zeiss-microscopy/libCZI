@@ -27,11 +27,32 @@
 
 using namespace libCZI;
 
+// Forward declaration for JpgXr vs. uncompressed SubBlocks workaround.
+static std::shared_ptr<libCZI::IBitmapData> CreateBitmapFromSubBlock_Uncompressed(ISubBlock* subBlk);
+
 static std::shared_ptr<libCZI::IBitmapData> CreateBitmapFromSubBlock_JpgXr(ISubBlock* subBlk)
 {
 	auto dec = GetSite()->GetDecoder(ImageDecoderType::JPXR_JxrLib, nullptr);
 	const void* ptr; size_t size;
 	subBlk->DangerousGetRawData(ISubBlock::MemBlkType::Data, ptr, size);
+
+	// Workaround for malformed CZI files which have SubBlocks labeled
+	// as JpxXr in the SubBlockDirectory (verified in the CZI binary
+	// file with hexdump), but which do not have the correct JpxXr
+	// header magic (hex 49 49 BC 01, hexdump verified as present in
+	// wellformed JpxXr SubBlocks, missing in malformed ones), and are
+	// in fact uncompressed binary image data (with size agreeing with
+	// uncompressed pixel data size, and image verified by rendering
+	// the malformed SubBlocks as uncompressed images).
+	//
+	static const unsigned char jpgxr_header_magic[] = { 0x49, 0x49, 0xbc, 0x01 };
+	if (memcmp((unsigned char *) ptr, jpgxr_header_magic, 4) != 0
+		&& (size == ((size_t)subBlk->GetSubBlockInfo().physicalSize.h *
+					 (size_t)subBlk->GetSubBlockInfo().physicalSize.w *
+					 (size_t)CziUtils::GetBytesPerPel(subBlk->GetSubBlockInfo().pixelType)))) {
+		return CreateBitmapFromSubBlock_Uncompressed(subBlk);
+	}
+
 	return dec->Decode(ptr, size);
 }
 

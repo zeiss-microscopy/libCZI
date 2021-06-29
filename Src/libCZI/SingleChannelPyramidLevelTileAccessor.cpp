@@ -82,6 +82,11 @@ void CSingleChannelPyramidLevelTileAccessor::InternalGet(libCZI::IBitmapData* pD
 	}
 
 	auto byLayer = CalcByLayer(subSet, pyramidInfo.minificationFactor);
+	if (byLayer.count(pyramidInfo.pyramidLayerNo) == 0)
+	{	// No subblocks were found in the requested pyramid layer, so there is nothing to do.
+		return;
+	}
+
 	// ok, now we just have to look at our requested pyramid-layer
 	const auto& indices = byLayer.at(pyramidInfo.pyramidLayerNo).indices;
 
