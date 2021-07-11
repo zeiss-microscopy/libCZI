@@ -59,7 +59,7 @@ There are at least two python wrappers available for libCZI. They provide easy a
 
 #### AICSImageIO
 
-This library from the Allen Cell Institute for Cell Science uses libCZI among other tools to read CZI, OME-TIFF and TIFF images and can be found here: [AICSimageIO](https://allencellmodeling.github.io/aicsimageio/)
+This library from the Allen Institute for Cell Science uses libCZI among other tools to read CZI, OME-TIFF and TIFF images and can be found here: [AICSimageIO](https://allencellmodeling.github.io/aicsimageio/)
 
 #### pylibCZI
 
