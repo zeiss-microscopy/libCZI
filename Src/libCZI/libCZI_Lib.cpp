@@ -28,63 +28,96 @@
 #include "SingleChannelPyramidLevelTileAccessor.h"
 #include "SingleChannelScalingTileAccessor.h"
 #include "StreamImpl.h"
+#include "CziMetadataBuilder.h"
+#include "inc_libCZI_Config.h"
 
 using namespace libCZI;
 using namespace std;
 
 void libCZI::GetLibCZIVersion(int* pMajor, int* pMinor)
 {
-	if (pMajor != nullptr)
-	{
-		*pMajor = 0;
-	}
+		if (pMajor != nullptr)
+		{
+				*pMajor = LIBCZI_VERSION_MAJOR;
+		}
 
-	if (pMinor != nullptr)
-	{
-		*pMinor = 24;
-	}
+		if (pMinor != nullptr)
+		{
+				*pMinor = LIBCZI_VERSION_MINOR;
+		}
+}
+
+void libCZI::GetLibCZIBuildInformation(BuildInformation& info)
+{
+		info.compilerIdentification = LIBCZI_CXX_COMPILER_IDENTIFICATION;
+		info.repositoryUrl = LIBCZI_REPOSITORYREMOTEURL;
+		info.repositoryBranch = LIBCZI_REPOSITORYBRANCH;
+		info.repositoryTag = LIBCZI_REPOSITORYHASH;
 }
 
 std::shared_ptr<ICZIReader> libCZI::CreateCZIReader()
 {
-	return std::make_shared<CCZIReader>();
+		return std::make_shared<CCZIReader>();
 }
 
 std::shared_ptr<libCZI::ICziMetadata> libCZI::CreateMetaFromMetadataSegment(IMetadataSegment* metadataSegment)
 {
-	return std::make_shared<CCziMetadata>(metadataSegment);
+		return std::make_shared<CCziMetadata>(metadataSegment);
 }
 
 std::shared_ptr<IAccessor> libCZI::CreateAccesor(std::shared_ptr<ISubBlockRepository> repository, AccessorType accessorType)
 {
-	switch (accessorType)
-	{
+		switch (accessorType)
+		{
 		case AccessorType::SingleChannelTileAccessor:
-			return std::make_shared<CSingleChannelTileAccessor>(repository);
+				return std::make_shared<CSingleChannelTileAccessor>(repository);
 		case AccessorType::SingleChannelPyramidLayerTileAccessor:
-			return std::make_shared<CSingleChannelPyramidLevelTileAccessor>(repository);
+				return std::make_shared<CSingleChannelPyramidLevelTileAccessor>(repository);
 		case AccessorType::SingleChannelScalingTileAccessor:
-			return std::make_shared<CSingleChannelScalingTileAccessor>(repository);
-	}
+				return std::make_shared<CSingleChannelScalingTileAccessor>(repository);
+		}
 
-	throw std::invalid_argument("unknown accessorType");
+		throw std::invalid_argument("unknown accessorType");
 }
 
-std::shared_ptr<IStream> libCZI::CreateStreamFromFile(const wchar_t* szFilename)
+std::shared_ptr<libCZI::IStream> libCZI::CreateStreamFromFile(const wchar_t* szFilename)
 {
 #ifdef _WIN32
-	return make_shared<CSimpleStreamImplWindows>(szFilename);
+		return make_shared<CSimpleStreamImplWindows>(szFilename);
 #else
-	return make_shared<CSimpleStreamImpl>(szFilename);
+		return make_shared<CSimpleStreamImpl>(szFilename);
 #endif
 }
 
-std::shared_ptr<IStream> libCZI::CreateStreamFromMemory(std::shared_ptr<const void> ptr, size_t dataSize)
+std::shared_ptr<libCZI::IStream> libCZI::CreateStreamFromMemory(std::shared_ptr<const void> ptr, size_t dataSize)
 {
-	return make_shared<CStreamImplInMemory>(ptr, dataSize);
+		return make_shared<CStreamImplInMemory>(ptr, dataSize);
 }
 
-std::shared_ptr<IStream> libCZI::CreateStreamFromMemory(libCZI::IAttachment* attachment)
+std::shared_ptr<libCZI::IStream> libCZI::CreateStreamFromMemory(libCZI::IAttachment* attachment)
 {
-	return make_shared<CStreamImplInMemory>(attachment);
+		return make_shared<CStreamImplInMemory>(attachment);
+}
+
+std::shared_ptr<IOutputStream> libCZI::CreateOutputStreamForFile(const wchar_t* szFilename, bool overwriteExisting)
+{
+#ifdef _WIN32
+		return make_shared<CSimpleOutputStreamImplWindows>(szFilename, overwriteExisting);
+#else
+		return make_shared<CSimpleOutputStreamStreams>(szFilename, overwriteExisting);
+#endif
+}
+
+std::shared_ptr<IInputOutputStream> libCZI::CreateInputOutputStreamForFile(const wchar_t* szFilename)
+{
+#ifdef _WIN32
+		return make_shared<CSimpleInputOutputStreamImplWindows>(szFilename);
+#else
+		return make_shared<CSimpleInputOutputStreamImpl>(szFilename);
+#endif
+}
+
+std::shared_ptr<ICziMetadataBuilder> libCZI::CreateMetadataBuilder()
+{
+		return make_shared<CCZiMetadataBuilder>(L"ImageDocument");
 }

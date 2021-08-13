@@ -29,8 +29,8 @@ using namespace libCZI;
 
 /*static*/void CSingleChannelTileCompositor::Compose(libCZI::IBitmapData* dest, libCZI::IBitmapData* source, int x, int y, bool drawTileBorder)
 {
-	auto srcLck = ScopedBitmapLockerP(source);
-	auto dstLck = ScopedBitmapLockerP(dest);
+	ScopedBitmapLockerP srcLck{ source };
+	ScopedBitmapLockerP dstLck{ dest };
 	CBitmapOperations::CopyOffsetedInfo info;
 	info.xOffset = x;
 	info.yOffset = y;

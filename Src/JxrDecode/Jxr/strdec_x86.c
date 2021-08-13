@@ -27,6 +27,7 @@
 //*@@@---@@@@******************************************************************
 #include "strcodec.h"
 #include "decode.h"
+#include "JXRGlue.h"
 
 #if defined(WMP_OPT_SSE2)
 #include <emmintrin.h>
@@ -426,7 +427,7 @@ Loop0:
 Int outputMBRow_RGB24_Lossless_1(CWMImageStrCodec* pSC)
 {
 #ifdef REENTRANT_MODE
-    const size_t cHeight = min((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
+    const size_t cHeight = MIN((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
     const size_t iFirstRow = ((pSC->cRow - 1) * 16 > pSC->m_Dparam->cROITopY ? 0 : (pSC->m_Dparam->cROITopY & 0xf));
 #endif
     const size_t cbRGB = pSC->WMIBI.cbStride;
@@ -1061,7 +1062,7 @@ Loop0:
 Int outputMBRow_RGB24_Lossy_3(CWMImageStrCodec* pSC)
 {
 #ifdef REENTRANT_MODE
-    const size_t cHeight = min((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
+    const size_t cHeight = MIN((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
     const size_t iFirstRow = ((pSC->cRow - 1) * 16 > pSC->m_Dparam->cROITopY ? 0 : (pSC->m_Dparam->cROITopY & 0xf));
 #endif
     const size_t cbRGB = pSC->WMIBI.cbStride;

@@ -23,6 +23,29 @@
 #include "stdafx.h"
 #include "CziAttachmentsDirectory.h"
 
+/*static*/bool CCziAttachmentsDirectoryBase::CompareForEquality_Id(const AttachmentEntry&a, const AttachmentEntry&b)
+{
+	int r = memcmp(&a.ContentGuid, &b.ContentGuid, sizeof(GUID));
+	if (r!=0)
+	{
+		return false;
+	}
+
+	r = strncmp(a.Name, b.Name, sizeof(a.Name));
+	if (r != 0)
+	{
+		return false;
+	}
+
+	r = strncmp(a.ContentFileType, b.ContentFileType, sizeof(a.ContentFileType));
+	if (r != 0)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void CCziAttachmentsDirectory::AddAttachmentEntry(const AttachmentEntry& entry)
 {
 	this->attachmentEntries.emplace_back(entry);
@@ -31,7 +54,7 @@ void CCziAttachmentsDirectory::AddAttachmentEntry(const AttachmentEntry& entry)
 void CCziAttachmentsDirectory::EnumAttachments(std::function<bool(int index, const CCziAttachmentsDirectory::AttachmentEntry&)> func)
 {
 	int i = 0;
-	for (const auto ae: this->attachmentEntries)
+	for (const auto ae : this->attachmentEntries)
 	{
 		bool b = func(i, ae);
 		if (b != true)

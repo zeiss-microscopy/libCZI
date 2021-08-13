@@ -27,11 +27,10 @@
 using namespace libCZI;
 
 CCziMetadataSegment::CCziMetadataSegment(const CCZIParse::MetadataSegmentData& data, std::function<void(void*)> deleter)
-	:
-	spXmlData(std::shared_ptr<const void>(data.ptrXmlData, deleter)),
-	spAttachment(std::shared_ptr<const void>(data.ptrAttachment, deleter)),
-	xmlDataSize(data.xmlDataSize),
-	attachmentSize(data.attachmentSize)
+	:	spXmlData(std::shared_ptr<const void>(data.ptrXmlData, deleter)),
+		spAttachment(std::shared_ptr<const void>(data.ptrAttachment, deleter)),
+		xmlDataSize(data.xmlDataSize),
+		attachmentSize(data.attachmentSize)
 {
 }
 

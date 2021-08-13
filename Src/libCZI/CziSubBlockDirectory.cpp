@@ -25,71 +25,48 @@
 #include "CziUtils.h"
 
 using namespace libCZI;
+using namespace std;
 
-CCziSubBlockDirectory::CCziSubBlockDirectory() : state(State::AddingAllowed)
+/*static*/bool CCziSubBlockDirectoryBase::CompareForEquality_Coordinate(const SubBlkEntry& a, const SubBlkEntry& b)
 {
-	this->statistics.Invalidate();
-	this->statistics.subBlockCount = 0;
-}
-
-void CCziSubBlockDirectory::AddSubBlock(const SubBlkEntry& entry)
-{
-	if (this->state != State::AddingAllowed)
+	if (Utils::Compare(&a.coordinate, &b.coordinate) == 0)
 	{
-		throw std::logic_error("The object is not allowing to add subblocks any more.");
-	}
-
-	this->subBlks.push_back(entry);
-	this->UpdateStatistics(entry);
-}
-
-void CCziSubBlockDirectory::AddingFinished()
-{
-	this->state = State::AddingFinished;
-	this->SortPyramidStatistics();
-}
-
-const libCZI::SubBlockStatistics& CCziSubBlockDirectory::GetStatistics() const
-{
-	return this->statistics;
-}
-
-const libCZI::PyramidStatistics& CCziSubBlockDirectory::GetPyramidStatistics() const
-{
-	return this->pyramidStatistics;
-}
-
-void CCziSubBlockDirectory::EnumSubBlocks(std::function<bool(int index, const SubBlkEntry&)> func)
-{
-	int i = 0;
-	for (auto it = this->subBlks.cbegin(); it != this->subBlks.cend(); ++it)
-	{
-		bool b = func(i++, *it);
-		if (b == false)
+		// if the coordinates are equal, then m-index (if valid) must be different are at least one of the blocks must
+		// be a pyramid-subblock
+		if (a.IsMIndexValid() && b.IsMIndexValid())
 		{
-			break;
+			if (a.mIndex == b.mIndex && a.IsStoredSizeEqualLogicalSize() && b.IsStoredSizeEqualLogicalSize())
+			{
+				return true;
+			}
 		}
-	}
-}
-
-bool CCziSubBlockDirectory::TryGetSubBlock(int index, SubBlkEntry& entry)
-{
-	if (index < (int)this->subBlks.size())
-	{
-		entry = this->subBlks.at(index);
-		return true;
 	}
 
 	return false;
 }
 
-void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
+//----------------------------------------------------------------------------------------
+
+CSbBlkStatisticsUpdater::CSbBlkStatisticsUpdater() :pyramidStatisticsDirty(false)
+{
+	this->statistics.Invalidate();
+	this->statistics.subBlockCount = 0;
+}
+
+void CSbBlkStatisticsUpdater::Clear()
+{
+	this->statistics.Invalidate();
+	this->statistics.subBlockCount = 0;
+	this->pyramidStatisticsDirty = false;
+}
+
+void CSbBlkStatisticsUpdater::UpdateStatistics(const CCziSubBlockDirectoryBase::SubBlkEntry& entry)
 {
 	// TODO: check validity of x,y etc.
-	CCziSubBlockDirectory::UpdateBoundingBox(this->statistics.boundingBox, entry);
+	CSbBlkStatisticsUpdater::UpdateBoundingBox(this->statistics.boundingBox, entry);
 	if (entry.IsStoredSizeEqualLogicalSize())
 	{
-		CCziSubBlockDirectory::UpdateBoundingBox(this->statistics.boundingBoxLayer0Only, entry);
+		CSbBlkStatisticsUpdater::UpdateBoundingBox(this->statistics.boundingBoxLayer0Only, entry);
 	}
 
 	entry.coordinate.EnumValidDimensions(
@@ -144,10 +121,10 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 		auto it = this->statistics.sceneBoundingBoxes.find(sceneIndex);
 		if (it != this->statistics.sceneBoundingBoxes.end())
 		{
-			CCziSubBlockDirectory::UpdateBoundingBox(it->second.boundingBox, entry);
+			CSbBlkStatisticsUpdater::UpdateBoundingBox(it->second.boundingBox, entry);
 			if (entry.IsStoredSizeEqualLogicalSize() == true)
 			{
-				CCziSubBlockDirectory::UpdateBoundingBox(it->second.boundingBoxLayer0, entry);
+				CSbBlkStatisticsUpdater::UpdateBoundingBox(it->second.boundingBoxLayer0, entry);
 			}
 		}
 		else
@@ -170,6 +147,8 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 		}
 	}
 
+	this->pyramidStatisticsDirty = true;
+
 	// now deal with the pyramid-layer info
 	if (!entry.coordinate.TryGetPosition(libCZI::DimensionIndex::S, &sceneIndex))
 	{
@@ -179,7 +158,7 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 	}
 
 	PyramidStatistics::PyramidLayerInfo pli;
-	bool b = CCziSubBlockDirectory::TryToDeterminePyramidLayerInfo(entry, &pli.minificationFactor, &pli.pyramidLayerNo);
+	bool b = CSbBlkStatisticsUpdater::TryToDeterminePyramidLayerInfo(entry, &pli.minificationFactor, &pli.pyramidLayerNo);
 	if (b == false)
 	{
 		pli.minificationFactor = pli.pyramidLayerNo = 0xff;
@@ -200,7 +179,28 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 	++this->statistics.subBlockCount;
 }
 
-/*static*/void CCziSubBlockDirectory::UpdateBoundingBox(libCZI::IntRect& rect, const SubBlkEntry& entry)
+/// This method is to be called in order to "finish up" the pyramid-statistics.
+void CSbBlkStatisticsUpdater::Consolidate()
+{
+	if (this->pyramidStatisticsDirty)
+	{
+		this->SortPyramidStatistics();
+		this->pyramidStatisticsDirty = true;
+	}
+}
+
+const libCZI::SubBlockStatistics& CSbBlkStatisticsUpdater::GetStatistics() const
+{
+	return this->statistics;
+}
+
+const libCZI::PyramidStatistics& CSbBlkStatisticsUpdater::GetPyramidStatistics()
+{
+	this->Consolidate();
+	return this->pyramidStatistics;
+}
+
+/*static*/void CSbBlkStatisticsUpdater::UpdateBoundingBox(libCZI::IntRect& rect, const CCziSubBlockDirectoryBase::SubBlkEntry& entry)
 {
 	if (rect.IsValid() == true)
 	{
@@ -245,7 +245,7 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 /// \param [out] ptrPyramidLayerNo	   If non-null, the pyramid layer no will be stored here.
 ///
 /// \return True if it succeeds, false if it fails.
-/*static*/bool CCziSubBlockDirectory::TryToDeterminePyramidLayerInfo(const SubBlkEntry& entry, std::uint8_t* ptrMinificationFactor, std::uint8_t* ptrPyramidLayerNo)
+/*static*/bool CSbBlkStatisticsUpdater::TryToDeterminePyramidLayerInfo(const CCziSubBlockDirectoryBase::SubBlkEntry& entry, std::uint8_t* ptrMinificationFactor, std::uint8_t* ptrPyramidLayerNo)
 {
 	if (entry.width == entry.storedWidth && entry.height == entry.storedHeight)
 	{
@@ -274,27 +274,27 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 
 	static const MinificationFactorToPyramidLayerInfo MinFacToPLI_Factor2[] =
 	{
-		{2,.1,.1,1},
-		{4,.2,.2,2},
-		{8,.4,.4,3},
-		{16,.8,.8,4},
-		{32, 1,1,5},
-		{64, 1,1,6},
-		{128,1,1,7},
-		{256,2,2,8},
-		{512,4,4,9},
-		{1024,10,10,10}
+	{ 2,.1,.1,1 },
+	{ 4,.2,.2,2 },
+	{ 8,.4,.4,3 },
+	{ 16,.8,.8,4 },
+	{ 32, 1,1,5 },
+	{ 64, 1,1,6 },
+	{ 128,1,1,7 },
+	{ 256,2,2,8 },
+	{ 512,4,4,9 },
+	{ 1024,10,10,10 }
 	};
 
 	static const MinificationFactorToPyramidLayerInfo MinFacToPLI_Factor3[] =
 	{
 		{ 3,.1,.1,1 },
-		{ 9,.2,.2,2 },
-		{ 27,.8,.8,3 },
-		{ 81,1.5,1.5,4 },
-		{ 243, 2,2,5 },
-		{ 729, 5,5,6 },
-		{ 2187,15,15,7 }
+	{ 9,.2,.2,2 },
+	{ 27,.8,.8,3 },
+	{ 81,1.5,1.5,4 },
+	{ 243, 2,2,5 },
+	{ 729, 5,5,6 },
+	{ 2187,15,15,7 }
 	};
 
 	// check whether it is a factor of 2
@@ -322,7 +322,7 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 	return false;
 }
 
-/*static*/void CCziSubBlockDirectory::UpdatePyramidLayerStatistics(std::vector<libCZI::PyramidStatistics::PyramidLayerStatistics>& vec, const PyramidStatistics::PyramidLayerInfo& pli)
+/*static*/void CSbBlkStatisticsUpdater::UpdatePyramidLayerStatistics(std::vector<libCZI::PyramidStatistics::PyramidLayerStatistics>& vec, const PyramidStatistics::PyramidLayerInfo& pli)
 {
 	auto it = std::find_if(vec.begin(), vec.end(), [&](const PyramidStatistics::PyramidLayerStatistics& i) {return pli.minificationFactor == i.layerInfo.minificationFactor && pli.pyramidLayerNo == i.layerInfo.pyramidLayerNo; });
 	if (it != vec.end())
@@ -338,7 +338,7 @@ void CCziSubBlockDirectory::UpdateStatistics(const SubBlkEntry& entry)
 	}
 }
 
-void CCziSubBlockDirectory::SortPyramidStatistics()
+void CSbBlkStatisticsUpdater::SortPyramidStatistics()
 {
 	for (auto& v : this->pyramidStatistics.scenePyramidStatistics)
 	{
@@ -381,4 +381,84 @@ void CCziSubBlockDirectory::SortPyramidStatistics()
 			return minificationFactorA < minificationFactorB;
 		});
 	}
+}
+
+// ---------------------------------------------------------------------------------------------
+
+CCziSubBlockDirectory::CCziSubBlockDirectory() : state(State::AddingAllowed)
+{
+	/*this->statistics.Invalidate();
+	this->statistics.subBlockCount = 0;*/
+}
+
+void CCziSubBlockDirectory::AddSubBlock(const SubBlkEntry& entry)
+{
+	if (this->state != State::AddingAllowed)
+	{
+		throw std::logic_error("The object is not allowing to add subblocks any more.");
+	}
+
+	this->subBlks.push_back(entry);
+	//this->UpdateStatistics(entry);
+	this->sblkStatistics.UpdateStatistics(entry);
+}
+
+void CCziSubBlockDirectory::AddingFinished()
+{
+	this->state = State::AddingFinished;
+	this->sblkStatistics.Consolidate();
+	//this->SortPyramidStatistics();
+}
+
+const libCZI::SubBlockStatistics& CCziSubBlockDirectory::GetStatistics() const
+{
+	//return this->statistics;
+	return this->sblkStatistics.GetStatistics();
+}
+
+const libCZI::PyramidStatistics& CCziSubBlockDirectory::GetPyramidStatistics() const
+{
+	//return this->pyramidStatistics;
+	return this->sblkStatistics.GetPyramidStatistics();
+}
+
+void CCziSubBlockDirectory::EnumSubBlocks(std::function<bool(int index, const SubBlkEntry&)> func)
+{
+	int i = 0;
+	for (auto it = this->subBlks.cbegin(); it != this->subBlks.cend(); ++it)
+	{
+		bool b = func(i++, *it);
+		if (b == false)
+		{
+			break;
+		}
+	}
+}
+
+bool CCziSubBlockDirectory::TryGetSubBlock(int index, SubBlkEntry& entry)
+{
+	if (index < (int)this->subBlks.size())
+	{
+		entry = this->subBlks.at(index);
+		return true;
+	}
+
+	return false;
+}
+
+//----------------------------------------------------------------------------------------------
+
+bool PixelTypeForChannelIndexStatistic::TryGetPixelTypeForNoChannelIndex(int* pixelType) const
+{
+	if (!this->pixeltypeNoValidChannelIdxValid)
+	{
+		return false;
+	}
+
+	if (pixelType != nullptr)
+	{
+		*pixelType = this->pixelTypeNoValidChannel;
+	}
+
+	return true;
 }

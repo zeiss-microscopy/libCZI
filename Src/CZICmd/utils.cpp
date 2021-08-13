@@ -24,6 +24,7 @@
 #include "utils.h"
 #include <cwctype>
 #include <iomanip>
+#include <regex>
 
 #if defined(WIN32ENV)
 #define HAS_CODECVT
@@ -146,7 +147,7 @@ std::uint8_t HexCharToInt(char c)
 
 bool ConvertHexStringToInteger(const char* cp, std::uint32_t* value)
 {
-	if (*cp=='\0')
+	if (*cp == '\0')
 	{
 		return false;
 	}
@@ -304,4 +305,85 @@ std::ostream& operator<<(std::ostream& os, const GUID& guid)
 		<< std::setw(2) << static_cast<short>(guid.Data4[7]);
 	os << std::nouppercase;
 	return os;
+}
+
+/// Attempts to parse a GUID from the given std::wstring. The string has to have the form 
+/// "cfc4a2fe-f968-4ef8-b685-e73d1b77271a" or "{cfc4a2fe-f968-4ef8-b685-e73d1b77271a}".
+///
+/// \param 		    str	    The string.
+/// \param [in,out] outGuid If non-null, the Guid will be put here if successful.
+///
+/// \return True if it succeeds, false if it fails.
+bool TryParseGuid(const std::wstring& str, GUID* outGuid)
+{
+	auto strTrimmed = trim(str);
+	if (strTrimmed.empty() || strTrimmed.length() < 2)
+	{
+		return false;
+	}
+
+	if (strTrimmed[0] == L'{' && strTrimmed[strTrimmed.length() - 1] == L'}')
+	{
+		strTrimmed = strTrimmed.substr(1, strTrimmed.length() - 2);
+	}
+
+	std::wregex guidRegex(LR"([0-9A-Fa-f]{8}[-]([0-9A-Fa-f]{4}[-]){3}[0-9A-Fa-f]{12})");
+	if (std::regex_match(strTrimmed, guidRegex))
+	{
+		GUID g;
+		uint32_t value;
+		char sz[9];
+		for (int i = 0; i < 8; ++i)
+		{
+			sz[i] = (char)strTrimmed[i];
+		}
+
+		sz[8] = '\0';
+		bool b = ConvertHexStringToInteger(sz, &value);
+		if (!b) { return false; }
+		g.Data1 = value;
+
+		for (int i = 0; i < 4; ++i)
+		{
+			sz[i] = (char)strTrimmed[i + 9];
+		}
+
+		sz[4] = '\0';
+		b = ConvertHexStringToInteger(sz, &value);
+		if (!b) { return false; }
+		g.Data2 = (unsigned short)value;
+
+		for (int i = 0; i < 4; ++i)
+		{
+			sz[i] = (char)strTrimmed[i + 14];
+		}
+
+		b = ConvertHexStringToInteger(sz, &value);
+		if (!b) { return false; }
+		g.Data3 = (unsigned short)value;
+
+		sz[2] = '\0';
+		static const uint8_t positions[] = { 19,21,24,26,  28,30,32,34 };
+
+		for (int p = 0; p < 8; ++p)
+		{
+			for (int i = 0; i < 2; ++i)
+			{
+				sz[i] = (char)strTrimmed[i + positions[p]];
+			}
+
+			b = ConvertHexStringToInteger(sz, &value);
+			if (!b) { return false; }
+			g.Data4[p] = (unsigned char)value;
+		}
+
+		if (outGuid != nullptr)
+		{
+			*outGuid = g;
+		}
+
+		return true;
+	}
+
+	return false;
 }

@@ -12,6 +12,7 @@ name                                                  |  purpose                
  [libpng](http://libpng.org/pub/png/libpng.html)      | write PNGs               | [libpng license] | used in CZICmd (on Linux)     | no
  [getoptW](https://github.com/bluebaroncanada/getoptW)| commandline args parser  | [getOptW license]| used in CZICmd (on Windows)   | yes
  [md5sum](https://sourceforge.net/projects/md5sum/)   | MD5Sum hash              | [MD5Sum license] |                               | yes
+ [zstd](https://github.com/facebook/zstd/)            | ZSTd compression         | [zstd license]   |                               | no
 
  
  [MIT]: https://opensource.org/licenses/MIT   "MIT"
@@ -20,3 +21,4 @@ name                                                  |  purpose                
  [libpng license]: http://libpng.org/pub/png/src/libpng-LICENSE.txt "libpng license"
  [getOptW license]: https://github.com/bluebaroncanada/getoptW/#licence] "getOptW license"
  [MD5Sum license]: http://www.cv.nrao.edu/glish/copyright/md5.html "MD5Sum license"
+ [zstd license]: https://github.com/facebook/zstd/blob/dev/LICENSE "ZStd license"

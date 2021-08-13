@@ -835,7 +835,7 @@ ERR PKImageEncode_EncodeContent_Encode(
 					  (pIE->WMP.wmiSCP.bYUVData && pIE->WMP.wmiSCP.cfColorFormat==YUV_420) );
         CWMImageBufferInfo wmiBI = { 0 };
         wmiBI.pv = pbPixels + cbStride * i / (f420 ? 2 : 1);
-        wmiBI.cLine = min(16, cLine - i);
+        wmiBI.cLine = MIN(16, cLine - i);
         wmiBI.cbStride = cbStride;
         FailIf(ICERR_OK != ImageStrEncEncode(pIE->WMP.ctxSC, &wmiBI), WMP_errFail);
     }
@@ -959,7 +959,7 @@ ERR PKImageEncode_EncodeAlpha_Encode(
     {
         CWMImageBufferInfo wmiBI = { 0 };
         wmiBI.pv = pbPixels + cbStride * i;
-        wmiBI.cLine = min(16, cLine - i);
+        wmiBI.cLine = MIN(16, cLine - i);
         wmiBI.cbStride = cbStride;
         FailIf(ICERR_OK != ImageStrEncEncode(pIE->WMP.ctxSC_Alpha, &wmiBI), WMP_errFail);
     }
@@ -1340,7 +1340,7 @@ ERR PKImageEncode_WritePixelsBandedEnd_WMP(PKImageEncode* pIE)
             char rgbBuf[TEMPFILE_COPYBUF_SIZE];
             size_t cbCopy;
 
-            cbCopy = min(sizeof(rgbBuf), cbAlpha - cbBytesCopied);
+            cbCopy = MIN(sizeof(rgbBuf), cbAlpha - cbBytesCopied);
             Call(pAlphaStream->Read(pAlphaStream, rgbBuf, cbCopy));
             Call(pMainStream->Write(pMainStream, rgbBuf, cbCopy));
 
@@ -1748,8 +1748,8 @@ ERR ParsePFDEntry(
             break;
 
         default:
-            fprintf(stderr, "Unrecognized WMPTag: %d(%#x), %d, %d, %#x" CRLF,
-                (int)uTag, (int)uTag, (int)uType, (int)uCount, (int)uValue);
+            /*fprintf(stderr, "Unrecognized WMPTag: %d(%#x), %d, %d, %#x" CRLF,
+                (int)uTag, (int)uTag, (int)uType, (int)uCount, (int)uValue);*/
             break;
     }
 

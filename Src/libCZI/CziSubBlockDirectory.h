@@ -23,9 +23,10 @@
 #pragma once
 
 #include <functional>
+#include <set>
 #include "libCZI.h"
 
-class CCziSubBlockDirectory
+class CCziSubBlockDirectoryBase
 {
 public:
 	struct SubBlkEntry
@@ -58,10 +59,42 @@ public:
 		}
 	};
 
+	struct SubBlkEntryEx : SubBlkEntry
+	{
+		std::uint64_t allocatedSize;
+	};
+
+	static bool CompareForEquality_Coordinate(const SubBlkEntry& a, const SubBlkEntry& b);
+};
+
+class CSbBlkStatisticsUpdater
+{
 private:
-	std::vector<SubBlkEntry> subBlks;
 	libCZI::SubBlockStatistics statistics;
 	libCZI::PyramidStatistics pyramidStatistics;
+	bool pyramidStatisticsDirty;
+public:
+	CSbBlkStatisticsUpdater();
+	void UpdateStatistics(const CCziSubBlockDirectoryBase::SubBlkEntry& entry);
+	void Consolidate();
+
+	const libCZI::SubBlockStatistics& GetStatistics() const;
+	const libCZI::PyramidStatistics& GetPyramidStatistics();
+
+	void Clear();
+private:
+	void SortPyramidStatistics();
+	static void UpdateBoundingBox(libCZI::IntRect& rect, const CCziSubBlockDirectoryBase::SubBlkEntry& entry);
+	static bool TryToDeterminePyramidLayerInfo(const CCziSubBlockDirectoryBase::SubBlkEntry& entry, std::uint8_t* ptrMinificationFactor, std::uint8_t* ptrPyramidLayerNo);
+	static void UpdatePyramidLayerStatistics(std::vector<libCZI::PyramidStatistics::PyramidLayerStatistics>& vec, const libCZI::PyramidStatistics::PyramidLayerInfo& pli);
+};
+
+
+class CCziSubBlockDirectory : public CCziSubBlockDirectoryBase
+{
+private:
+	std::vector<SubBlkEntry> subBlks;
+	mutable CSbBlkStatisticsUpdater sblkStatistics;
 	enum class State
 	{
 		AddingAllowed,
@@ -79,11 +112,26 @@ public:
 
 	void EnumSubBlocks(std::function<bool(int index, const SubBlkEntry&)> func);
 	bool TryGetSubBlock(int index, SubBlkEntry& entry);
+};
 
-private:
-	void UpdateStatistics(const SubBlkEntry& entry);
-	void SortPyramidStatistics();
-	static void UpdateBoundingBox(libCZI::IntRect& rect, const SubBlkEntry& entry);
-	static bool TryToDeterminePyramidLayerInfo(const SubBlkEntry& entry, std::uint8_t* minificationFactor, std::uint8_t* pyramidLayerNo);
-	static void UpdatePyramidLayerStatistics(std::vector<libCZI::PyramidStatistics::PyramidLayerStatistics>& vec, const libCZI::PyramidStatistics::PyramidLayerInfo& pli);
+class PixelTypeForChannelIndexStatistic
+{
+protected:
+	bool pixeltypeNoValidChannelIdxValid;
+	int pixelTypeNoValidChannel;
+	std::map<int, int> pixelTypePerChannelIndex;
+public:
+	PixelTypeForChannelIndexStatistic() :pixeltypeNoValidChannelIdxValid(false)
+	{}
+
+	/// Attempts to get the pixeltype for "sub-blocks without a channel index".
+	///
+	/// \param [in,out] pixelType If non-null, will receive the pixeltype (if successful).
+	/// \return True if it succeeds, false if it fails.
+	bool TryGetPixelTypeForNoChannelIndex(int* pixelType) const;
+
+	/// Gets a map where key is the channel-index and value is the pixel-type that was determinded.
+	///
+	/// \return A map where key is the channel-index and value is the pixel-type that was determinded.
+	const std::map<int, int>& GetChannelIndexPixelTypeMap() const { return this->pixelTypePerChannelIndex; }
 };

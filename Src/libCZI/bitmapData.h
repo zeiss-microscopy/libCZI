@@ -53,10 +53,10 @@ public:
 	static std::shared_ptr<libCZI::IBitmapData> Create(libCZI::PixelType pixeltype, std::uint32_t width, std::uint32_t height, std::uint32_t pitch = 0, std::uint32_t extraRows = 0, std::uint32_t extraColumns = 0);
 	static std::shared_ptr<libCZI::IBitmapData> Create(tAllocator allocator, libCZI::PixelType pixeltype, std::uint32_t width, std::uint32_t height, std::uint32_t pitch);
 
-	virtual libCZI::PixelType		GetPixelType() const override { return this->pixelType; }
-	virtual libCZI::IntSize			GetSize() const override { return libCZI::IntSize{ this->width,this->height }; }
+	libCZI::PixelType		GetPixelType() const override { return this->pixelType; }
+	libCZI::IntSize			GetSize() const override { return libCZI::IntSize{ this->width,this->height }; }
 
-	virtual libCZI::BitmapLockInfo	Lock() override
+	libCZI::BitmapLockInfo	Lock() override
 	{
 		std::atomic_fetch_add(&this->lockCnt, 1);
 		libCZI::BitmapLockInfo bli;
@@ -67,7 +67,7 @@ public:
 		return bli;
 	}
 
-	virtual void Unlock() override
+	void Unlock() override
 	{
 		int lckCnt = std::atomic_fetch_sub(&this->lockCnt, 1);
 		if (lckCnt < 1)

@@ -27,53 +27,93 @@ using namespace libCZI;
 
 /*static*/libCZI::PixelType CziUtils::PixelTypeFromInt(int i)
 {
-	switch (i)
-	{
-	case 0:  return PixelType::Gray8;
-	case 1:  return PixelType::Gray16;
-	case 2:  return PixelType::Gray32Float;
-	case 3:  return PixelType::Bgr24;
-	case 4:  return PixelType::Bgr48;
-	case 8:  return PixelType::Bgr96Float;
-	case 9:  return PixelType::Bgra32;
-	case 10: return PixelType::Gray64ComplexFloat;
-	case 11: return PixelType::Bgr192ComplexFloat;
-	case 12: return PixelType::Gray32;
-	case 13: return PixelType::Gray64Float;
-	}
+		switch (i)
+		{
+		case 0:  return PixelType::Gray8;
+		case 1:  return PixelType::Gray16;
+		case 2:  return PixelType::Gray32Float;
+		case 3:  return PixelType::Bgr24;
+		case 4:  return PixelType::Bgr48;
+		case 8:  return PixelType::Bgr96Float;
+		case 9:  return PixelType::Bgra32;
+		case 10: return PixelType::Gray64ComplexFloat;
+		case 11: return PixelType::Bgr192ComplexFloat;
+		case 12: return PixelType::Gray32;
+		case 13: return PixelType::Gray64Float;
+		}
 
-	return PixelType::Invalid;
+		return PixelType::Invalid;
 }
+
+/*static*/int CziUtils::IntFromPixelType(libCZI::PixelType p)
+{
+		switch (p)
+		{
+		case PixelType::Gray8:				return 0;
+		case PixelType::Gray16:				return 1;
+		case PixelType::Gray32Float:		return 2;
+		case PixelType::Bgr24:				return 3;
+		case PixelType::Bgr48:				return 4;
+		case PixelType::Bgr96Float:			return 8;
+		case PixelType::Bgra32:				return 9;
+		case PixelType::Gray64ComplexFloat:	return 10;
+		case PixelType::Bgr192ComplexFloat:	return 11;
+		case PixelType::Gray32:				return 12;
+		case PixelType::Gray64Float:		return 13;
+		default:							return (std::numeric_limits<int>::min)();
+		}
+}
+
 
 /*static*/libCZI::CompressionMode CziUtils::CompressionModeFromInt(int i)
 {
-	switch (i)
-	{
-	case 0: return CompressionMode::UnCompressed;
-	case 1: return CompressionMode::Jpg;
-	case 4: return CompressionMode::JpgXr;
-	}
+		switch (i)
+		{
+		case 0:  return CompressionMode::UnCompressed;
+		case 1:  return CompressionMode::Jpg;
+		case 4:  return CompressionMode::JpgXr;
+		case 5: return CompressionMode::Zstd0;
+		case 6: return CompressionMode::Zstd1;
+		default: return CompressionMode::Invalid;
+		}
+}
 
-	return CompressionMode::Invalid;
+/*static*/std::int32_t CziUtils::CompressionModeToInt(libCZI::CompressionMode m)
+{
+		switch (m)
+		{
+		case CompressionMode::UnCompressed:
+				return 0;
+		case CompressionMode::Jpg:
+				return 1;
+		case CompressionMode::JpgXr:
+				return 4;
+		case CompressionMode::Zstd0:
+				return 5;
+		case CompressionMode::Zstd1:
+				return 6;
+		default:
+				return (std::numeric_limits<int32_t>::min)();
+		}
 }
 
 /*static*/std::uint8_t CziUtils::GetBytesPerPel(libCZI::PixelType pixelType)
 {
-	switch (pixelType)
-	{
-	case PixelType::Gray8: return 1;
-	case PixelType::Gray16:return 2;
-	case PixelType::Gray32Float:return 4;
-	case PixelType::Bgr24:return 3;
-	case PixelType::Bgr48: return 6;
-	case PixelType::Bgr96Float: return 12;
-	case PixelType::Bgra32:return 4;
-	case PixelType::Gray64ComplexFloat: return 16;
-	case PixelType::Bgr192ComplexFloat: return 48;
-	case PixelType::Gray32: return 4;
-	case PixelType::Gray64Float:return 8;
-	default:throw std::invalid_argument("illegal pixeltype");
-	}
+		switch (pixelType)
+		{
+		case PixelType::Gray8:				return 1;
+		case PixelType::Gray16:				return 2;
+		case PixelType::Gray32Float:		return 4;
+		case PixelType::Bgr24:				return 3;
+		case PixelType::Bgr48:				return 6;
+		case PixelType::Bgr96Float:			return 12;
+		case PixelType::Bgra32:				return 4;
+		case PixelType::Gray64ComplexFloat: return 16;
+		case PixelType::Bgr192ComplexFloat: return 48;
+		case PixelType::Gray32:				return 4;
+		case PixelType::Gray64Float:		return 8;
+		default: throw std::invalid_argument("illegal pixeltype");
+		}
 }
 
 /// <summary>	Compare coordinate in the following way:
@@ -88,59 +128,72 @@ using namespace libCZI;
 /// <returns>	A boolean indicating whether the coordinates are equal or not (according to the above definition of equality). </returns>
 /*static*/bool CziUtils::CompareCoordinate(const libCZI::IDimCoordinate* coord1, const libCZI::IDimCoordinate* coord2)
 {
-	bool areEqual = true;
-	CziUtils::EnumAllCoordinateDimensions(
-		[&](libCZI::DimensionIndex dim)->bool
-	{
-		int coordinate1, coordinate2;
-		if (coord1->TryGetPosition(dim, &coordinate1) == true)
-		{
-			if (coord2->TryGetPosition(dim, &coordinate2) != true)
-			{
-				areEqual= false;
-				return false;
-			}
+		bool areEqual = true;
+		CziUtils::EnumAllCoordinateDimensions(
+				[&](libCZI::DimensionIndex dim)->bool
+				{
+						int coordinate1, coordinate2;
+						if (coord1->TryGetPosition(dim, &coordinate1) == true)
+						{
+								if (coord2->TryGetPosition(dim, &coordinate2) != true)
+								{
+										areEqual = false;
+										return false;
+								}
 
-			if (coordinate1 != coordinate2)
-			{
-				areEqual = false;
-				return false;
-			}
-		}
+								if (coordinate1 != coordinate2)
+								{
+										areEqual = false;
+										return false;
+								}
+						}
 
-		return true;
-	});
+						return true;
+				});
 
-	return areEqual;
+		return areEqual;
 }
 
 /*static*/void CziUtils::EnumAllCoordinateDimensions(std::function<bool(libCZI::DimensionIndex)> func)
 {
-	static const DimensionIndex dims[] = { DimensionIndex::Z,DimensionIndex::C,DimensionIndex::T,DimensionIndex::R,DimensionIndex::S,
-											DimensionIndex::I,DimensionIndex::H,DimensionIndex::V,DimensionIndex::B };
+		static const DimensionIndex dims[] = { DimensionIndex::Z,DimensionIndex::C,DimensionIndex::T,DimensionIndex::R,DimensionIndex::S,
+												DimensionIndex::I,DimensionIndex::H,DimensionIndex::V,DimensionIndex::B };
 
-	for (int i = 0; i < sizeof(dims) / sizeof(dims[0]); ++i)
-	{
-		if (func(dims[i]) == false)
-			break;
-	}
+		for (int i = 0; i < sizeof(dims) / sizeof(dims[0]); ++i)
+		{
+				if (func(dims[i]) == false)
+						break;
+		}
 }
 
 /*static*/double CziUtils::CalculateMinificationFactor(int logicalSizeWidth, int logicalSizeHeight, int physicalSizeWidth, int physicalSizeHeight)
 {
-	// We try to reduce the error (introduced by the fact that the width/height are given in integers)
-	// by using the largest value.
-	// - Note that we are limiting ourselves to isotrophic scales (which is not a problem because that is all that works)
-	// - This is only mitigating the issue...
-	double minFactor;
-	if (physicalSizeWidth > physicalSizeHeight)
-	{
-		minFactor = double(logicalSizeWidth) / physicalSizeWidth;
-	}
-	else
-	{
-		minFactor = double(logicalSizeHeight) / physicalSizeHeight;
-	}
+		// We try to reduce the error (introduced by the fact that the width/height are given in integers)
+		// by using the largest value.
+		// - Note that we are limiting ourselves to isotrophic scales (which is not a problem because that is all that works)
+		// - This is only mitigating the issue...
+		double minFactor;
+		if (physicalSizeWidth > physicalSizeHeight)
+		{
+				minFactor = double(logicalSizeWidth) / physicalSizeWidth;
+		}
+		else
+		{
+				minFactor = double(logicalSizeHeight) / physicalSizeHeight;
+		}
 
-	return minFactor;
+		return minFactor;
+}
+
+/*static*/bool CziUtils::IsPixelTypeEndianessAgnostic(libCZI::PixelType pixelType)
+{
+		switch (pixelType)
+		{
+		case PixelType::Gray8:
+		case PixelType::Bgr24:
+		case PixelType::Bgra32:
+				return true;
+		}
+
+		return false;
 }

@@ -25,29 +25,29 @@
 // TODO: we need a platform-independent replacement for GUID
 
 #if !defined(__GNUC__)
- #include <pshpack2.h>
+#include <pshpack2.h>
 #define PACKED 
 #else
- #define PACKED __attribute__ ((__packed__))
+#define PACKED __attribute__ ((__packed__))
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////
 // Enumerations
 /////////////////////////////////////////////////////////////////////////////////
 
-enum class PixelType : std::uint8_t
-{
-	Gray8 = 0,
-	Gray16 = 1,
-	Gray32Float = 2, Bgr24 = 3,
-	Bgr48 = 4,
-	Bgr96Float = 8,
-	Bgra32 = 9,
-	Gray64ComplexFloat = 10,
-	Bgr192ComplexFloat = 11,
-	Gray32 = 12,
-	Gray64Float = 13,
-};
+//enum class PixelType : std::uint8_t
+//{
+//    Gray8 = 0,
+//    Gray16 = 1,
+//    Gray32Float = 2, Bgr24 = 3,
+//    Bgr48 = 4,
+//    Bgr96Float = 8,
+//    Bgra32 = 9,
+//    Gray64ComplexFloat = 10,
+//    Bgr192ComplexFloat = 11,
+//    Gray32 = 12,
+//    Gray64Float = 13,
+//};
 
 ////////////////////////////////////////////////////////////////////
 // STRUCTURES
@@ -57,17 +57,17 @@ enum class PixelType : std::uint8_t
 typedef struct PACKED DimensionEntry
 {
 	char Dimension[4];
-	int	Start;
-	int Size;
+	std::int32_t Start;
+	std::int32_t Size;
 	float StartCoordinate;
-	int StoredSize;
+	std::int32_t StoredSize;
 } DIMENSIONENTRY;
 
 typedef struct PACKED AttachmentInfo
 {
 	std::int64_t AllocatedSize;
 	std::int64_t DataSize;
-	int FilePart;
+	std::int32_t FilePart;
 	GUID ContentGuid;
 	char ContentFileType[8];
 	char Name[80];
@@ -78,13 +78,13 @@ typedef struct PACKED AttachmentInfo
 typedef struct PACKED MetadataInfo
 {
 	std::int64_t AllocatedSize;
-	int XmlSize;
-	int BinarySize;
+	std::int32_t XmlSize;
+	std::int32_t BinarySize;
 } METADATAINFO;
 
 typedef struct PACKED AttachmentDirectoryInfo
 {
-	int EntryCount;
+	std::int32_t EntryCount;
 	//HANDLE* attachmentHandles;
 } ATTACHMENTDIRECTORYINFO;
 
@@ -100,24 +100,24 @@ struct PACKED SegmentHeader
 };
 
 // defined segment algignments (never modify this constants!)
-const int SEGMENT_ALIGN = 32;
+const std::int32_t SEGMENT_ALIGN = 32;
 
 // Sizes of segment parts (never modify this constants!)
-const int SIZE_SEGMENTHEADER = 32;
-const int SIZE_SEGMENTID = 16;
-const int SIZE_SUBBLOCKDIRECTORYENTRY_DE = 128;
-const int SIZE_ATTACHMENTENTRY = 128;
-const int SIZE_SUBBLOCKDIRECTORYENTRY_DV_FIXEDPART = 32;
+const std::int32_t SIZE_SEGMENTHEADER = 32;
+const std::int32_t SIZE_SEGMENTID = 16;
+const std::int32_t SIZE_SUBBLOCKDIRECTORYENTRY_DE = 128;
+const std::int32_t SIZE_ATTACHMENTENTRY = 128;
+const std::int32_t SIZE_SUBBLOCKDIRECTORYENTRY_DV_FIXEDPART = 32;
 
 // Data section within segments (never modify this constants!)
-const int SIZE_FILEHEADER_DATA = 512;
-const int SIZE_METADATA_DATA = 256;
-const int SIZE_SUBBLOCKDATA_MINIMUM = 256;
-const int SIZE_SUBBLOCKDATA_FIXEDPART = 16;
-const int SIZE_SUBBLOCKDIRECTORY_DATA = 128;
-const int SIZE_ATTACHMENTDIRECTORY_DATA = 256;
-const int SIZE_ATTACHMENT_DATA = 256;
-const int SIZE_DIMENSIONENTRYDV = 20;
+const std::int32_t SIZE_FILEHEADER_DATA = 512;
+const std::int32_t SIZE_METADATA_DATA = 256;
+const std::int32_t SIZE_SUBBLOCKDATA_MINIMUM = 256;
+const std::int32_t SIZE_SUBBLOCKDATA_FIXEDPART = 16;
+const std::int32_t SIZE_SUBBLOCKDIRECTORY_DATA = 128;
+const std::int32_t SIZE_ATTACHMENTDIRECTORY_DATA = 256;
+const std::int32_t SIZE_ATTACHMENT_DATA = 256;
+const std::int32_t SIZE_DIMENSIONENTRYDV = 20;
 
 // internal implementation limits (internal use of pre-allocated structures)
 // re-dimension if more items needed
@@ -134,16 +134,16 @@ const int MAXDIMENSIONS = 40;
 
 struct PACKED FileHeaderSegmentData
 {
-	int Major;
-	int Minor;
-	int _Reserved1;
-	int _Reserved2;
+	std::int32_t Major;
+	std::int32_t Minor;
+	std::int32_t _Reserved1;
+	std::int32_t _Reserved2;
 	GUID PrimaryFileGuid;
 	GUID FileGuid;
-	int FilePart;
+	std::int32_t FilePart;
 	std::int64_t SubBlockDirectoryPosition;
 	std::int64_t MetadataPosition;
-	int updatePending;
+	std::int32_t updatePending;
 	std::int64_t AttachmentDirectoryPosition;
 	unsigned char _spare[SIZE_FILEHEADER_DATA - 80];  // offset 80
 };
@@ -153,34 +153,34 @@ struct PACKED FileHeaderSegmentData
 struct PACKED SubBlockDirectoryEntryDE
 {
 	unsigned char SchemaType[2];
-	int PixelType;
-	int SizeXStored;
-	int SizeYStored;
+	std::int32_t PixelType;
+	std::int32_t SizeXStored;
+	std::int32_t SizeYStored;
 	unsigned char _pad[2];
-	int StartX;		// offset 16
-	int SizeX;
-	int StartY;
-	int SizeY;
-	int StartC;
-	int SizeC;
-	int StartZ;
-	int SizeZ;
-	int StartT;
-	int SizeT;
-	int StartS;
-	int StartR;
-	int StartI;
-	int StartB;
-	int Compression;
-	int StartM;
+	std::int32_t StartX;		// offset 16
+	std::int32_t SizeX;
+	std::int32_t StartY;
+	std::int32_t SizeY;
+	std::int32_t StartC;
+	std::int32_t SizeC;
+	std::int32_t StartZ;
+	std::int32_t SizeZ;
+	std::int32_t StartT;
+	std::int32_t SizeT;
+	std::int32_t StartS;
+	std::int32_t StartR;
+	std::int32_t StartI;
+	std::int32_t StartB;
+	std::int32_t Compression;
+	std::int32_t StartM;
 	std::int64_t FilePosition;
-	int FilePart;
+	std::int32_t FilePart;
 	unsigned char DimensionOrder[16];
-	int StartH;
-	int Start10;
-	int Start11;
-	int Start12;
-	int Start13;
+	std::int32_t StartH;
+	std::int32_t Start10;
+	std::int32_t Start11;
+	std::int32_t Start12;
+	std::int32_t Start13;
 };
 
 // SubBlockDirectory - Entry: DV variable length - mimimum of 256 bytes
@@ -193,12 +193,12 @@ struct PACKED DimensionEntryDV : DIMENSIONENTRY
 struct PACKED SubBlockDirectoryEntryDV
 {
 	unsigned char SchemaType[2];
-	int PixelType;
+	std::int32_t PixelType;
 	std::int64_t FilePosition;
-	int FilePart;
-	int Compression;
+	std::int32_t FilePart;
+	std::int32_t Compression;
 	unsigned char _spare[6];
-	int DimensionCount;
+	std::int32_t DimensionCount;
 
 	// max. allocation for ease of use (valid size = 32 + EntryCount * 20)
 	struct DimensionEntryDV DimensionEntries[MAXDIMENSIONS]; // offset 32
@@ -206,7 +206,7 @@ struct PACKED SubBlockDirectoryEntryDV
 
 struct PACKED SubBlockDirectorySegmentData
 {
-	int EntryCount;
+	std::int32_t EntryCount;
 	unsigned char _spare[SIZE_SUBBLOCKDIRECTORY_DATA - 4];
 	// followed by any sequence of SubBlockDirectoryEntryDE or SubBlockDirectoryEntryDV records;
 };
@@ -219,7 +219,7 @@ struct PACKED AttachmentEntryA1
 	unsigned char SchemaType[2];
 	unsigned char _spare[10];
 	std::int64_t FilePosition;
-	int FilePart;
+	std::int32_t FilePart;
 	GUID ContentGuid;
 	unsigned char ContentFileType[8];
 	unsigned char Name[80];
@@ -239,7 +239,7 @@ struct PACKED AttachmentSegmentData
 
 struct PACKED AttachmentDirectorySegmentData
 {
-	int EntryCount;
+	std::int32_t EntryCount;
 	unsigned char _spare[SIZE_ATTACHMENTDIRECTORY_DATA - 4];
 	// followed by => AttachmentEntry entries[EntryCount];
 };
@@ -250,8 +250,8 @@ struct PACKED AttachmentDirectorySegmentData
 
 struct PACKED SubBlockSegmentData
 {
-	int MetadataSize;
-	int AttachmentSize;
+	std::int32_t MetadataSize;
+	std::int32_t AttachmentSize;
 	std::int64_t DataSize;
 	union PACKED
 	{
@@ -267,8 +267,8 @@ struct PACKED SubBlockSegmentData
 
 struct PACKED MetadataSegmentData
 {
-	int XmlSize;
-	int AttachmentSize;
+	std::int32_t XmlSize;
+	std::int32_t AttachmentSize;
 	unsigned char _spare[SIZE_METADATA_DATA - 8];
 };
 
@@ -320,7 +320,28 @@ struct PACKED FileHeaderSegment
 };
 
 #if !defined(__GNUC__)
- #include <poppack.h>
+#include <poppack.h>
 #else
- #define PACK
+#define PACK
 #endif
+
+class ConvertToHostByteOrder
+{
+public:
+	static void Convert(SegmentHeader* p);
+	static void Convert(FileHeaderSegmentData* p);
+	static void Convert(FileHeaderSegment* p);
+	static void Convert(AttachmentEntryA1* p);
+	static void Convert(SubBlockDirectoryEntryDV* p);
+	static void Convert(DimensionEntryDV* p, int count);
+	static void Convert(SubBlockDirectoryEntryDE* p);
+
+	static void Convert(AttachmentSegment* p);
+	static void Convert(AttachmentDirectorySegment* p);
+	static void Convert(MetadataSegment* p);
+	static void Convert(SubBlockDirectorySegment* p);
+	static void Convert(SubBlockSegment* p);
+
+	static void ConvertAndAllSubBlkEntries(SubBlockSegment* p);
+	static void ConvertAndAllSubBlkDirEntries(SubBlockDirectorySegment* p);
+};

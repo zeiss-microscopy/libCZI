@@ -346,14 +346,13 @@ inline void CBitmapOperations::Copy<libCZI::PixelType::Bgr24, libCZI::PixelType:
 	Copy<libCZI::PixelType::Bgr24, libCZI::PixelType::Bgr48, CConvBgr24ToBgr48>(CConvBgr24ToBgr48(), srcPtr, srcStride, dstPtr, dstStride, width, height, drawTileBorder);
 }
 
-
 //------------------------------------------------------------------------------------------------------------
 
 template <libCZI::PixelType tSrcPixelType, libCZI::PixelType tDstPixelType, typename tPixelConverter, typename tFlt>
 inline void CBitmapOperations::InternalNNScale2(const tPixelConverter& conv, const NNResizeInfo2<tFlt>& resizeInfo)
 {
-	auto bytesPerPelSrc = CziUtils::BytesPerPel<tSrcPixelType>();
-	auto bytesPerPelDest = CziUtils::BytesPerPel<tDstPixelType>();
+	constexpr uint8_t bytesPerPelSrc = CziUtils::BytesPerPel<tSrcPixelType>();
+	constexpr uint8_t bytesPerPelDest = CziUtils::BytesPerPel<tDstPixelType>();
 
 	int dstXStart = (std::max)((int)resizeInfo.dstRoiX, 0);
 	int dstXEnd = (std::min)((int)(resizeInfo.dstRoiX + resizeInfo.dstRoiW), resizeInfo.dstWidth - 1);
