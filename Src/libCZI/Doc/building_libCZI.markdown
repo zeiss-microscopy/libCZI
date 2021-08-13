@@ -1,16 +1,21 @@
 Building libCZI                 {#buildinglibCZI}
 ===============
 
-libCZI aims to be portable and should build readily using a C++11 compiler. Here are some instructions
-for building on Windows and on Linux.
+libCZI aims to be portable and should build readily using any decent C++ compiler. This repository is leveraging the [CMake](https://cmake.org/) system for building.
 
-Building on Windows in Visual Studio
-------------------------------------
+Here are some instructions for building on Windows and on Linux.
 
-For Windows a solution-file (for VisualStudio 2017) <tt>LibCZI-Solution</tt> is provided.
+Building on Windows with Visual Studio
+--------------------------------------
 
-![libCZI solution](Images/VisualStudioProj_1_a.PNG "libCZI solution")
-@image latex VisualStudioProj_1.PNG "libCZI solution"
+Visual Studio has [built-in support](https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-160) for CMake projects. Executing File->Open Folder... and pointing to the folder where the libCZI-repo is located should give something like this:
+![libCZI solution](Images/VisualStudio_cmake1.png "libCZI solution")
+@image latex VisualStudio_cmake1.png "libCZI solution"
+The project should compile and build without further ado.
+
+
+
+
 
 We find those solution configurations and solution platforms defined:
 

@@ -1,4 +1,4 @@
-﻿using libCZI                 {#using_naczirlib}
+﻿using libCZI                 {#using_libczi}
 ============
 
 ## Opening a CZI-file ##
