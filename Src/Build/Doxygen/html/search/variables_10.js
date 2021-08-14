@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['scalex_1295',['scaleX',['../structlib_c_z_i_1_1_scaling_info.html#ad78c8dd0c50767ea6004f513379744a3',1,'libCZI::ScalingInfo']]],
+  ['scaley_1296',['scaleY',['../structlib_c_z_i_1_1_scaling_info.html#a1e3eaed2c197331a7f47db7c6a89d930',1,'libCZI::ScalingInfo']]],
+  ['scalez_1297',['scaleZ',['../structlib_c_z_i_1_1_scaling_info.html#a51209385ef9ee539c5f1fad0a507f63b',1,'libCZI::ScalingInfo']]],
+  ['sceneboundingboxes_1298',['sceneBoundingBoxes',['../structlib_c_z_i_1_1_sub_block_statistics.html#ab02ae7bcd25f34008ec9d5afa8a4efec',1,'libCZI::SubBlockStatistics']]],
+  ['scenefilter_1299',['sceneFilter',['../structlib_c_z_i_1_1_i_single_channel_tile_accessor_1_1_options.html#a7f07fd78043d3ab587e86a510a088e84',1,'libCZI::ISingleChannelTileAccessor::Options::sceneFilter()'],['../structlib_c_z_i_1_1_i_single_channel_pyramid_layer_tile_accessor_1_1_options.html#ac0a487d11790cfaaf5e0ea052efd178f',1,'libCZI::ISingleChannelPyramidLayerTileAccessor::Options::sceneFilter()'],['../structlib_c_z_i_1_1_i_single_channel_scaling_tile_accessor_1_1_options.html#a8cede93cd20a293ccf34354813779d41',1,'libCZI::ISingleChannelScalingTileAccessor::Options::sceneFilter()']]],
+  ['scenepyramidstatistics_1300',['scenePyramidStatistics',['../structlib_c_z_i_1_1_pyramid_statistics.html#a07ba65bd447d746f10ab578060d25959',1,'libCZI::PyramidStatistics']]],
+  ['sec_1301',['sec',['../structlib_c_z_i_1_1_xml_date_time.html#ad6150dda14ef3c9dd3c7d8035e203add',1,'libCZI::XmlDateTime']]],
+  ['singlepeak_1302',['singlePeak',['../structlib_c_z_i_1_1_spectrum_characteristics.html#af079f5cdea64ae1c1ce9c1802e5fd7f3',1,'libCZI::SpectrumCharacteristics']]],
+  ['singlevalue_1303',['singleValue',['../structlib_c_z_i_1_1_range_or_single_value.html#ab7281ed3283d0f683757f3fd5d40e9aa',1,'libCZI::RangeOrSingleValue']]],
+  ['size_1304',['size',['../structlib_c_z_i_1_1_dimension_and_start_size.html#ac0953e9273d2261ee3d282dac2683175',1,'libCZI::DimensionAndStartSize::size()'],['../structlib_c_z_i_1_1_bitmap_lock_info.html#a109f8d69b48bc4398861217c375dee1b',1,'libCZI::BitmapLockInfo::size()']]],
+  ['sortbym_1305',['sortByM',['../structlib_c_z_i_1_1_i_single_channel_tile_accessor_1_1_options.html#a6825901b1c28cff524d5eec48a2ceea3',1,'libCZI::ISingleChannelTileAccessor::Options']]],
+  ['splinectrlpoints_1306',['splineCtrlPoints',['../structlib_c_z_i_1_1_channel_display_settings_p_o_d.html#ae3342d21506c44664f165e7c9cc8422e',1,'libCZI::ChannelDisplaySettingsPOD']]],
+  ['start_1307',['start',['../structlib_c_z_i_1_1_dimension_and_start_size.html#abea9803a01b3f198f34ed14278669500',1,'libCZI::DimensionAndStartSize']]],
+  ['startorsinglevalue_1308',['startOrSingleValue',['../structlib_c_z_i_1_1_range_or_single_value.html#af3e966f0b8b30334d6c8ba8fa5752322',1,'libCZI::RangeOrSingleValue']]],
+  ['stokesparameter_1309',['stokesParameter',['../structlib_c_z_i_1_1_i_dimension_channel_light_sources_setting_1_1_polarization.html#a0d1d83dc345af05c7036fb065d9e5198',1,'libCZI::IDimensionChannelLightSourcesSetting::Polarization']]],
+  ['stokesparametervalid_1310',['stokesParameterValid',['../structlib_c_z_i_1_1_i_dimension_channel_light_sources_setting_1_1_polarization.html#a4545c50fd8278faf1166f2262fda7e18',1,'libCZI::IDimensionChannelLightSourcesSetting::Polarization']]],
+  ['stride_1311',['stride',['../structlib_c_z_i_1_1_bitmap_lock_info.html#a8e7259142382ec0ad887c974d27775b6',1,'libCZI::BitmapLockInfo']]],
+  ['subblockcount_1312',['subBlockCount',['../structlib_c_z_i_1_1_sub_block_statistics.html#a2507642d2007c30f4984cc2618203534',1,'libCZI::SubBlockStatistics']]]
+];
