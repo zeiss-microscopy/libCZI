@@ -37,6 +37,9 @@ endif()
  
 # This option allows to exclude the unit-tests from the build. The unit-tests are using the
 # Google-Test-framework which is downloaded from GitHub during the CMake-run.
-option(BUILD_UNITTESTS "Build the gTest-based unit-tests" ON) 
+option(LIBCZI_BUILD_UNITTESTS "Build the gTest-based unit-tests" ON) 
+
+option(LIBCZI_BUILD_DYNLIB "Build dynamic library 'libCZI'." ON)
+option(LIBCZI_BUILD_CZICMD "Build application 'CZICmd'." ON)
 
 add_subdirectory(Src)
