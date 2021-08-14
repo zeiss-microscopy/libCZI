@@ -23,11 +23,7 @@
 #include "stdafx.h"
 #include "splines.h"
 #include <cmath>
-#if defined(_USE_EXTERNAL_EIGEN3)
- #include <Eigen/Eigen>
-#else
- #include "./eigen/Eigen"
-#endif
+#include <Eigen/Eigen>
 
 using namespace std;
 using namespace Eigen;
