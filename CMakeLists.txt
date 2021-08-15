@@ -7,7 +7,9 @@ list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(GNUInstallDirs)
 
 include(TestLargeFile)
-test_large_files (_LARGEFILES)
+test_large_files(_LARGEFILES)
+
+include(check_unaligned_access)
 
 include (TestBigEndian)
 TEST_BIG_ENDIAN(IS_BIG_ENDIAN)
@@ -29,7 +31,6 @@ if (NOT HAVE_ALIGNED_ALLOC)
   check_cxx_symbol_exists(_aligned_malloc stdlib.h HAVE__ALIGNED_MALLOC)
 endif()
  
-include (CheckCXXSymbolExists)
 check_cxx_symbol_exists(aligned_alloc stdlib.h HAVE_ALIGNED_ALLOC)
 if (NOT HAVE_ALIGNED_ALLOC)
   check_cxx_symbol_exists(_aligned_malloc stdlib.h HAVE__ALIGNED_MALLOC)
