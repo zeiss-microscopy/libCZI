@@ -277,19 +277,20 @@ void CCmdLineOptions::Clear()
 
 void CCmdLineOptions::PrintUsage(int switchesCnt, const std::function<std::tuple<int, std::wstring>(int idx)>& getSwitch)
 {
-		static const char* Synopsis1 =
-				"usage: CZIcmd -c COMMAND -s SOURCEFILE -o OUTPUTFILE [-p PLANECOORDINATE]";
-		static const char* Synopsis2 =
-				"                 [-r ROI] [-d DISPLAYSETTINGS] [-h] [-b] [-t] [-j DECODERNAME] ";
-		static const char* Synopsis3 =
-				"                 [-v VERBOSITYLEVEL] [-y PYRAMIDINFO] [-z ZOOM] [-i INFOLEVEL]";
-		static const char* Synopsis4 =
-				"                 [-e SELECTION] [-f FILTER] [-p CHANNELCOMPOSITIONFORMAT]";
-		this->GetLog()->WriteLineStdOut(Synopsis1);
-		this->GetLog()->WriteLineStdOut(Synopsis2);
-		this->GetLog()->WriteLineStdOut(Synopsis3);
-		this->GetLog()->WriteLineStdOut(Synopsis4);
-		this->GetLog()->WriteLineStdOut("");
+		static const char* Synopsis[] =
+		{
+			"usage: CZIcmd -c COMMAND -s SOURCEFILE -o OUTPUTFILE [-p PLANECOORDINATE]",
+			"                 [-r ROI] [-d DISPLAYSETTINGS] [-h] [-b] [-t] [-j DECODERNAME] ",
+			"                 [-v VERBOSITYLEVEL] [-y PYRAMIDINFO] [-z ZOOM] [-i INFOLEVEL]",
+			"                 [-e SELECTION] [-f FILTER] [-p CHANNELCOMPOSITIONFORMAT]",
+			"                 [-b BACKGROUNDCOLOR] [-y PYRAMIDINFO] [-m FORMAT]"
+		};
+
+		for (size_t i = 0; i < sizeof(Synopsis) / sizeof(Synopsis[0]); ++i)
+		{
+			this->GetLog()->WriteLineStdOut(Synopsis[i]);
+		}
+
 		stringstream ss;
 		int majorVersion, minorVersion;
 		libCZI::GetLibCZIVersion(&majorVersion, &minorVersion);
@@ -309,7 +310,7 @@ void CCmdLineOptions::PrintUsage(int switchesCnt, const std::function<std::tuple
 				L"",
 				LR"(Show this help message and exit.)"
 			},
-				{
+			{
 					L'c',
 					L"COMMAND",
 					LR"(COMMAND can be any of 'PrintInformation', 'ExtractSubBlock', 'SingleChannelTileAccessor', 'ChannelComposite',
