@@ -305,3 +305,4 @@ cmake-build-debug/
 /Src/Build/VS
 /cmake-build-debug---wsl
 /out
+/Src/Build/Doxygen/
