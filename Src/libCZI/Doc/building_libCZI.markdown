@@ -16,7 +16,7 @@ The project should compile and build without further ado.
 For building on the command-line, it is recommended to do an out-of-source build. Executing those commands will execute all steps - go to the folder where the libCZI-repo is located:
 
     mkdir build
-	  cd build
+    cd build
     cmake ..
     cmake --build .
 
