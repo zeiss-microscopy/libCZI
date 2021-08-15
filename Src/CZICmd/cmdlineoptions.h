@@ -291,6 +291,7 @@ private:
 
 		void PrintSynopsis(int switchesCnt, std::function<std::tuple<int, std::wstring>(int idx)> getSwitch, std::function<std::tuple<std::wstring, std::wstring>(int shortOption)> getExplanation);
 
+		void PrintHelpBuildInfo();
 		void PrintHelp(int switchesCnt, const std::function<std::tuple<int, std::wstring>(int idx)>& getSwitch);
 		void PrintHelp(const wchar_t* sz, int switchesCnt, const std::function<std::tuple<int, std::wstring>(int idx)>& getSwitch);
 		void PrintHelp(const char* s, int switchesCnt, const std::function<std::tuple<int, std::wstring>(int idx)>& getSwitch)

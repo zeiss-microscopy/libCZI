@@ -28,7 +28,7 @@
 using namespace std;
 using namespace Eigen;
 
-/*static*/std::vector<CSplines::Coefficients> CSplines::GetSplineCoefficients(int pointsCnt, std::function<void(int index, double* x, double* y)> getPoint)
+/*static*/std::vector<CSplines::Coefficients> CSplines::GetSplineCoefficients(int pointsCnt, const std::function<void(int index, double* x, double* y)>& getPoint)
 {
 	if (!getPoint || pointsCnt < 2)
 	{
@@ -125,7 +125,7 @@ using namespace Eigen;
 	return splineCoefficients;
 }
 
-/*static*/double CSplines::CalculateSplineValue(double xPosition, int pointsCnt, std::function<void(int index, double* x)> getPoint, const  std::vector<Coefficients>& coefficients)
+/*static*/double CSplines::CalculateSplineValue(double xPosition, int pointsCnt, const std::function<void(int index, double* x)> getPoint, const  std::vector<Coefficients>& coefficients)
 {
 	// the polynomial number is always 4 in our case
 	if (pointsCnt >= 4 + 2)

@@ -1107,7 +1107,43 @@ void CCmdLineOptions::ParseChannelCompositionFormat(const wchar_t* s)
 
 void CCmdLineOptions::PrintHelp(const wchar_t* sz, int switchesCnt, const std::function<std::tuple<int, std::wstring>(int idx)>& getSwitch)
 {
-		this->PrintHelp(switchesCnt, getSwitch);
+	if (sz != nullptr)
+	{
+		if (icasecmp(sz, L"build") || icasecmp(sz, L"buildinfo"))
+		{
+			this->PrintHelpBuildInfo();
+			return;
+		}
+	}
+
+	this->PrintHelp(switchesCnt, getSwitch);
+}
+
+void CCmdLineOptions::PrintHelpBuildInfo()
+{
+	int majorVer, minorVer;
+	libCZI::BuildInformation buildInfo;
+	libCZI::GetLibCZIVersion(&majorVer, &minorVer);
+	libCZI::GetLibCZIBuildInformation(buildInfo);
+	
+	this->GetLog()->WriteLineStdOut("Build-Information");
+	this->GetLog()->WriteLineStdOut("-----------------");
+	this->GetLog()->WriteLineStdOut("");
+	stringstream ss;
+	ss << "version          : " << majorVer << "." << minorVer;
+	this->GetLog()->WriteLineStdOut(ss.str());
+	ss = stringstream();
+	ss << "compiler         : " << buildInfo.compilerIdentification;
+	this->GetLog()->WriteLineStdOut(ss.str());
+	ss = stringstream();
+	ss << "repository-URL   : " << buildInfo.repositoryUrl;
+	this->GetLog()->WriteLineStdOut(ss.str());
+	ss = stringstream();
+	ss << "repository-branch: " << buildInfo.repositoryBranch;
+	this->GetLog()->WriteLineStdOut(ss.str());
+	ss = stringstream();
+	ss << "repository-tag   : " << buildInfo.repositoryTag;
+	this->GetLog()->WriteLineStdOut(ss.str());
 }
 
 void CCmdLineOptions::PrintHelp(int switchesCnt, const std::function<std::tuple<int, std::wstring>(int idx)>& getSwitch)
