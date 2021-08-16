@@ -10,6 +10,12 @@ include(TestLargeFile)
 test_large_files(_LARGEFILES)
 
 include(check_unaligned_access)
+CHECK_UNALIGNED_ACCESS(CRASH_ON_UNALIGNED_ACCESS)
+if (CRASH_ON_UNALIGNED_ACCESS)
+  message("Read/write to unaligned addresses is NOT possible.")
+else()
+  message("Read/write to unaligned addresses is OK.")
+endif()
 
 include (TestBigEndian)
 TEST_BIG_ENDIAN(IS_BIG_ENDIAN)
