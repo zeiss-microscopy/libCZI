@@ -25,7 +25,7 @@ endif()
 
 set(libCZI_HAVE_ENDIAN_H ${HAVE_ENDIAN_H}) 
 
-if (CRASH_ON_UNALIGNED_ACCESS EQUAL TRUE)
+if (CRASH_ON_UNALIGNED_ACCESS)
 	set (libCZI_CrashOnUnalignedIntegers 1)
 else()
   set (libCZI_CrashOnUnalignedIntegers 0)
