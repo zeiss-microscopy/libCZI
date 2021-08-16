@@ -17,7 +17,7 @@ endif()
 
 # Prevent overriding the parent project's compiler/linker
 # settings on Windows
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
 
 # Add googletest directly to our build. This defines
 # the gtest and gtest_main targets.
