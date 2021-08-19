@@ -661,7 +661,7 @@ ERR PKImageEncode_WriteSource(
         || &GUID_PKPixelFormat16bppYUV422 == pPITo.pGUIDPixFmt) 
         cbStrideTo >>= 1;
 
-    cbStride = max(cbStrideFrom, cbStrideTo);
+    cbStride = MAX(cbStrideFrom, cbStrideTo);
 
     // actual dec/enc with local buffer
     Call(PKAllocAligned((void **) &pb, cbStride * pRect->Height, 128));
@@ -746,7 +746,7 @@ ERR PKImageEncode_Transcode(
         || &GUID_PKPixelFormat16bppYUV422 == pPITo.pGUIDPixFmt) 
         cbStrideTo >>= 1;
 
-    cbStride = max(cbStrideFrom, cbStrideTo);
+    cbStride = MAX(cbStrideFrom, cbStrideTo);
 
     if(pIE->bWMP){
         cParam.cLeftX = pFC->pDecoder->WMP.wmiI.cROILeftX;

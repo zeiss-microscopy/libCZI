@@ -26,26 +26,47 @@
 
 #include "CziSubBlockDirectory.h"
 #include "CziAttachmentsDirectory.h"
-#include "CziDataStructs.h"
+#include "FileHeaderSegmentData.h"
 #include "libCZI.h"
 
 class CCZIParse
 {
-private:
+	friend class CCZIParseTest;	
+public:
 	static const std::uint8_t FILEHDRMAGIC[16];
 	static const std::uint8_t SUBBLKDIRMAGIC[16];
 	static const std::uint8_t SUBBLKMAGIC[16];
 	static const std::uint8_t METADATASEGMENTMAGIC[16];
 	static const std::uint8_t ATTACHMENTSDIRMAGC[16];
 	static const std::uint8_t ATTACHMENTBLKMAGIC[16];
+	static const std::uint8_t DELETEDSEGMENTMAGIC[16];
 public:
-	static CFileHeaderSegmentData ReadFileHeaderSegment(libCZI::IStream* str);
+	enum class SegmentType
+	{
+		SbBlkDirectory,
+		SbBlk,
+		AttchmntDirectory,
+		Attachment,
+		Metadata
+	};
+	struct SegmentSizes
+	{
+		std::int64_t AllocatedSize;
+		std::int64_t UsedSize;
+		std::int64_t GetTotalSegmentSize() const { return this->AllocatedSize + sizeof(SegmentHeader); }
+	};
+
+	static FileHeaderSegmentData ReadFileHeaderSegment(libCZI::IStream* str);
+	static CFileHeaderSegmentData ReadFileHeaderSegmentData(libCZI::IStream* str);
 
 	static CCziSubBlockDirectory ReadSubBlockDirectory(libCZI::IStream* str, std::uint64_t offset);
 	static CCziAttachmentsDirectory ReadAttachmentsDirectory(libCZI::IStream* str, std::uint64_t offset);
+	static void ReadAttachmentsDirectory(libCZI::IStream* str, std::uint64_t offset, const std::function<void(const CCziAttachmentsDirectoryBase::AttachmentEntry&)>& addFunc, SegmentSizes* segmentSizes = nullptr);
 
 	static void ReadSubBlockDirectory(libCZI::IStream* str, std::uint64_t offset, CCziSubBlockDirectory& subBlkDir);
 
+	static void ReadSubBlockDirectory(libCZI::IStream* str, std::uint64_t offset, const std::function<void(const CCziSubBlockDirectoryBase::SubBlkEntry&)>& addFunc, SegmentSizes* segmentSizes=nullptr);
+	
 	struct SubBlockStorageAllocate
 	{
 		std::function<void*(size_t size)> alloc;
@@ -66,8 +87,7 @@ public:
 		libCZI::CDimCoordinate	coordinate;
 		libCZI::IntRect			logicalRect;
 		libCZI::IntSize			physicalSize;
-		int						mIndex;
-		double					zoom;
+		int						mIndex;			// if not present, then this is int::max
 	};
 
 	static SubBlockData ReadSubBlock(libCZI::IStream* str, std::uint64_t offset, const SubBlockStorageAllocate& allocateInfo);
@@ -89,11 +109,14 @@ public:
 	};
 
 	static AttachmentData ReadAttachment(libCZI::IStream* str, std::uint64_t offset, const SubBlockStorageAllocate& allocateInfo);
+
+	static CCZIParse::SegmentSizes ReadSegmentHeader(SegmentType type, libCZI::IStream* str,std::uint64_t pos);
+	static CCZIParse::SegmentSizes ReadSegmentHeaderAny(libCZI::IStream* str, std::uint64_t pos);
 private:
 	static void ParseThroughDirectoryEntries(int count, std::function<void(int, void*)> funcRead, std::function<void(const SubBlockDirectoryEntryDE*, const SubBlockDirectoryEntryDV*)> funcAddEntry);
 
-	static void AddEntryToSubBlockDirectory(const SubBlockDirectoryEntryDE* subBlkDirDE, CCziSubBlockDirectory& subBlkDir);
-	static void AddEntryToSubBlockDirectory(const SubBlockDirectoryEntryDV* subBlkDirDE, CCziSubBlockDirectory& subBlkDir);
+	static void AddEntryToSubBlockDirectory(const SubBlockDirectoryEntryDE* subBlkDirDE, const std::function<void(const CCziSubBlockDirectoryBase::SubBlkEntry&)>& addFunc/*CCziSubBlockDirectory& subBlkDir*/);
+	static void AddEntryToSubBlockDirectory(const SubBlockDirectoryEntryDV* subBlkDirDE, const std::function<void(const CCziSubBlockDirectoryBase::SubBlkEntry&)>& addFunc/*CCziSubBlockDirectory& subBlkDir*/);
 
 	static libCZI::DimensionIndex DimensionCharToDimensionIndex(const char* ptr, size_t size);
 	static bool IsMDimension(const char* ptr, size_t size);

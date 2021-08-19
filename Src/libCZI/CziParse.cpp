@@ -21,6 +21,7 @@
 //******************************************************************************
 
 #include "stdafx.h"
+#include "libCZI.h"
 #include "CziParse.h"
 #include <assert.h>
 #include "Site.h"
@@ -28,14 +29,15 @@
 using namespace std;
 using namespace libCZI;
 
-/*static*/const std::uint8_t CCZIParse::FILEHDRMAGIC[16]		 = { 'Z','I','S','R','A','W','F','I','L','E','\0','\0','\0','\0','\0','\0' };
-/*static*/const std::uint8_t CCZIParse::SUBBLKDIRMAGIC[16]		 = { 'Z','I','S','R','A','W','D','I','R','E','C','T','O','R','Y','\0' };
-/*static*/const std::uint8_t CCZIParse::SUBBLKMAGIC[16]			 = { 'Z','I','S','R','A','W' ,'S','U','B','B' ,'L','O','C','K' ,'\0','\0' };
-/*static*/const std::uint8_t CCZIParse::METADATASEGMENTMAGIC[16] = { 'Z','I','S','R','A','W' ,'M','E','T','A' ,'D','A','T','A' ,'\0','\0' };
-/*static*/const std::uint8_t CCZIParse::ATTACHMENTSDIRMAGC[16]	 = { 'Z','I','S','R','A','W' ,'A','T','T','D' ,'I','R','\0','\0' ,'\0','\0' };
-/*static*/const std::uint8_t CCZIParse::ATTACHMENTBLKMAGIC[16]	 = { 'Z','I','S','R','A','W' ,'A','T','T','A' ,'C','H','\0','\0' ,'\0','\0' };
+/*static*/const std::uint8_t CCZIParse::FILEHDRMAGIC[16] = { 'Z','I','S','R','A','W','F','I','L','E','\0','\0','\0','\0','\0','\0' };
+/*static*/const std::uint8_t CCZIParse::SUBBLKDIRMAGIC[16] = { 'Z','I','S','R','A','W','D','I','R','E','C','T','O','R','Y','\0' };
+/*static*/const std::uint8_t CCZIParse::SUBBLKMAGIC[16] = { 'Z','I','S','R','A','W','S','U','B','B','L','O','C','K' ,'\0','\0' };
+/*static*/const std::uint8_t CCZIParse::METADATASEGMENTMAGIC[16] = { 'Z','I','S','R','A','W','M','E','T','A','D','A','T','A' ,'\0','\0' };
+/*static*/const std::uint8_t CCZIParse::ATTACHMENTSDIRMAGC[16] = { 'Z','I','S','R','A','W','A','T','T','D','I','R','\0','\0' ,'\0','\0' };
+/*static*/const std::uint8_t CCZIParse::ATTACHMENTBLKMAGIC[16] = { 'Z','I','S','R','A','W','A','T','T','A','C','H','\0','\0' ,'\0','\0' };
+/*static*/const std::uint8_t CCZIParse::DELETEDSEGMENTMAGIC[16] = { 'D','E','L','E','T','E','D','\0','\0','\0' ,'\0','\0','\0','\0' ,'\0','\0' };
 
-/*static*/CFileHeaderSegmentData CCZIParse::ReadFileHeaderSegment(libCZI::IStream* str)
+/*static*/FileHeaderSegmentData CCZIParse::ReadFileHeaderSegment(libCZI::IStream* str)
 {
 	FileHeaderSegment fileHeaderSegment;
 
@@ -54,12 +56,20 @@ using namespace libCZI;
 		CCZIParse::ThrowNotEnoughDataRead(0, sizeof(fileHeaderSegment), bytesRead);
 	}
 
+	ConvertToHostByteOrder::Convert(&fileHeaderSegment);
+
 	if (memcmp(fileHeaderSegment.header.Id, CCZIParse::FILEHDRMAGIC, 16) != 0)
 	{
 		CCZIParse::ThrowIllegalData(0, "Invalid FileHdr-magic");
 	}
 
-	CFileHeaderSegmentData fileHdr{ &fileHeaderSegment.data };
+	return fileHeaderSegment.data;
+}
+
+/*static*/CFileHeaderSegmentData CCZIParse::ReadFileHeaderSegmentData(libCZI::IStream* str)
+{
+	auto fileHeaderSegment = CCZIParse::ReadFileHeaderSegment(str);
+	CFileHeaderSegmentData fileHdr{ &fileHeaderSegment };
 	return fileHdr;
 }
 
@@ -71,7 +81,7 @@ using namespace libCZI;
 	return subBlkDir;
 }
 
-/*static*/void CCZIParse::ReadSubBlockDirectory(libCZI::IStream* str, std::uint64_t offset, CCziSubBlockDirectory& subBlkDir)
+/*static*/void CCZIParse::ReadSubBlockDirectory(libCZI::IStream* str, std::uint64_t offset, const std::function<void(const CCziSubBlockDirectoryBase::SubBlkEntry&)>& addFunc, SegmentSizes* segmentSizes /*= nullptr*/)
 {
 	SubBlockDirectorySegment subBlckDirSegment;
 	std::uint64_t bytesRead;
@@ -88,6 +98,8 @@ using namespace libCZI;
 	{
 		CCZIParse::ThrowNotEnoughDataRead(offset, sizeof(subBlckDirSegment), bytesRead);
 	}
+
+	ConvertToHostByteOrder::Convert(&subBlckDirSegment);
 
 	if (memcmp(subBlckDirSegment.header.Id, CCZIParse::SUBBLKDIRMAGIC, 16) != 0)
 	{
@@ -110,6 +122,12 @@ using namespace libCZI;
 	}
 
 	subBlkDirSize -= sizeof(SubBlockDirectorySegmentData);
+
+	if (segmentSizes != nullptr)
+	{
+		segmentSizes->AllocatedSize = subBlckDirSegment.header.AllocatedSize;
+		segmentSizes->UsedSize = subBlckDirSegment.header.UsedSize;
+	}
 
 	// now read the used-size from stream
 	std::unique_ptr<void, decltype(free)*> pBuffer(malloc((size_t)subBlkDirSize), free);
@@ -146,16 +164,28 @@ using namespace libCZI;
 	{
 		if (subBlkDirDE != nullptr)
 		{
-			CCZIParse::AddEntryToSubBlockDirectory(subBlkDirDE, subBlkDir);
+			CCZIParse::AddEntryToSubBlockDirectory(subBlkDirDE, addFunc);
 		}
 		else if (subBlkDirDV != nullptr)
 		{
-			CCZIParse::AddEntryToSubBlockDirectory(subBlkDirDV, subBlkDir);
+			CCZIParse::AddEntryToSubBlockDirectory(subBlkDirDV, addFunc);
 		}
 	});
 }
 
+/*static*/void CCZIParse::ReadSubBlockDirectory(libCZI::IStream* str, std::uint64_t offset, CCziSubBlockDirectory& subBlkDir)
+{
+	CCZIParse::ReadSubBlockDirectory(str, offset, [&](const CCziSubBlockDirectoryBase::SubBlkEntry& e)->void {subBlkDir.AddSubBlock(e); });
+}
+
 /*static*/CCziAttachmentsDirectory CCZIParse::ReadAttachmentsDirectory(libCZI::IStream* str, std::uint64_t offset)
+{
+	CCziAttachmentsDirectory attDir;
+	CCZIParse::ReadAttachmentsDirectory(str, offset, [&](const CCziAttachmentsDirectoryBase::AttachmentEntry& ae)->void {attDir.AddAttachmentEntry(ae); });
+	return attDir;
+}
+
+/*static*/void CCZIParse::ReadAttachmentsDirectory(libCZI::IStream* str, std::uint64_t offset, const std::function<void(const CCziAttachmentsDirectoryBase::AttachmentEntry&)>& addFunc, SegmentSizes* segmentSizes/*= nullptr*/)
 {
 	AttachmentDirectorySegment attachmentDirSegment;
 	std::uint64_t bytesRead;
@@ -173,15 +203,23 @@ using namespace libCZI;
 		CCZIParse::ThrowNotEnoughDataRead(offset, sizeof(attachmentDirSegment), bytesRead);
 	}
 
+	ConvertToHostByteOrder::Convert(&attachmentDirSegment);
+
 	if (memcmp(attachmentDirSegment.header.Id, CCZIParse::ATTACHMENTSDIRMAGC, 16) != 0)
 	{
 		CCZIParse::ThrowIllegalData(offset, "Invalid AttachmentDirectory-magic");
 	}
 
+	if (segmentSizes != nullptr)
+	{
+		segmentSizes->UsedSize = attachmentDirSegment.header.UsedSize;
+		segmentSizes->AllocatedSize = attachmentDirSegment.header.AllocatedSize;
+	}
+
 	// TODO: we can add a couple of consistency checks here
 
 	// now read the AttachmentEntries
-	std::uint64_t attachmentEntriesSize = attachmentDirSegment.data.EntryCount * sizeof(AttachmentEntryA1);
+	std::uint64_t attachmentEntriesSize = ((std::uint64_t)attachmentDirSegment.data.EntryCount) * sizeof(AttachmentEntryA1);
 
 	std::unique_ptr<AttachmentEntryA1, decltype(free)*> pBuffer((AttachmentEntryA1*)malloc((size_t)attachmentEntriesSize), free);
 
@@ -200,11 +238,12 @@ using namespace libCZI;
 		CCZIParse::ThrowNotEnoughDataRead(offset + sizeof(attachmentDirSegment), attachmentEntriesSize, bytesRead);
 	}
 
-	CCziAttachmentsDirectory attDir{ (size_t)attachmentDirSegment.data.EntryCount };
 	for (int i = 0; i < attachmentDirSegment.data.EntryCount; ++i)
 	{
+		ConvertToHostByteOrder::Convert(pBuffer.get() + i);
+
 		const AttachmentEntryA1* pSrc = pBuffer.get() + i;
-		CCziAttachmentsDirectory::AttachmentEntry ae;
+		CCziAttachmentsDirectoryBase::AttachmentEntry ae;
 		bool b = CheckAttachmentSchemaType((const char*)&pSrc->SchemaType[0], 2);
 		if (b == false)
 		{
@@ -217,10 +256,8 @@ using namespace libCZI;
 		memcpy(&ae.ContentFileType[0], &pSrc->ContentFileType[0], sizeof(AttachmentEntryA1::ContentFileType));
 		memcpy(&ae.Name[0], &pSrc->Name[0], sizeof(AttachmentEntryA1::Name));
 		ae.Name[sizeof(AttachmentEntryA1::Name) - 1] = '\0';
-		attDir.AddAttachmentEntry(ae);
+		addFunc(ae);
 	}
-
-	return attDir;
 }
 
 /*static*/CCZIParse::SubBlockData CCZIParse::ReadSubBlock(libCZI::IStream* str, std::uint64_t offset, const SubBlockStorageAllocate& allocateInfo)
@@ -241,6 +278,8 @@ using namespace libCZI;
 		CCZIParse::ThrowNotEnoughDataRead(offset, sizeof(subBlckSegment), bytesRead);
 	}
 
+	ConvertToHostByteOrder::Convert(&subBlckSegment);
+
 	if (memcmp(subBlckSegment.header.Id, CCZIParse::SUBBLKMAGIC, 16) != 0)
 	{
 		CCZIParse::ThrowIllegalData(offset, "Invalid SubBlockk-magic");
@@ -250,8 +289,11 @@ using namespace libCZI;
 	SubBlockData sbd;
 	if (subBlckSegment.data.entrySchema[0] == 'D' && subBlckSegment.data.entrySchema[1] == 'V')
 	{
+		ConvertToHostByteOrder::Convert(&subBlckSegment.data.entryDV);
 		sbd.compression = subBlckSegment.data.entryDV.Compression;
 		sbd.pixelType = subBlckSegment.data.entryDV.PixelType;
+		sbd.mIndex = (std::numeric_limits<int>::max)();
+		ConvertToHostByteOrder::Convert(subBlckSegment.data.entryDV.DimensionEntries, subBlckSegment.data.entryDV.DimensionCount);
 		for (int i = 0; i < subBlckSegment.data.entryDV.DimensionCount; ++i)
 		{
 			const DimensionEntryDV* dimEntry = subBlckSegment.data.entryDV.DimensionEntries + i;
@@ -385,6 +427,8 @@ using namespace libCZI;
 		CCZIParse::ThrowNotEnoughDataRead(offset, sizeof(attchmntSegment), bytesRead);
 	}
 
+	ConvertToHostByteOrder::Convert(&attchmntSegment);
+
 	if (memcmp(attchmntSegment.header.Id, CCZIParse::ATTACHMENTBLKMAGIC, 16) != 0)
 	{
 		CCZIParse::ThrowIllegalData(offset, "Invalid Attachment-magic");
@@ -428,10 +472,12 @@ using namespace libCZI;
 			SubBlockDirectoryEntryDV dv;
 			dv.SchemaType[0] = schemaType[0]; dv.SchemaType[1] = schemaType[1];
 			funcRead(4 + 8 + 4 + 4 + 6 + 4, ((char*)&dv) + 2);
+			ConvertToHostByteOrder::Convert(&dv);
 
-			int sizeToRead = dv.DimensionCount*sizeof(DimensionEntryDV);
+			int sizeToRead = dv.DimensionCount * sizeof(DimensionEntryDV);
 			// TODO: check for max size etc.
 			funcRead(sizeToRead, &dv.DimensionEntries[0]);
+			ConvertToHostByteOrder::Convert(&dv.DimensionEntries[0], dv.DimensionCount);
 
 			funcAddEntry(nullptr, &dv);
 		}
@@ -439,18 +485,19 @@ using namespace libCZI;
 		{
 			SubBlockDirectoryEntryDE de;
 			funcRead(sizeof(de), &de);
+			ConvertToHostByteOrder::Convert(&de);
 			funcAddEntry(&de, nullptr);
 		}
 	}
 }
 
-/*static*/void CCZIParse::AddEntryToSubBlockDirectory(const SubBlockDirectoryEntryDE* subBlkDirDE, CCziSubBlockDirectory& subBlkDir)
+/*static*/void CCZIParse::AddEntryToSubBlockDirectory(const SubBlockDirectoryEntryDE* subBlkDirDE, const std::function<void(const CCziSubBlockDirectoryBase::SubBlkEntry&)>& addFunc)
 {
 	// TODO
 	throw std::logic_error("not (yet) implemented");
 }
 
-/*static*/void CCZIParse::AddEntryToSubBlockDirectory(const SubBlockDirectoryEntryDV* subBlkDirDE, CCziSubBlockDirectory& subBlkDir)
+/*static*/void CCZIParse::AddEntryToSubBlockDirectory(const SubBlockDirectoryEntryDV* subBlkDirDE, const std::function<void(const CCziSubBlockDirectoryBase::SubBlkEntry&)>& addFunc)
 {
 	CCziSubBlockDirectory::SubBlkEntry entry;
 	entry.Invalidate();
@@ -485,7 +532,7 @@ using namespace libCZI;
 	entry.PixelType = subBlkDirDE->PixelType;
 	entry.Compression = subBlkDirDE->Compression;
 
-	subBlkDir.AddSubBlock(entry);
+	addFunc(entry);
 }
 
 /*static*/CCZIParse::MetadataSegmentData CCZIParse::ReadMetadataSegment(libCZI::IStream* str, std::uint64_t offset, const SubBlockStorageAllocate& allocateInfo)
@@ -505,6 +552,8 @@ using namespace libCZI;
 	{
 		CCZIParse::ThrowNotEnoughDataRead(offset, sizeof(metadataSegment), bytesRead);
 	}
+
+	ConvertToHostByteOrder::Convert(&metadataSegment);
 
 	if (memcmp(metadataSegment.header.Id, CCZIParse::METADATASEGMENTMAGIC, 16) != 0)
 	{
@@ -559,7 +608,7 @@ using namespace libCZI;
 
 /*static*/char CCZIParse::ToUpperCase(char c)
 {
-	if (isascii(c) != 0 && isupper(c) != 0)
+	if (isascii(c) != 0 && isupper(c) == 0)
 	{
 		return (char)toupper(c);
 	}
@@ -574,30 +623,33 @@ using namespace libCZI;
 		CCZIParse::ThrowIllegalData("parameter 'size' is illegal");
 	}
 
-	static const struct
+	static const struct CharAndDim
 	{
 		char dimChar;
 		libCZI::DimensionIndex dimIndex;
-	} CharAndDim[] =
+	} CharAndDimList[] =
 	{
-		{ 'Z', DimensionIndex::Z },
+		// important: this list must be sorted (ascending) for "dimChar"
+		{ 'B', DimensionIndex::B },
 		{ 'C', DimensionIndex::C },
-		{ 'T', DimensionIndex::T },
+		{ 'H', DimensionIndex::H },
+		{ 'I', DimensionIndex::I },
 		{ 'R', DimensionIndex::R },
 		{ 'S', DimensionIndex::S },
-		{ 'I', DimensionIndex::I },
-		{ 'H', DimensionIndex::H },
+		{ 'T', DimensionIndex::T },
 		{ 'V', DimensionIndex::V },
-		{ 'B', DimensionIndex::B }
+		{ 'Z', DimensionIndex::Z }
 	};
 
-	char c = CCZIParse::ToUpperCase(*ptr);
-	for (int i = 0; i < sizeof(CharAndDim) / sizeof(CharAndDim[0]); ++i)
+	const char c = CCZIParse::ToUpperCase(*ptr);
+	const auto it = std::lower_bound(
+		std::begin(CharAndDimList), 
+		std::end(CharAndDimList), 
+		c,
+		[](const CharAndDim& val, char toSearch)->int {return val.dimChar < toSearch; });
+	if (it != std::end(CharAndDimList) && !(c < it->dimChar))
 	{
-		if (c == CharAndDim[i].dimChar)
-		{
-			return CharAndDim[i].dimIndex;
-		}
+		return it->dimIndex;
 	}
 
 	CCZIParse::ThrowIllegalData("invalid dimension");
@@ -672,4 +724,77 @@ using namespace libCZI;
 	}
 
 	return true;
+}
+
+/*static*/CCZIParse::SegmentSizes CCZIParse::ReadSegmentHeader(CCZIParse::SegmentType type, libCZI::IStream* str, std::uint64_t pos)
+{
+	const std::uint8_t* pMagic = nullptr;
+	switch (type)
+	{
+	case CCZIParse::SegmentType::SbBlkDirectory:
+		pMagic = CCZIParse::SUBBLKDIRMAGIC;
+		break;
+	case CCZIParse::SegmentType::SbBlk:
+		pMagic = CCZIParse::SUBBLKMAGIC;
+		break;
+	case CCZIParse::SegmentType::AttchmntDirectory:
+		pMagic = CCZIParse::ATTACHMENTSDIRMAGC;
+		break;
+	case CCZIParse::SegmentType::Attachment:
+		pMagic = CCZIParse::ATTACHMENTBLKMAGIC;
+		break;
+	case CCZIParse::SegmentType::Metadata:
+		pMagic = CCZIParse::METADATASEGMENTMAGIC;
+		break;
+	default:
+		throw std::logic_error("unknown SegmentType");
+	}
+
+	SegmentHeader segmentHdr;
+	std::uint64_t bytesRead;
+	try
+	{
+		str->Read(pos, &segmentHdr, sizeof(segmentHdr), &bytesRead);
+	}
+	catch (const std::exception&)
+	{
+		std::throw_with_nested(LibCZIIOException("Error reading SegmentHeader", pos, sizeof(segmentHdr)));
+	}
+
+	if (bytesRead != sizeof(segmentHdr))
+	{
+		CCZIParse::ThrowNotEnoughDataRead(pos, sizeof(segmentHdr), bytesRead);
+	}
+
+	if (memcmp(segmentHdr.Id, pMagic, 16) != 0)
+	{
+		CCZIParse::ThrowIllegalData(pos, "Invalid SegmentHeader-magic");
+	}
+
+	ConvertToHostByteOrder::Convert(&segmentHdr);
+
+	return SegmentSizes{ segmentHdr.AllocatedSize,segmentHdr.UsedSize };
+}
+
+/*static*/CCZIParse::SegmentSizes CCZIParse::ReadSegmentHeaderAny(libCZI::IStream* str, std::uint64_t pos)
+{
+	SegmentHeader segmentHdr;
+	std::uint64_t bytesRead;
+	try
+	{
+		str->Read(pos, &segmentHdr, sizeof(segmentHdr), &bytesRead);
+	}
+	catch (const std::exception&)
+	{
+		std::throw_with_nested(LibCZIIOException("Error reading SegmentHeader", pos, sizeof(segmentHdr)));
+	}
+
+	if (bytesRead != sizeof(segmentHdr))
+	{
+		CCZIParse::ThrowNotEnoughDataRead(pos, sizeof(segmentHdr), bytesRead);
+	}
+
+	ConvertToHostByteOrder::Convert(&segmentHdr);
+
+	return SegmentSizes{ segmentHdr.AllocatedSize,segmentHdr.UsedSize };
 }

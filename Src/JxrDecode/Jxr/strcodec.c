@@ -687,7 +687,13 @@ U32 _byteswap_ulong(U32 bits)
 U32 load4BE(void* pv)
 {
 #ifdef _BIG__ENDIAN_
+ #ifdef _NO_UNALIGNED_LOAD_
+	U32 v;
+	memcpy(&v, pv, 4);
+	return v;
+ #else
 	return (*(U32*)pv);
+ #endif
 #else // _BIG__ENDIAN_
 #if	defined(__EMSCRIPTEN__)
 	U32 v;
@@ -701,7 +707,13 @@ U32 load4BE(void* pv)
 	v |= ((U32)((U16 *)pv)[1]) << 16;
 	return _byteswap_ulong(v);
 #else // _M_IA64
+ #ifdef _NO_UNALIGNED_LOAD_
+	U32 v;
+	memcpy(&v, pv, 4);
+	return _byteswap_ulong(v);
+ #else
 	return _byteswap_ulong(*(U32*)pv);
+ #endif
 #endif // _M_IA64
 #endif
 #endif // _BIG__ENDIAN_
@@ -1136,7 +1148,7 @@ ERR readIS(CWMImageStrCodec* pSC, BitIOInfo* pIO)
 		PERFTIMER_START(pSC->m_fMeasurePerf, pSC->m_ptEncDecPerf);
 
 		// make shadow copy for first 4B
-		pIO->uiShadow = *(U32*)pIO->pbStart;
+		pIO->uiShadow = *(U32*)pIO->pbStart;	// TODO: does this need to be made endianess-aware?
 
 		// reposition pbPacket pointer
 		pIO->pbStart = MASKPTR(pIO->pbStart + PACKETLENGTH, pIO->iMask);

@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['read',['Read',['../classlib_c_z_i_1_1_i_stream.html#ae275276d0da5082a3711527ddfedfd9f',1,'libCZI::IStream']]],
-  ['readattachment',['ReadAttachment',['../classlib_c_z_i_1_1_i_attachment_repository.html#a8f0a7a926425e39017559a95207e2d5d',1,'libCZI::IAttachmentRepository']]],
-  ['readmetadatasegment',['ReadMetadataSegment',['../classlib_c_z_i_1_1_i_c_z_i_reader.html#a9dbab9ddaa7ae4bcfce3c64ed5eea82d',1,'libCZI::ICZIReader']]],
-  ['readsubblock',['ReadSubBlock',['../classlib_c_z_i_1_1_i_sub_block_repository.html#afd2d9c375554492cf499c97ae49aa50b',1,'libCZI::ISubBlockRepository']]]
+  ['name_1011',['Name',['../classlib_c_z_i_1_1_i_xml_node_read.html#a7a17744c795303a9c446b5ccf850a90c',1,'libCZI::IXmlNodeRead']]],
+  ['nearestneighborresize_1012',['NearestNeighborResize',['../classlib_c_z_i_1_1_utils.html#af19f5d15750c0949f3dd4ebb5684c7d3',1,'libCZI::Utils::NearestNeighborResize(libCZI::IBitmapData *bmSrc, int dstWidth, int dstHeight)'],['../classlib_c_z_i_1_1_utils.html#a6d56f447db1707083cb47042729bfabf',1,'libCZI::Utils::NearestNeighborResize(libCZI::IBitmapData *bmSrc, int dstWidth, int dstHeight, const DblRect &amp;roiSrc, const DblRect &amp;roiDest)']]]
 ];

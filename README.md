@@ -1,8 +1,7 @@
-## libCZI
-
-### *Open Source Cross-Platform C++ library to read CZI image files*
+# libCZI
+***Open Source Cross-Platform C++ library to read CZI image files***
 ---------------------------------------------------------------------
-
+ 
 ***libCZI*** is a library intended for providing read-only access to the information contained in CZI-documents.
 
 It features:
@@ -27,7 +26,7 @@ It is intended to be easily portable to other platforms.
 
 ---------------------------------------------------------------------------------
 
-### ***Licensing***
+***Licensing***
 
 ******************************************************************************
  

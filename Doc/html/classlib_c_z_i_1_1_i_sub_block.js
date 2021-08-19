@@ -7,8 +7,8 @@ var classlib_c_z_i_1_1_i_sub_block =
     ] ],
     [ "~ISubBlock", "classlib_c_z_i_1_1_i_sub_block.html#a6edf53d07376b0b7adce81755f5ba93c", null ],
     [ "CreateBitmap", "classlib_c_z_i_1_1_i_sub_block.html#af2059d1f270f3e4349244403fa7dd71c", null ],
-    [ "DangerousGetRawData", "classlib_c_z_i_1_1_i_sub_block.html#a6f84a58437af59bac64a6147369ddae4", null ],
     [ "DangerousGetRawData", "classlib_c_z_i_1_1_i_sub_block.html#acd9396cc5d366de99b37a26c98031d66", null ],
+    [ "DangerousGetRawData", "classlib_c_z_i_1_1_i_sub_block.html#a6f84a58437af59bac64a6147369ddae4", null ],
     [ "GetRawData", "classlib_c_z_i_1_1_i_sub_block.html#a55ec2c117050df253367661f9cd606cf", null ],
     [ "GetSubBlockInfo", "classlib_c_z_i_1_1_i_sub_block.html#a557108549db08e25b1df1ef8fae37a07", null ]
 ];

@@ -5,13 +5,14 @@ In the libCZI-library and its sample-code the following 3rd-party-software is us
 
 name                                                  |  purpose                 | license          | comment                       | source included
  ---------------------------------------------------- | ------------------------ | ---------------- | ----------------------------- | -----
- [pugixml](https://github.com/zeux/pugixml)           | XML-parser               | [MIT]            |                               | yes
- [Eigen](http://eigen.tuxfamily.org/)                 | linear algebra           | [MPL2]           | used for very basic stuff     | yes
+ [pugixml](https://github.com/zeux/pugixml)           | XML-parser               | [MIT]            | used in libCZI                | yes
+ [Eigen](http://eigen.tuxfamily.org/)                 | linear algebra           | [MPL2]           | used in libCZI                | no
  [RapidJSON](http://rapidjson.org/)                   | JSON parser/genertor     | [MIT]            | used in CZIcmd                | yes
  [jxrlib](https://jxrlib.codeplex.com/)               | JPG-XR codec             | [BSD 2-Clause]   | code has some modifictions    | yes
  [libpng](http://libpng.org/pub/png/libpng.html)      | write PNGs               | [libpng license] | used in CZICmd (on Linux)     | no
  [getoptW](https://github.com/bluebaroncanada/getoptW)| commandline args parser  | [getOptW license]| used in CZICmd (on Windows)   | yes
  [md5sum](https://sourceforge.net/projects/md5sum/)   | MD5Sum hash              | [MD5Sum license] |                               | yes
+ [zstd](https://github.com/facebook/zstd/)            | ZSTd compression         | [zstd license]   | used in libCZI                | no
 
  
  [MIT]: https://opensource.org/licenses/MIT   "MIT"
@@ -20,3 +21,4 @@ name                                                  |  purpose                
  [libpng license]: http://libpng.org/pub/png/src/libpng-LICENSE.txt "libpng license"
  [getOptW license]: https://github.com/bluebaroncanada/getoptW/#licence] "getOptW license"
  [MD5Sum license]: http://www.cv.nrao.edu/glish/copyright/md5.html "MD5Sum license"
+ [zstd license]: https://github.com/facebook/zstd/blob/dev/LICENSE "ZStd license"

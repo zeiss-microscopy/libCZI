@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['nearestneighborresize',['NearestNeighborResize',['../classlib_c_z_i_1_1_utils.html#af19f5d15750c0949f3dd4ebb5684c7d3',1,'libCZI::Utils::NearestNeighborResize(libCZI::IBitmapData *bmSrc, int dstWidth, int dstHeight)'],['../classlib_c_z_i_1_1_utils.html#a6d56f447db1707083cb47042729bfabf',1,'libCZI::Utils::NearestNeighborResize(libCZI::IBitmapData *bmSrc, int dstWidth, int dstHeight, const DblRect &amp;roiSrc, const DblRect &amp;roiDest)']]]
+  ['hassamedimensions_982',['HasSameDimensions',['../classlib_c_z_i_1_1_utils.html#a12906a27e0e3fbf65f999c9387782cbc',1,'libCZI::Utils']]],
+  ['hastimezoneoffset_983',['HasTimeZoneOffset',['../structlib_c_z_i_1_1_xml_date_time.html#abdd0b4dc181a4825b2eaf97aea58d44d',1,'libCZI::XmlDateTime']]]
 ];

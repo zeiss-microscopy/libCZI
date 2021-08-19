@@ -26,7 +26,7 @@
 #include "libCZI.h"
 #include "CziSubBlockDirectory.h"
 #include "CziAttachmentsDirectory.h"
-#include "CziDataStructs.h"
+#include "FileHeaderSegmentData.h"
 
 class CCZIReader : public libCZI::ICZIReader, public std::enable_shared_from_this<CCZIReader>
 {
@@ -50,6 +50,7 @@ public:
 	
 	// interface ICZIReader
 	void Open(std::shared_ptr<libCZI::IStream> stream) override;
+	libCZI::FileHeaderInfo GetFileHeaderInfo() override;
 	std::shared_ptr<libCZI::IMetadataSegment> ReadMetadataSegment() override;
 	std::shared_ptr<libCZI::IAccessor> CreateAccessor(libCZI::AccessorType accessorType) override;
 	void Close() override;

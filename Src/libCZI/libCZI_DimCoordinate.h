@@ -72,6 +72,23 @@ namespace libCZI
 		{
 			return this->TryGetPosition(dim, nullptr);
 		}
+
+		/// Gets the number of valid dimensions.
+		///
+		/// \return The number of valid dimensions.
+		inline int GetNumberOfValidDimensions() const
+		{
+			int cnt = 0;
+			for (auto i = static_cast<std::underlying_type<libCZI::DimensionIndex>::type>(libCZI::DimensionIndex::MinDim); i <= static_cast<std::underlying_type<libCZI::DimensionIndex>::type>(libCZI::DimensionIndex::MaxDim); ++i)
+			{
+				if (this->IsValid(static_cast<libCZI::DimensionIndex>(i)))
+				{
+					++cnt;
+				}
+			}
+
+			return cnt;
+		}
 	};
 
 	/// Interface used to represent an interval (for several dimensions).
@@ -89,7 +106,7 @@ namespace libCZI
 		/// Query if the specified dimension is valid.
 		/// \param dim The dimension.
 		/// \return True if valid, false otherwise.
-		inline bool IsValid(DimensionIndex dim)
+		inline bool IsValid(DimensionIndex dim) const
 		{
 			return this->TryGetInterval(dim, nullptr, nullptr);
 		}
@@ -203,6 +220,12 @@ namespace libCZI
 			this->validDims &= ~(1 << index);
 		}
 
+		/// Clears the validity of all dimensions.
+		void Clear()
+		{
+			this->validDims = 0;
+		}
+
 		/// Enumerate the valid dimensions contained in this coordinate. The specified functor will
 		/// be called for each valid dimension (and providing the functor with the dimension index and
 		/// the coordinate). If the functor returns false, the enumeration is cancelled.
@@ -221,16 +244,38 @@ namespace libCZI
 			}
 		}
 
-		/// <summary>	Parses the given string and construct a CDimCoordinate-object from the information. 
-		/// 			The syntax for the string is - a character identifying the dimension (one of 
-		/// 			'Z', 'C', 'T', 'R', 'S', 'I', 'H', 'V', 'B' followed by an integer (possibly with a + or -).
-		/// 			There can be more than one dimension given, in which case the parts can be separated by a comma,
-		/// 			a semicolon or spaces. 
-		/// 			The regular expression is: ([:blank:]*[Z|C|T|R|S|I|H|V|B][\\+|-]?[[:digit:]]+[,|;| ]*).
-		/// 			It is illegal to give the same dimension multiple times.</summary>
-		/// <exception cref="LibCZIStringParseException">	Thrown when the specified string cannot be parsed because of a syntactical error. </exception>
-		/// <param name="str">	The string to parse. </param>
-		/// <returns>	A CDimCoordinate object constructed from the string. </returns>
+		/// Determine the number the valid dimensions contained in this coordinate. 
+		int GetValidDimensionsCount() const
+		{
+			int count = 0;
+			for (auto i = (std::underlying_type<libCZI::DimensionIndex>::type)(libCZI::DimensionIndex::MinDim); i <= (std::underlying_type<libCZI::DimensionIndex>::type)(libCZI::DimensionIndex::MaxDim); ++i)
+			{
+				int bitIndex = CDimCoordinate::GetBitIndexForDimension((libCZI::DimensionIndex) i);
+				if ((this->validDims & (1 << bitIndex)) != 0)
+				{
+					++count;
+				}
+			}
+
+			return count;
+		}
+
+		/// Parse the specified string and construct a CDimCoordinate-object from the information. The
+		/// syntax for the string is - a character identifying the dimension (one of 'Z', 'C', 'T', 'R',
+		/// 'S', 'I', 'H', 'V', 'B') followed by an integer (possibly with a + or -). There can be more
+		/// than one dimension given, in which case the parts can be separated by a comma, a semicolon or
+		/// spaces. The regular expression is: 
+		/// \code{.unparsed}
+		/// ([:blank:]*[Z|C|T|R|S|I|H|V|B][\\+|-]?[[:digit:]]+[,|;| ]*)
+		/// \endcode
+		/// It is illegal to give the same dimension multiple times.
+		///
+		/// \exception LibCZIStringParseException Thrown when the specified string cannot be parsed because
+		/// of a syntactical error.
+		///
+		/// \param str The string to parse.
+		///
+		/// \return A CDimCoordinate object constructed from the string.
 		static CDimCoordinate Parse(const char* str);
 	public:	// IDimCoordinate
 		virtual bool TryGetPosition(libCZI::DimensionIndex dim, int* coordinate) const
@@ -260,6 +305,24 @@ namespace libCZI
 	public:
 		/// Default constructor - the object will contain no valid dimension.
 		CDimBounds() : validDims(0) {};
+
+		/// Constructor which copies the content of the specified IDimBounds-object.
+		///
+		/// \param other The IDimBounds-object to copy information from.
+		CDimBounds(const IDimBounds* other) : validDims(0)
+		{
+			if (other != nullptr)
+			{
+				for (int i = static_cast<int>(libCZI::DimensionIndex::MinDim); i <= static_cast<int>(libCZI::DimensionIndex::MaxDim); ++i)
+				{
+					int start, size;
+					if (other->TryGetInterval(static_cast<DimensionIndex>(i), &start, &size))
+					{
+						this->Set(static_cast<DimensionIndex>(i), start, size);
+					}
+				}
+			}
+		}
 
 		/// Construct a libCZI::CDimBounds object from an initializer-list.
 		/// \param list The list of "dimension, start and size".
@@ -311,8 +374,32 @@ namespace libCZI
 		{
 			this->validDims = 0;
 		}
-	public:
 
+		/// Query if this object is empty - no valid dimensions contained.
+		///
+		/// \return True if empty, false if not.
+		bool IsEmpty() const
+		{
+			return this->validDims == 0;
+		}
+
+		/// Parse the specified string and construct a CDimBounds-object from the information. The syntax
+		/// for the string is - a character identifying the dimension (one of 'Z', 'C', 'T', 'R', 'S',
+		/// 'I', 'H', 'V', 'B') followed by an integer (possibly with a + or -) specifying the start-index,
+		/// followed by a colon ':', then followed by an integer specifying the size. There can be more
+		/// than one dimension given, in which case the above sequence is repeated for a different
+		/// dimension. It is illegal to give the same dimension multiple times. Examples: "T0:10",
+		/// "T0:5Z0:10", "C0:2T0:10Z0:5".
+		///
+		/// \exception LibCZIStringParseException Thrown when the specified string cannot be parsed because
+		/// of a syntactical error.
+		///
+		/// \param str The string to parse.
+		///
+		/// \return A CDimBounds object constructed from the string.
+		static CDimBounds Parse(const char* str);
+	
+	public:	// IDimBounds
 		/// Attempts to get interval and size for the specified dimension.
 		/// \param dim				   The dimemension.
 		/// \param [out] startIndex If non-null, it will receive the start index.

@@ -35,148 +35,93 @@
 
 class CLibCZISite : public libCZI::ISite
 {
-	libCZI::ISite* pSite;
-	const CCmdLineOptions& options;
+		libCZI::ISite* pSite;
+		const CCmdLineOptions& options;
 public:
-	explicit CLibCZISite(const CCmdLineOptions& opts) : options(opts)
-	{
+		explicit CLibCZISite(const CCmdLineOptions& opts) : options(opts)
+		{
 #if defined(WIN32ENV)
-		if (options.GetUseWICJxrDecoder())
-		{
-			this->pSite = libCZI::GetDefaultSiteObject(libCZI::SiteObjectType::WithWICDecoder);
-		}
-		else
-		{
-			this->pSite = libCZI::GetDefaultSiteObject(libCZI::SiteObjectType::WithJxrDecoder);
-		}
+				if (options.GetUseWICJxrDecoder())
+				{
+						this->pSite = libCZI::GetDefaultSiteObject(libCZI::SiteObjectType::WithWICDecoder);
+				}
+				else
+				{
+						this->pSite = libCZI::GetDefaultSiteObject(libCZI::SiteObjectType::WithJxrDecoder);
+				}
 #else
-		this->pSite = libCZI::GetDefaultSiteObject(libCZI::SiteObjectType::Default);
+				this->pSite = libCZI::GetDefaultSiteObject(libCZI::SiteObjectType::Default);
 #endif
-	}
+		}
 
-	bool IsEnabled(int logLevel) override
-	{
-		return this->options.IsLogLevelEnabled(logLevel);
-	}
+		bool IsEnabled(int logLevel) override
+		{
+				return this->options.IsLogLevelEnabled(logLevel);
+		}
 
-	void Log(int level, const char* szMsg) override
-	{
-		this->options.GetLog()->WriteStdOut(szMsg);
-	}
+		void Log(int level, const char* szMsg) override
+		{
+				this->options.GetLog()->WriteLineStdOut(szMsg);
+		}
 
-	std::shared_ptr<libCZI::IDecoder> GetDecoder(libCZI::ImageDecoderType type, const char* arguments) override
-	{
-		return this->pSite->GetDecoder(type, arguments);
-	}
+		std::shared_ptr<libCZI::IDecoder> GetDecoder(libCZI::ImageDecoderType type, const char* arguments) override
+		{
+				return this->pSite->GetDecoder(type, arguments);
+		}
 
-	std::shared_ptr<libCZI::IBitmapData> CreateBitmap(libCZI::PixelType pixeltype, std::uint32_t width, std::uint32_t height, std::uint32_t stride, std::uint32_t extraRows, std::uint32_t extraColumns) override
-	{
-		return this->pSite->CreateBitmap(pixeltype, width, height, stride, extraRows, extraColumns);
-	}
+		std::shared_ptr<libCZI::IBitmapData> CreateBitmap(libCZI::PixelType pixeltype, std::uint32_t width, std::uint32_t height, std::uint32_t stride, std::uint32_t extraRows, std::uint32_t extraColumns) override
+		{
+				return this->pSite->CreateBitmap(pixeltype, width, height, stride, extraRows, extraColumns);
+		}
 };
 
-//int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, char** _argv)
 {
-#if !defined(__EMSCRIPTEN__)
 #if defined(WIN32ENV)
-	wchar_t** argv;
-	CoInitialize(NULL);
-	argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+		wchar_t** argv;
+		CoInitialize(NULL);
+		argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 #endif
 #if defined(LINUXENV)
-	setlocale(LC_CTYPE, "");
-	char** argv = _argv;
+		setlocale(LC_CTYPE, "");
+		char** argv = _argv;
 #endif
 
-	int retVal = 0;
-	auto log = CConsoleLog::CreateInstance();
-	try
-	{
-		CCmdLineOptions options(log);
-		bool cmdLineParsedOk = options.Parse(argc, argv);
-		if (cmdLineParsedOk == true)
+		int retVal = 0;
+		auto log = CConsoleLog::CreateInstance();
+		try
 		{
-			if (options.GetCommand() != Command::Invalid)
-			{
-				// Important: We have to ensure that the object passed in here has a lifetime greater than
-				// any usage of the libCZI.
-				CLibCZISite site(options);
-				libCZI::SetSiteObject(&site);
+				CCmdLineOptions options(log);
+				bool cmdLineParsedOk = options.Parse(argc, argv);
+				if (cmdLineParsedOk == true)
+				{
+						if (options.GetCommand() != Command::Invalid)
+						{
+								// Important: We have to ensure that the object passed in here has a lifetime greater than
+								// any usage of the libCZI.
+								CLibCZISite site(options);
+								libCZI::SetSiteObject(&site);
 
-				execute(options);
-			}
+								execute(options);
+						}
+				}
+				else
+				{
+						log->WriteLineStdErr("There were errors parsing the arguments -> exiting.");
+				}
 		}
-		else
+		catch (std::exception& excp)
 		{
-			log->WriteStdErr("There were errors parsing the arguments -> exiting.");
+				std::stringstream ss;
+				ss << "Exception caught -> \"" << excp.what() << "\"";
+				log->WriteLineStdErr(ss.str());
+				retVal = 1000;
 		}
-	}
-	catch (std::exception& excp)
-	{
-		std::stringstream ss;
-		ss << "Exception caught -> \"" << excp.what() << "\"";
-		log->WriteStdErr(ss.str());
-		retVal = 1000;
-	}
 
 #if defined(WIN32ENV)
-	CoUninitialize();
-	LocalFree(argv);
+		CoUninitialize();
+		LocalFree(argv);
 #endif
-#endif
-	return retVal;
+
+		return retVal;
 }
-
-#if defined(__EMSCRIPTEN__)
-#include <emscripten.h>
-#include <emscripten/bind.h>
-using namespace emscripten;
-
-extern int optind;
-
-int myMain(std::vector<std::string> args)
-{
-#if defined(LINUXENV)
-	setlocale(LC_CTYPE, "");
-#endif
-
-	auto log = CConsoleLog::CreateInstance();
-
-	CCmdLineOptions options(log);
-
-	char** argv = (char**)malloc(sizeof(char*)*(1 + args.size()));
-	for (int i = 0; i < args.size(); ++i)
-	{
-		argv[i + 1] = (char*)args[i].c_str();
-	}
-
-	char empty[1]; empty[0] = '\0';
-	argv[0] = empty;
-
-	options.Parse((int)args.size(), argv);
-
-	// Important: We have to ensure that the object passed in here has a lifetime greater than
-	// any usage of the libCZI.
-	CLibCZISite* pSite = new CLibCZISite(options);
-	try
-	{
-		libCZI::SetSiteObject(pSite);
-	}
-	catch (std::logic_error& e)
-	{
-		delete pSite;
-	}
-
-	execute(options);
-
-	free(argv);
-	optind = 0;
-	return 0;
-}
-
-EMSCRIPTEN_BINDINGS(LibCZIModule2) {
-	register_vector<std::string>("VectorString");
-	function("myMain", &myMain);
-	}
-#endif

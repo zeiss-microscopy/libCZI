@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['h',['h',['../structlib_c_z_i_1_1_int_rect.html#a59e7b7e0a9190fae3973e2da2bf7d173',1,'libCZI::IntRect::h()'],['../structlib_c_z_i_1_1_dbl_rect.html#a00b8d612c3f621b56f6950f5803a0298',1,'libCZI::DblRect::h()'],['../structlib_c_z_i_1_1_int_size.html#a04b144b6c7cd7b6e994bad25a46dfdf5',1,'libCZI::IntSize::h()']]]
+  ['g_1251',['g',['../structlib_c_z_i_1_1_rgb8_color.html#ac65ccfe0906c981fffe91d03aeb1c5e6',1,'libCZI::Rgb8Color::g()'],['../structlib_c_z_i_1_1_rgb_float_color.html#ac2d9348df01510bd606f011cb4930254',1,'libCZI::RgbFloatColor::g()']]],
+  ['gamma_1252',['gamma',['../structlib_c_z_i_1_1_channel_display_settings_p_o_d.html#a845e01c1c5e41e2ab64fe6a22361d8d6',1,'libCZI::ChannelDisplaySettingsPOD']]],
+  ['gradationcurvemode_1253',['gradationCurveMode',['../structlib_c_z_i_1_1_channel_display_settings_p_o_d.html#a3f54ad6d72307e0e15f1e2f89bfd6aea',1,'libCZI::ChannelDisplaySettingsPOD']]]
 ];

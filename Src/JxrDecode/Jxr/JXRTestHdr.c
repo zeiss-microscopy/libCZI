@@ -158,7 +158,7 @@ ERR ParseHDRHeader(
     if(((2 == txtbuff[0]) && (2 == txtbuff[1]) && (0 == (txtbuff[2] & 0x80))) ||
        ((1 == txtbuff[0]) && (1 == txtbuff[1]) && (1 == txtbuff[2])))
     {
-        printf("Doesn't support compressed HDR files.\n");
+        /*printf("Doesn't support compressed HDR files.\n");*/
         err = WMP_errUnsupportedFormat;
         goto Cleanup;
     }

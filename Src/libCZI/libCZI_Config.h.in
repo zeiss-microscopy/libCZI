@@ -1,0 +1,30 @@
+#pragma once
+
+#define LIBCZI_VERSION_MAJOR @libCZI_VERSION_MAJOR@
+#define LIBCZI_VERSION_MINOR @libCZI_VERSION_MINOR@
+
+// if the host system is a big-endian system, this is "1", otherwise 0
+#define LIBCZI_ISBIGENDIANHOST @libCZI_ISBIGENDIANHOST@
+
+// if the include-file "endian.h" is available, then this is "1", otherwise 0
+#define LIBCZI_HAVE_ENDIAN_H @libCZI_HAVE_ENDIAN_H@
+
+// whether the processor can load integers from an unaligned address, if this
+//  is 1 it means that we cannot load an integer from an unaligned address (we'd
+//  get a bus-error if we try), 0 means that the CPU can load from unaligned addresses
+#define LIBCZI_SIGBUS_ON_UNALIGNEDINTEGERS @libCZI_CrashOnUnalignedIntegers@
+
+#define LIBCZI_CXX_COMPILER_IDENTIFICATION "@libCZI_CompilerIdentification@"
+
+// whether the function "aligned_alloc" is available
+#define LIBCZI_HAVE_ALIGNED_ALLOC @libCZI_HAVE_ALIGNED_ALLOC@
+
+// whether the function "_aligned_malloc" is available
+#define LIBCZI_HAVE__ALIGNED_MALLOC @libCZI_HAVE__ALIGNED_MALLOC@
+
+
+#define LIBCZI_REPOSITORYREMOTEURL "@libCZI_REPOSITORYREMOTEURL@"
+
+#define LIBCZI_REPOSITORYBRANCH    "@libCZI_REPOSITORYBRANCH@"
+
+#define LIBCZI_REPOSITORYHASH      "@libCZI_REPOSITORYHASH@"

@@ -33,61 +33,9 @@
 #include <map>
 #include <fstream>
 
-#if defined(__EMSCRIPTEN__)
-#include <iostream>
-#include <iomanip>
-#endif
-
 using namespace libCZI;
 using namespace std;
 using namespace rapidjson;
-
-#if defined(__EMSCRIPTEN__)
-extern "C"
-{
-	extern int JsLibCZI_CreateStreamForFile(const char* sz);
-	extern int JsLibCZI_ReadFromFile(int handle, double offset, double size, void* pv);
-}
-
-class CStreamJs :public libCZI::IStream
-{
-private:
-	int handle;
-	CStreamJs() = delete;
-public:
-	CStreamJs(int h) :handle(h) {}
-public:
-	static std::shared_ptr<libCZI::IStream> CreateJsStream(const std::wstring& fname)
-	{
-		auto fn = convertToUtf8(fname);
-		return CStreamJs::CreateJsStream(fn.c_str());
-	}
-
-	static std::shared_ptr<libCZI::IStream> CreateJsStream(const char* sz)
-	{
-		int handle = JsLibCZI_CreateStreamForFile(sz);
-		return std::make_shared<CStreamJs>(handle);
-	}
-
-	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead)
-	{
-		//cout << "READ: offset=" << offset << " size=" << size << endl;
-		auto br = JsLibCZI_ReadFromFile(this->handle, (double)offset, (double)size, pv);
-		if (ptrBytesRead != nullptr)
-		{
-			*ptrBytesRead = br;
-		}
-
-		/*int maxBytes = size > 512 ? 512 : size;
-		for (int i = 0; i < maxBytes; ++i)
-		{
-			cout << hex << (int)((std::uint8_t*)pv)[i] << dec << " ";
-		}
-
-		cout << endl;*/
-	}
-};
-#endif
 
 class CExecuteBase
 {
@@ -99,11 +47,7 @@ protected:
 
 	static std::shared_ptr<ICZIReader> CreateAndOpenCziReader(const wchar_t* fileName)
 	{
-#if defined(__EMSCRIPTEN__)
-		auto stream = CStreamJs::CreateJsStream(std::wstring(fileName));
-#else
 		auto stream = libCZI::CreateStreamFromFile(fileName);
-#endif
 		auto spReader = libCZI::CreateCZIReader();
 		spReader->Open(stream);
 		return spReader;
@@ -143,7 +87,7 @@ protected:
 		std::stringstream ss;
 		ss << "hash of result: " << hashHex;
 		auto log = options.GetLog();
-		log->WriteStdOut(ss.str().c_str());
+		log->WriteLineStdOut(ss.str().c_str());
 	}
 
 	static void DoCalcHashOfResult(libCZI::IBitmapData* bm, const CCmdLineOptions& options)
@@ -225,9 +169,9 @@ public:
 private:
 	static void PrintAttachmentInfo(ICZIReader* reader, const CCmdLineOptions& options)
 	{
-		options.GetLog()->WriteStdOut("Attachment Info");
-		options.GetLog()->WriteStdOut("---------------");
-		options.GetLog()->WriteStdOut("");
+		options.GetLog()->WriteLineStdOut("Attachment Info");
+		options.GetLog()->WriteLineStdOut("---------------");
+		options.GetLog()->WriteLineStdOut("");
 
 		std::map<std::string, int> mapAttchmntName;
 		reader->EnumerateAttachments(
@@ -239,28 +183,28 @@ private:
 
 		if (mapAttchmntName.empty())
 		{
-			options.GetLog()->WriteStdOut(" -> No attachments found.");
+			options.GetLog()->WriteLineStdOut(" -> No attachments found.");
 		}
 		else
 		{
-			options.GetLog()->WriteStdOut("count | name");
-			options.GetLog()->WriteStdOut("------+----------------------------");
+			options.GetLog()->WriteLineStdOut("count | name");
+			options.GetLog()->WriteLineStdOut("------+----------------------------");
 			for (auto i : mapAttchmntName)
 			{
 				stringstream ss;
 				ss << setw(5) << i.second << " | " << i.first;
-				options.GetLog()->WriteStdOut(ss.str());
+				options.GetLog()->WriteLineStdOut(ss.str());
 			}
 		}
 	}
 
 	static void PrintScalingInfo(ICziMetadata* md, const CCmdLineOptions& options)
 	{
-		options.GetLog()->WriteStdOut("Scaling-Information");
-		options.GetLog()->WriteStdOut("-------------------");
-		options.GetLog()->WriteStdOut("");
-		options.GetLog()->WriteStdOut(" (the numbers give the length of one pixel (in the respective direction) in the unit 'meter')");
-		options.GetLog()->WriteStdOut("");
+		options.GetLog()->WriteLineStdOut("Scaling-Information");
+		options.GetLog()->WriteLineStdOut("-------------------");
+		options.GetLog()->WriteLineStdOut("");
+		options.GetLog()->WriteLineStdOut(" (the numbers give the length of one pixel (in the respective direction) in the unit 'meter')");
+		options.GetLog()->WriteLineStdOut("");
 
 		auto docInfo = md->GetDocumentInfo();
 		auto scalingInfo = docInfo->GetScalingInfo();
@@ -268,34 +212,44 @@ private:
 		ss << "ScaleX=" << scalingInfo.scaleX << endl;
 		ss << "ScaleY=" << scalingInfo.scaleY << endl;
 		ss << "ScaleZ=" << scalingInfo.scaleZ << endl;
-		options.GetLog()->WriteStdOut(ss.str());
+		options.GetLog()->WriteLineStdOut(ss.str());
 	}
 
 	static void PrintGeneralInfo(ICziMetadata* md, const CCmdLineOptions& options)
 	{
-		options.GetLog()->WriteStdOut("General Information");
-		options.GetLog()->WriteStdOut("-------------------");
-		options.GetLog()->WriteStdOut("");
+		options.GetLog()->WriteLineStdOut("General Information");
+		options.GetLog()->WriteLineStdOut("-------------------");
+		options.GetLog()->WriteLineStdOut("");
 
 		auto docInfo = md->GetDocumentInfo();
 		auto generalInfo = docInfo->GetGeneralDocumentInfo();
+		const wstring unspecifiedString(L"<unspecified>");
 		wstringstream ss;
-		ss << "Name=" << generalInfo.name << endl;
-		ss << "Title=" << generalInfo.title << endl;
-		ss << "UserName=" << generalInfo.userName << endl;
-		ss << "Description=" << generalInfo.description << endl;
-		ss << "Comment=" << generalInfo.comment << endl;
-		ss << "Keywords=" << generalInfo.keywords << endl;
-		ss << "Rating=" << generalInfo.rating << endl;
-		ss << "CreationDate=" << generalInfo.creationDateTime << endl;
-		options.GetLog()->WriteStdOut(ss.str());
+		ss << "Name=" << (generalInfo.name_valid ? generalInfo.name : unspecifiedString) << endl;
+		ss << "Title=" << (generalInfo.title_valid ? generalInfo.title : unspecifiedString) << endl;
+		ss << "UserName=" << (generalInfo.userName_valid ? generalInfo.userName : unspecifiedString) << endl;
+		ss << "Description=" << (generalInfo.description_valid ? generalInfo.description : unspecifiedString) << endl;
+		ss << "Comment=" << (generalInfo.comment_valid ? generalInfo.comment : unspecifiedString) << endl;
+		ss << "Keywords=" << (generalInfo.keywords_valid ? generalInfo.keywords : unspecifiedString) << endl;
+		ss << "Rating=";
+		if (generalInfo.rating_valid)
+		{
+			ss << generalInfo.rating << endl;
+		}
+		else
+		{
+			ss << unspecifiedString << endl;
+		}
+
+		ss << "CreationDate=" << (generalInfo.creationDateTime_valid ? generalInfo.creationDateTime : unspecifiedString) << endl;
+		options.GetLog()->WriteLineStdOut(ss.str());
 	}
 
 	static void PrintAllAttachments(ICZIReader* reader, const CCmdLineOptions& options)
 	{
-		options.GetLog()->WriteStdOut("Complete list of Attachments");
-		options.GetLog()->WriteStdOut("----------------------------");
-		options.GetLog()->WriteStdOut("");
+		options.GetLog()->WriteLineStdOut("Complete list of Attachments");
+		options.GetLog()->WriteLineStdOut("----------------------------");
+		options.GetLog()->WriteLineStdOut("");
 
 		bool isFirst = true;
 		reader->EnumerateAttachments(
@@ -304,22 +258,22 @@ private:
 			if (isFirst == true)
 			{
 				isFirst = false;
-				options.GetLog()->WriteStdOut("index | filetype | GUID                                   | name");
-				options.GetLog()->WriteStdOut("------+----------+----------------------------------------+-------------");
+				options.GetLog()->WriteLineStdOut("index | filetype | GUID                                   | name");
+				options.GetLog()->WriteLineStdOut("------+----------+----------------------------------------+-------------");
 			}
 
 			stringstream ss;
 			ss << setw(5) << index << " | " << setw(8) << std::left << info.contentFileType << " | {" << info.contentGuid << "} | " << info.name;
-			options.GetLog()->WriteStdOut(ss.str());
+			options.GetLog()->WriteLineStdOut(ss.str());
 			return true;
 		});
 	}
 
 	static void PrintAllSubBlocks(ICZIReader* reader, const CCmdLineOptions& options)
 	{
-		options.GetLog()->WriteStdOut("Complete list of sub-blocks");
-		options.GetLog()->WriteStdOut("---------------------------");
-		options.GetLog()->WriteStdOut("");
+		options.GetLog()->WriteLineStdOut("Complete list of sub-blocks");
+		options.GetLog()->WriteLineStdOut("---------------------------");
+		options.GetLog()->WriteLineStdOut("");
 		reader->EnumerateSubBlocks(
 			[&](int index, const SubBlockInfo& info)->bool
 		{
@@ -332,8 +286,17 @@ private:
 
 			ss << " logical=" << info.logicalRect << " phys.=" << info.physicalSize;
 			ss << " pixeltype=" << Utils::PixelTypeToInformalString(info.pixelType);
-			ss << " comp.mode=" << Utils::CompressionModeToInformalString(info.mode);
-			options.GetLog()->WriteStdOut(ss.str());
+            auto compressionMode = info.GetCompressionMode();
+            if (compressionMode != CompressionMode::Invalid)
+            {
+                ss << " compression=" << Utils::CompressionModeToInformalString(compressionMode);
+            }
+            else
+            {
+                ss << " compression=" << Utils::CompressionModeToInformalString(compressionMode) << "(" << info.compressionModeRaw << ")";
+            }
+
+			options.GetLog()->WriteLineStdOut(ss.str());
 			return true;
 		});
 	}
@@ -343,14 +306,14 @@ private:
 		std::string xmlUtf8 = md->GetXml();
 
 		//TODO: should we convert to UCS2/UTF16?
-		options.GetLog()->WriteStdOut(xmlUtf8);
+		options.GetLog()->WriteLineStdOut(xmlUtf8);
 	}
 
 	static void PrintDisplaySettingsMetadata(ICZIReader* reader, ICziMetadata* md, const CCmdLineOptions& options)
 	{
-		options.GetLog()->WriteStdOut("Display-Settings");
-		options.GetLog()->WriteStdOut("----------------");
-		options.GetLog()->WriteStdOut("");
+		options.GetLog()->WriteLineStdOut("Display-Settings");
+		options.GetLog()->WriteLineStdOut("----------------");
+		options.GetLog()->WriteLineStdOut("");
 
 		int startC = 0, endC = 0;
 
@@ -364,7 +327,7 @@ private:
 		auto dsplSettings = docInfo->GetDisplaySettings();
 		if (!dsplSettings)
 		{
-			options.GetLog()->WriteStdOut("-> No Display-Settings available");
+			options.GetLog()->WriteLineStdOut("-> No Display-Settings available");
 			return;
 		}
 
@@ -379,14 +342,14 @@ private:
 
 	static void PrintDisplaySettingsMetadataAsJson(ICZIReader* reader, ICziMetadata* md, const CCmdLineOptions& options)
 	{
-		options.GetLog()->WriteStdOut("Display-Settings in CZIcmd-JSON-Format");
-		options.GetLog()->WriteStdOut("--------------------------------------");
-		options.GetLog()->WriteStdOut("");
+		options.GetLog()->WriteLineStdOut("Display-Settings in CZIcmd-JSON-Format");
+		options.GetLog()->WriteLineStdOut("--------------------------------------");
+		options.GetLog()->WriteLineStdOut("");
 		auto docInfo = md->GetDocumentInfo();
 		auto dsplSettings = docInfo->GetDisplaySettings();
 		if (!dsplSettings)
 		{
-			options.GetLog()->WriteStdOut("-> No Display-Settings available");
+			options.GetLog()->WriteLineStdOut("-> No Display-Settings available");
 			return;
 		}
 
@@ -397,13 +360,13 @@ private:
 		StringBuffer sb;
 		PrettyWriter<StringBuffer> pw(sb);
 		document.Accept(pw);
-		options.GetLog()->WriteStdOut("");
-		options.GetLog()->WriteStdOut("Pretty-Print:");
-		options.GetLog()->WriteStdOut(sb.GetString());
+		options.GetLog()->WriteLineStdOut("");
+		options.GetLog()->WriteLineStdOut("Pretty-Print:");
+		options.GetLog()->WriteLineStdOut(sb.GetString());
 
-		options.GetLog()->WriteStdOut("");
-		options.GetLog()->WriteStdOut("Compact:");
-		options.GetLog()->WriteStdOut(dsplSettingsJson);
+		options.GetLog()->WriteLineStdOut("");
+		options.GetLog()->WriteLineStdOut("Compact:");
+		options.GetLog()->WriteLineStdOut(dsplSettingsJson);
 	}
 
 	static void PrintDisplaySettingsForChannel(int ch, IChannelDisplaySetting* dsplChSettings, const CCmdLineOptions& options)
@@ -450,7 +413,7 @@ private:
 
 		ss << endl;
 
-		options.GetLog()->WriteStdOut(ss.str());
+		options.GetLog()->WriteLineStdOut(ss.str());
 	}
 
 	static string CreateJsonForDisplaySettings(IDisplaySettings* dsplSettings)
@@ -580,7 +543,7 @@ private:
 		{
 			ss << endl;
 			ss << "Bounding-Box for scenes:" << endl;
-			for (const auto sceneBb : sbStatistics.sceneBoundingBoxes)
+			for (const auto& sceneBb : sbStatistics.sceneBoundingBoxes)
 			{
 				ss << " Scene" << sceneBb.first << ":" << endl;
 				ss << "  All:    ";
@@ -592,7 +555,7 @@ private:
 			}
 		}
 
-		log->WriteStdOut(ss.str());
+		log->WriteLineStdOut(ss.str());
 	}
 
 	static void PrintPyramidStatistics(ICZIReader* reader, const CCmdLineOptions& options)
@@ -642,7 +605,7 @@ private:
 			ss << endl;
 		}
 
-		log->WriteStdOut(ss.str());
+		log->WriteLineStdOut(ss.str());
 	}
 
 	static void WriteIntRect(stringstream& ss, const IntRect& r)
@@ -686,8 +649,8 @@ public:
 
 		std::wstring outputfilename = options.MakeOutputFilename(L"", L"PNG");
 
-		CSaveData save(outputfilename, SaveDataFormat::PNG);
-		save.Save(re.get());
+		auto saver = CSaveBitmapFactory::CreateSaveBitmapObj(nullptr);
+		saver->Save(outputfilename.c_str(), SaveDataFormat::PNG, re.get());
 
 		return true;
 	}
@@ -718,7 +681,7 @@ public:
 
 		if (!dsplSettings)
 		{
-			options.GetLog()->WriteStdErr("No Display-Settings available.");
+			options.GetLog()->WriteLineStdErr("No Display-Settings available.");
 			return false;
 		}
 
@@ -765,15 +728,15 @@ public:
 
 		if (!mcComposite)
 		{
-			options.GetLog()->WriteStdErr("Unknown output pixeltype.");
+			options.GetLog()->WriteLineStdErr("Unknown output pixeltype.");
 			return false;
 		}
 
 		DoCalcHashOfResult(mcComposite, options);
 		std::wstring outputfilename = options.MakeOutputFilename(L"", L"PNG");
 
-		CSaveData save(outputfilename, SaveDataFormat::PNG);
-		save.Save(mcComposite.get());
+		auto saver = CSaveBitmapFactory::CreateSaveBitmapObj(nullptr);
+		saver->Save(outputfilename.c_str(), SaveDataFormat::PNG, mcComposite.get());
 
 		return true;
 	}
@@ -845,8 +808,8 @@ public:
 		DoCalcHashOfResult(re, options);
 		std::wstring outputfilename = options.MakeOutputFilename(L"", L"PNG");
 
-		CSaveData save(outputfilename, SaveDataFormat::PNG);
-		save.Save(re.get());
+		auto saver = CSaveBitmapFactory::CreateSaveBitmapObj(nullptr);
+		saver->Save(outputfilename.c_str(), SaveDataFormat::PNG, re.get());
 
 		return true;
 	}
@@ -872,8 +835,8 @@ public:
 		DoCalcHashOfResult(re, options);
 		std::wstring outputfilename = options.MakeOutputFilename(L"", L"PNG");
 
-		CSaveData save(outputfilename, SaveDataFormat::PNG);
-		save.Save(re.get());
+		auto saver = CSaveBitmapFactory::CreateSaveBitmapObj(nullptr);
+		saver->Save(outputfilename.c_str(), SaveDataFormat::PNG, re.get());
 		return true;
 	}
 };
@@ -902,7 +865,7 @@ public:
 
 		if (!dsplSettings)
 		{
-			options.GetLog()->WriteStdErr("No Display-Settings available.");
+			options.GetLog()->WriteLineStdErr("No Display-Settings available.");
 			return false;
 		}
 
@@ -949,15 +912,15 @@ public:
 
 		if (!mcComposite)
 		{
-			options.GetLog()->WriteStdErr("Unknown output pixeltype.");
+			options.GetLog()->WriteLineStdErr("Unknown output pixeltype.");
 			return false;
 		}
 
 		DoCalcHashOfResult(mcComposite, options);
 		std::wstring outputfilename = options.MakeOutputFilename(L"", L"PNG");
 
-		CSaveData save(outputfilename, SaveDataFormat::PNG);
-		save.Save(mcComposite.get());
+		auto saver = CSaveBitmapFactory::CreateSaveBitmapObj(nullptr);
+		saver->Save(outputfilename.c_str(), SaveDataFormat::PNG, mcComposite.get());
 
 		return true;
 	}
@@ -1130,7 +1093,7 @@ private:
 #endif
 		output.write(static_cast<const char*>(spData.get()), size);
 		output.close();
-	}
+}
 };
 
 class CExecuteExtractSubBlock : CExecuteBase
@@ -1206,8 +1169,9 @@ private:
 		std::wstring suffix(L"#");
 		suffix += std::to_wstring(index);
 		std::wstring outputfilename = options.MakeOutputFilename(suffix.c_str(), L"PNG");
-		CSaveData save(outputfilename, SaveDataFormat::PNG);
-		save.Save(bm);
+
+		auto saver = CSaveBitmapFactory::CreateSaveBitmapObj(nullptr);
+		saver->Save(outputfilename.c_str(), SaveDataFormat::PNG, bm);
 	}
 };
 
@@ -1251,7 +1215,7 @@ bool execute(const CCmdLineOptions& options)
 		wstringstream ss;
 		string what(excp.what() != nullptr ? excp.what() : "");
 		ss << "FATAL ERROR: std::exception caught" << endl << " -> " << convertUtf8ToUCS2(what);
-		options.GetLog()->WriteStdErr(ss.str());
+		options.GetLog()->WriteLineStdErr(ss.str());
 		success = false;
 	}
 

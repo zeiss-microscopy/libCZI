@@ -818,7 +818,10 @@ ERR WriteWmpDE(
                     Call(pWS->SetPos(pWS, pDE->uValueOrOffset));
                     Call(pWS->Write(pWS, pbData, pDE->uCount));
                     Call(pWS->SetPos(pWS, offPos));
-                    *pcbDataWrittenToOffset = pDE->uCount;
+					if (pcbDataWrittenToOffset)
+					{
+						*pcbDataWrittenToOffset = pDE->uCount;
+					}
                 }
             }
             break;

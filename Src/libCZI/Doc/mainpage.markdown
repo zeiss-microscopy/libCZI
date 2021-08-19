@@ -7,7 +7,7 @@ libCZI is a library intended for providing read-only access to the information c
 
 It features
 - reading subblocks and get the content as a bitmap
-- reading subblocks which are compressed with JPEG-XR
+- reading subblocks which are compressed with JPEG-XR andZStd
 - works with tiled images and pyramid images
 - composing multi-channel images with tinting and applying a gradation curve
 - access metadata

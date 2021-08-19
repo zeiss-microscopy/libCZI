@@ -53,7 +53,7 @@ private:
 	static libCZI::IntSize InternalCalcSize(const libCZI::IntRect& roi, float zoom);
 
 	std::vector<int> CreateSortByZoom(const std::vector<SbInfo>& sbBlks);
-	std::vector<SbInfo> GetSubSet(const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate);
+	std::vector<SbInfo> GetSubSet(const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate, const std::vector<int>* allowedScenes);
 	int GetIdxOf1stSubBlockWithZoomGreater(const std::vector<SbInfo>& sbBlks, const std::vector<int>& byZoom, float zoom);
 	void ScaleBlt(libCZI::IBitmapData* bmDest, float zoom, const libCZI::IntRect&  roi, const SbInfo& sbInfo);
 
@@ -67,7 +67,7 @@ private:
 		std::vector<int>	sortedByZoom;
 	};
 
-	SubSetSortedByZoom GetSubSetSortedByZoom(const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate);
+	SubSetSortedByZoom GetSubSetFilteredBySceneSortedByZoom(const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate,const std::vector<int>& allowedScenes);
 
 	std::vector<std::tuple<int, SubSetSortedByZoom>> GetSubSetSortedByZoomPerScene(const std::vector<int>& scenes, const libCZI::IntRect& roi, const libCZI::IDimCoordinate* planeCoordinate);
 	void Paint(libCZI::IBitmapData* bmDest, const libCZI::IntRect&  roi,const SubSetSortedByZoom& sbSetSortedByZoom, float zoom);

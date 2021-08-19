@@ -40,15 +40,15 @@ CCZIReader::~CCZIReader()
 {
 }
 
-/*virtual */void CCZIReader::Open(std::shared_ptr<IStream> stream)
+/*virtual */void CCZIReader::Open(std::shared_ptr<libCZI::IStream> stream)
 {
 	if (this->isOperational == true)
 	{
 		throw logic_error("CZIReader is already operational.");
 	}
 
-	this->hdrSegmentData = CCZIParse::ReadFileHeaderSegment(stream.get());
-	this->subBlkDir = std::move(CCZIParse::ReadSubBlockDirectory(stream.get(), this->hdrSegmentData.GetSubBlockDirectoryPosition()));
+	this->hdrSegmentData = CCZIParse::ReadFileHeaderSegmentData(stream.get());
+	this->subBlkDir = CCZIParse::ReadSubBlockDirectory(stream.get(), this->hdrSegmentData.GetSubBlockDirectoryPosition());
 	auto attachmentPos = this->hdrSegmentData.GetAttachmentDirectoryPosition();
 	if (attachmentPos != 0)
 	{
@@ -59,6 +59,15 @@ CCZIReader::~CCZIReader()
 
 	this->stream = stream;
 	this->SetOperationalState(true);
+}
+
+/*virtual*/FileHeaderInfo CCZIReader::GetFileHeaderInfo()
+{
+	this->ThrowIfNotOperational();
+	FileHeaderInfo fhi;
+	fhi.fileGuid = this->hdrSegmentData.GetFileGuid();
+	this->hdrSegmentData.GetVersion(&fhi.majorVersion, &fhi.minorVersion);
+	return fhi;
 }
 
 /*virtual*/std::shared_ptr<libCZI::IMetadataSegment> CCZIReader::ReadMetadataSegment()
@@ -87,11 +96,11 @@ CCZIReader::~CCZIReader()
 		[&](int index, const CCziSubBlockDirectory::SubBlkEntry& entry)->bool
 	{
 		SubBlockInfo info;
-		info.mode = CziUtils::CompressionModeFromInt(entry.Compression);
+		info.compressionModeRaw = entry.Compression;
 		info.pixelType = CziUtils::PixelTypeFromInt(entry.PixelType);
 		info.coordinate = entry.coordinate;
 		info.logicalRect = IntRect{ entry.x,entry.y,entry.width,entry.height };
-		info.physicalSize = IntSize{ std::uint32_t(entry.storedWidth), std::uint32_t(entry.storedHeight) };
+		info.physicalSize = IntSize{ (std::uint32_t)entry.storedWidth, (std::uint32_t)entry.storedHeight };
 		info.mIndex = entry.mIndex;
 		return funcEnum(index, info);
 	});
@@ -251,7 +260,7 @@ std::shared_ptr<ISubBlock> CCZIReader::ReadSubBlock(const CCziSubBlockDirectory:
 
 	libCZI::SubBlockInfo info;
 	info.pixelType = CziUtils::PixelTypeFromInt(subBlkData.pixelType);
-	info.mode = CziUtils::CompressionModeFromInt(subBlkData.compression);
+	info.compressionModeRaw = subBlkData.compression;
 	info.coordinate = subBlkData.coordinate;
 	info.mIndex = subBlkData.mIndex;
 	info.logicalRect = subBlkData.logicalRect;
@@ -287,7 +296,7 @@ void CCZIReader::ThrowIfNotOperational()
 {
 	if (this->isOperational == false)
 	{
-		throw logic_error("CZReader is not operational (must call 'Open' first)");
+		throw logic_error("CZIReader is not operational (must call 'Open' first)");
 	}
 }
 

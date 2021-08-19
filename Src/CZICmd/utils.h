@@ -47,3 +47,5 @@ std::vector<std::wstring> wrap(const wchar_t* text, size_t line_length/* = 72*/)
 const wchar_t* skipWhiteSpaceAndOneOfThese(const wchar_t* s, const wchar_t* charToSkipOnce);
 
 std::ostream& operator<<(std::ostream& os, const GUID& guid); 
+
+bool TryParseGuid(const std::wstring& str, GUID* g);

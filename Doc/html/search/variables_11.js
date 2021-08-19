@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['w',['w',['../structlib_c_z_i_1_1_int_rect.html#ad83af8b748b2fdbf5ac96ff1773e623b',1,'libCZI::IntRect::w()'],['../structlib_c_z_i_1_1_dbl_rect.html#a19153011d443de0d64924db9d10d4af8',1,'libCZI::DblRect::w()'],['../structlib_c_z_i_1_1_int_size.html#a62979309ccf04e31423b494e68c80957',1,'libCZI::IntSize::w()']]],
-  ['weight',['weight',['../structlib_c_z_i_1_1_compositors_1_1_channel_info.html#a2a049e26e597abd995dcf860f45f0d3e',1,'libCZI::Compositors::ChannelInfo']]],
-  ['whitepoint',['whitePoint',['../structlib_c_z_i_1_1_compositors_1_1_channel_info.html#acd5158e2c9011e0d5af98363c89d6a96',1,'libCZI::Compositors::ChannelInfo']]]
+  ['tinting_1313',['tinting',['../structlib_c_z_i_1_1_compositors_1_1_channel_info.html#a5bc342e6d105188d423110cbbd48af87',1,'libCZI::Compositors::ChannelInfo']]],
+  ['tintingcolor_1314',['tintingColor',['../structlib_c_z_i_1_1_channel_display_settings_p_o_d.html#aaecc9fb8046318f7eba1d711e20b824b',1,'libCZI::ChannelDisplaySettingsPOD']]],
+  ['tintingmode_1315',['tintingMode',['../structlib_c_z_i_1_1_channel_display_settings_p_o_d.html#a3829067d6622854bddfb66f3e39718d1',1,'libCZI::ChannelDisplaySettingsPOD']]],
+  ['title_1316',['title',['../structlib_c_z_i_1_1_general_document_info.html#ab35797e1b6c3a8e5c8476b43672180bc',1,'libCZI::GeneralDocumentInfo']]],
+  ['title_5fvalid_1317',['title_valid',['../structlib_c_z_i_1_1_general_document_info.html#af240090fbdd5c8a48c888d7c19a69d3b',1,'libCZI::GeneralDocumentInfo']]],
+  ['type_1318',['type',['../structlib_c_z_i_1_1_spectrum_characteristics.html#a4820e9de35dcab3709d6ec597a300334',1,'libCZI::SpectrumCharacteristics']]]
 ];

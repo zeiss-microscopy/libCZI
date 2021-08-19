@@ -43,17 +43,19 @@ extern "C" {
 #define PK_SDK_VERSION 0x0101
 
 #define sizeof2(array) (sizeof(array)/sizeof(*(array)))
-#ifndef max
-#define max(a,b) ((a) > (b) ? (a) : (b))
+#ifndef MAX
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
 #endif
-#ifndef min
-#define min(b,a) ((a) < (b) ? (a) : (b))
+#ifndef MIN
+#define MIN(b,a) ((a) < (b) ? (a) : (b))
 #endif
-#ifdef __ANSI__
+
+#if !defined(_MSC_VER)
 #define STRCPY_SAFE(pszDest, cbDest, pszSrc)    (strncpy((pszDest), (pszSrc), (cbDest)) == (pszDest) ? 0 : 1)
 #else
 #define STRCPY_SAFE(pszDest, cbDest, pszSrc)    (strcpy_s((pszDest), (cbDest), (pszSrc)))
-#endif // __ANSI__
+#endif
+
 
 //================================================================
 typedef struct tagPKRect

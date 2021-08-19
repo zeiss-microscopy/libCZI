@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['w',['w',['../structlib_c_z_i_1_1_int_rect.html#ad83af8b748b2fdbf5ac96ff1773e623b',1,'libCZI::IntRect::w()'],['../structlib_c_z_i_1_1_dbl_rect.html#a19153011d443de0d64924db9d10d4af8',1,'libCZI::DblRect::w()'],['../structlib_c_z_i_1_1_int_size.html#a62979309ccf04e31423b494e68c80957',1,'libCZI::IntSize::w()']]],
-  ['weight',['weight',['../structlib_c_z_i_1_1_compositors_1_1_channel_info.html#a2a049e26e597abd995dcf860f45f0d3e',1,'libCZI::Compositors::ChannelInfo']]],
-  ['whitepoint',['whitePoint',['../structlib_c_z_i_1_1_compositors_1_1_channel_info.html#acd5158e2c9011e0d5af98363c89d6a96',1,'libCZI::Compositors::ChannelInfo']]],
-  ['withjxrdecoder',['WithJxrDecoder',['../namespacelib_c_z_i.html#a77743727a5f0709a64237e58b9254983a6cdacd623c3a47d457783e5410437a42',1,'libCZI']]]
+  ['v_722',['V',['../namespacelib_c_z_i.html#a55049658acf59d0eddfaebcad16df424a5206560a306a2e085a437fd258eb57ce',1,'libCZI']]],
+  ['value_723',['value',['../structlib_c_z_i_1_1_dimension_and_value.html#a297b6a1b603c8e8e5ae77d271e93ea15',1,'libCZI::DimensionAndValue']]],
+  ['vector_724',['Vector',['../structlib_c_z_i_1_1_i_fast_airy_scan_settings_1_1_vector.html',1,'libCZI::IFastAiryScanSettings']]],
+  ['virtualpinhole_725',['VirtualPinhole',['../classlib_c_z_i_1_1_i_dimension_channel_airyscan_settings.html#a948b693a567b41421a19af77beb3cdcda002519a852a8cb59989ebca349d5b029',1,'libCZI::IDimensionChannelAiryscanSettings']]]
 ];

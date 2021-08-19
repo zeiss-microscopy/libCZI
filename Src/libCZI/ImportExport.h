@@ -22,7 +22,8 @@
 
 #pragma once
 
-#if !defined(_STATICLIBBUILD)
+// if linking with the static libCZI-library, the variable "_LIBCZISTATICLIB" should be defined.
+#if !defined(_LIBCZISTATICLIB)
 
 	#ifdef LIBCZI_EXPORTS
 		#ifdef __GNUC__

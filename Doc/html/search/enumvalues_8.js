@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['jpg',['Jpg',['../namespacelib_c_z_i.html#a672959aa909ce27c5a549465200b08fbad490ed93cc2099a7be4dcb5257fe50bf',1,'libCZI']]],
-  ['jpgxr',['JpgXr',['../namespacelib_c_z_i.html#a672959aa909ce27c5a549465200b08fba92cede94b3f3b5fabbcd19c7fe25b9bc',1,'libCZI']]],
-  ['jpxr_5fjxrlib',['JPXR_JxrLib',['../namespacelib_c_z_i.html#a68cd7521fd89880f820ea55baf6f6179a843daf124e8ac9b9d6e02c87c0bdb580',1,'libCZI']]]
+  ['h_1421',['H',['../namespacelib_c_z_i.html#a55049658acf59d0eddfaebcad16df424ac1d9f50f86825a1a2302ec2449c17196',1,'libCZI']]],
+  ['heightmap_1422',['Heightmap',['../namespacelib_c_z_i.html#a8825d01d553b73fe6eb2be888e5e30d0a6836366b1ef05ae4b5032f5bd2c6bf67',1,'libCZI']]],
+  ['hoffmanmodulation_1423',['HoffmanModulation',['../namespacelib_c_z_i.html#a11a1d85aa49586162fdbdd422ad97b14a081f8f2aa97aa8cd24fad8f82cfb4f4f',1,'libCZI']]]
 ];

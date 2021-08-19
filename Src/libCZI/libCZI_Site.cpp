@@ -23,6 +23,7 @@
 #include "stdafx.h"
 #include "libCZI.h"
 #include "decoder.h"
+#include "decoder_zstd.h"
 #include <mutex>
 #include "bitmapData.h"
 #include "decoder_wic.h"
@@ -35,62 +36,126 @@ using namespace std;
 class CSiteImpBase : public ISite
 {
 public:
-	virtual bool IsEnabled(int logLevel)
-	{
-		return false;
-	}
+		virtual bool IsEnabled(int logLevel)
+		{
+				return false;
+		}
 
-	virtual void Log(int level, const char* szMsg)
-	{
-	}
+		virtual void Log(int level, const char* szMsg)
+		{
+		}
 
-	virtual std::shared_ptr<libCZI::IBitmapData> CreateBitmap(libCZI::PixelType pixeltype, std::uint32_t width, std::uint32_t height, std::uint32_t stride, std::uint32_t extraRows, std::uint32_t extraColumns)
-	{
-		return CStdBitmapData::Create(pixeltype, width, height, stride, extraRows, extraColumns);
-	}
+		virtual std::shared_ptr<libCZI::IBitmapData> CreateBitmap(libCZI::PixelType pixeltype, std::uint32_t width, std::uint32_t height, std::uint32_t stride, std::uint32_t extraRows, std::uint32_t extraColumns)
+		{
+				return CStdBitmapData::Create(pixeltype, width, height, stride, extraRows, extraColumns);
+		}
 
-	virtual std::shared_ptr<IDecoder> GetDecoder(ImageDecoderType type, const char* arguments)
-	{
-		throw std::runtime_error("must not be called...");
-	}
+		virtual std::shared_ptr<IDecoder> GetDecoder(ImageDecoderType type, const char* arguments)
+		{
+				throw std::runtime_error("must not be called...");
+		}
 };
 
 #if defined(_WIN32)
 class CSiteImpWic : public CSiteImpBase
 {
 private:
-	std::once_flag	jxrDecoderInitialized;
-	std::shared_ptr<IDecoder> decoder;
+		std::once_flag	jxrDecoderInitialized;
+		std::shared_ptr<IDecoder> jpgXrdecoder;
+		std::once_flag	zstd0DecoderInitialized;
+		std::shared_ptr<IDecoder> zstd0decoder;
+		std::once_flag	zstd1DecoderInitialized;
+		std::shared_ptr<IDecoder> zstd1decoder;
 public:
-	virtual std::shared_ptr<IDecoder> GetDecoder(ImageDecoderType type, const char* arguments)
-	{
-		std::call_once(jxrDecoderInitialized,
-			[this]()
+		virtual std::shared_ptr<IDecoder> GetDecoder(ImageDecoderType type, const char* arguments)
 		{
-			this->decoder = CWicJpgxrDecoder::Create();
-		});
+				switch (type)
+				{
+				case ImageDecoderType::JPXR_JxrLib:
+				{
+						std::call_once(jxrDecoderInitialized,
+								[this]()
+								{
+										this->jpgXrdecoder = CWicJpgxrDecoder::Create();
+								});
 
-		return this->decoder;
-	}
+						return this->jpgXrdecoder;
+				}
+				case ImageDecoderType::ZStd0:
+				{
+						std::call_once(zstd0DecoderInitialized,
+								[this]()
+								{
+										this->zstd0decoder = CZstd0Decoder::Create();
+								});
+
+						return this->zstd0decoder;
+				}
+				case ImageDecoderType::ZStd1:
+				{
+						std::call_once(zstd1DecoderInitialized,
+								[this]()
+								{
+										this->zstd1decoder = CZstd1Decoder::Create();
+								});
+
+						return this->zstd1decoder;
+				}
+				}
+
+				return shared_ptr<IDecoder>();
+		}
 };
 #endif
 
 class CSiteImpJxrLib : public CSiteImpBase
 {
 private:
-	std::once_flag	jxrDecoderInitialized;
-	std::shared_ptr<IDecoder> decoder;
+		std::once_flag	jxrDecoderInitialized;
+		std::shared_ptr<IDecoder> jpgXrdecoder;
+		std::once_flag	zstd0DecoderInitialized;
+		std::shared_ptr<IDecoder> zstd0decoder;
+		std::once_flag	zstd1DecoderInitialized;
+		std::shared_ptr<IDecoder> zstd1decoder;
 public:
-	virtual std::shared_ptr<IDecoder> GetDecoder(ImageDecoderType type, const char* arguments)
-	{
-		std::call_once(jxrDecoderInitialized,
-			[this]()
+		virtual std::shared_ptr<IDecoder> GetDecoder(ImageDecoderType type, const char* arguments)
 		{
-			this->decoder = CJxrLibDecoder::Create();
-		});
+				switch (type)
+				{
+				case ImageDecoderType::JPXR_JxrLib:
+				{
+						std::call_once(jxrDecoderInitialized,
+								[this]()
+								{
+										this->jpgXrdecoder = CJxrLibDecoder::Create();
+								});
 
-		return this->decoder;
-	}
+						return this->jpgXrdecoder;
+				}
+				case ImageDecoderType::ZStd0:
+				{
+						std::call_once(zstd0DecoderInitialized,
+								[this]()
+								{
+										this->zstd0decoder = CZstd0Decoder::Create();
+								});
+
+						return this->zstd0decoder;
+				}
+				case ImageDecoderType::ZStd1:
+				{
+						std::call_once(zstd1DecoderInitialized,
+								[this]()
+								{
+										this->zstd1decoder = CZstd1Decoder::Create();
+								});
+
+						return this->zstd1decoder;
+				}
+				}
+
+				return shared_ptr<IDecoder>();
+		}
 };
 
 #if defined(_WIN32)
@@ -106,40 +171,40 @@ static ISite* g_site = nullptr;
 
 libCZI::ISite* GetSite()
 {
-	std::call_once(gSite_init,
-		[]()
-	{
-		if (g_site == nullptr)
-		{
-			g_site = libCZI::GetDefaultSiteObject(SiteObjectType::Default);
-		}
-	});
+		std::call_once(gSite_init,
+				[]()
+				{
+						if (g_site == nullptr)
+						{
+								g_site = libCZI::GetDefaultSiteObject(SiteObjectType::Default);
+						}
+				});
 
-	return g_site;
+		return g_site;
 }
 
 libCZI::ISite* libCZI::GetDefaultSiteObject(SiteObjectType type)
 {
-	switch (type)
-	{
+		switch (type)
+		{
 #if defined(_WIN32)
-	case SiteObjectType::WithWICDecoder:
-		return &theWicSite;
+		case SiteObjectType::WithWICDecoder:
+				return &theWicSite;
 #endif
-	case SiteObjectType::WithJxrDecoder:
-	case SiteObjectType::Default:
-		return &theJxrLibSite;
-	default:
-		return nullptr;
-	}
+		case SiteObjectType::WithJxrDecoder:
+		case SiteObjectType::Default:
+				return &theJxrLibSite;
+		default:
+				return nullptr;
+		}
 }
 
 void libCZI::SetSiteObject(libCZI::ISite* pSite)
 {
-	if (g_site != nullptr)
-	{
-		throw std::logic_error("Site was already initialized");
-	}
+		if (g_site != nullptr)
+		{
+				throw std::logic_error("Site was already initialized");
+		}
 
-	g_site = pSite;
+		g_site = pSite;
 }

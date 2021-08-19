@@ -1,4 +1,4 @@
-CZIcmd Documentation                 {#naczircmd}
+CZIcmd Documentation                 {#czicmd}
 =======================
 
 The console application "CZIcmd" is provided for two purposes:
