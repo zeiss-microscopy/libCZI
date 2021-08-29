@@ -56,9 +56,9 @@ static U32 Convert_Half_To_Float(U16 u16)
     {
         return s << 31;
     }
-    else if (~(~0 << 5) == e) // inf, snan, qnan
+    else if (~(0xffffffe0/*~0 << 5*/) == e) // inf, snan, qnan
     {
-        return (s << 31) | ~(~0 << 8) << 23| (m << 13);
+        return (s << 31) | ~(0xffffff00/*~0 << 8*/) << 23| (m << 13);
     }
 
     return (s << 31) | ((e - 15 + 127) << 23) | (m << 13); // norm
@@ -974,9 +974,9 @@ ERR RGB96Float_RGBE(PKFormatConverter* pFC, const PKRect* pRect, U8* pb, U32 cbS
         for (x = 0; x < iWidth; x++)
         {
             // We clamp source RGB values at zero (don't allow negative numbers)
-            const float fltRed = max(pfltSrcPixel[3*x], 0.0F);
-            const float fltGreen = max(pfltSrcPixel[3*x+1], 0.0F);
-            const float fltBlue = max(pfltSrcPixel[3*x+2], 0.0F);
+            const float fltRed = MAX(pfltSrcPixel[3*x], 0.0F);
+            const float fltGreen = MAX(pfltSrcPixel[3*x+1], 0.0F);
+            const float fltBlue = MAX(pfltSrcPixel[3*x+2], 0.0F);
             float fltMaxPos = fltRed;
 
             if (fltGreen > fltMaxPos)

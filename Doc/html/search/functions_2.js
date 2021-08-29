@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['enumchannels',['EnumChannels',['../classlib_c_z_i_1_1_i_display_settings.html#af19480abbb7905656e5411bd34d0506d',1,'libCZI::IDisplaySettings']]],
-  ['enumdimensions',['EnumDimensions',['../classlib_c_z_i_1_1_i_czi_multi_dimension_document_info.html#a23f7b26bd323732fac0d190e9b38b6e3',1,'libCZI::ICziMultiDimensionDocumentInfo']]],
-  ['enumerateattachments',['EnumerateAttachments',['../classlib_c_z_i_1_1_i_attachment_repository.html#a38f1c13a03e2dd8887d911be2c1b892b',1,'libCZI::IAttachmentRepository']]],
-  ['enumeratesubblocks',['EnumerateSubBlocks',['../classlib_c_z_i_1_1_i_sub_block_repository.html#a986ec9360cafdbadafdea9b8b5528ac3',1,'libCZI::ISubBlockRepository']]],
-  ['enumeratesubset',['EnumerateSubset',['../classlib_c_z_i_1_1_i_attachment_repository.html#acc6b932d8d587bb8399c0236c1c29a55',1,'libCZI::IAttachmentRepository']]],
-  ['enumsubset',['EnumSubset',['../classlib_c_z_i_1_1_i_sub_block_repository.html#abf5c6fe4c21dde7079ac9c5aa04a760f',1,'libCZI::ISubBlockRepository']]],
-  ['enumvaliddimensions',['EnumValidDimensions',['../classlib_c_z_i_1_1_c_dim_coordinate.html#a65d3104fbc171cdab0cd53616df13f8e',1,'libCZI::CDimCoordinate::EnumValidDimensions()'],['../classlib_c_z_i_1_1_c_dim_bounds.html#ae2bddb983e507840449695dc2757cd2f',1,'libCZI::CDimBounds::EnumValidDimensions()']]]
+  ['dangerousgetrawdata_898',['DangerousGetRawData',['../classlib_c_z_i_1_1_i_sub_block.html#a6f84a58437af59bac64a6147369ddae4',1,'libCZI::ISubBlock::DangerousGetRawData(MemBlkType type, const void *&amp;ptr, size_t &amp;size) const =0'],['../classlib_c_z_i_1_1_i_sub_block.html#acd9396cc5d366de99b37a26c98031d66',1,'libCZI::ISubBlock::DangerousGetRawData(MemBlkType type, const Q *&amp;ptr, size_t &amp;size) const'],['../classlib_c_z_i_1_1_i_attachment.html#ab809465974cfe7eaf10e171cc1c7bc15',1,'libCZI::IAttachment::DangerousGetRawData(const void *&amp;ptr, size_t &amp;size) const =0'],['../classlib_c_z_i_1_1_i_attachment.html#a2f716dad937d9bc600c27ff33c94dd4e',1,'libCZI::IAttachment::DangerousGetRawData(const Q *&amp;ptr, size_t &amp;size) const'],['../classlib_c_z_i_1_1_i_metadata_segment.html#a749349eab738a5fd7e5bce2e67440953',1,'libCZI::IMetadataSegment::DangerousGetRawData()']]],
+  ['decode_899',['Decode',['../classlib_c_z_i_1_1_i_decoder.html#a50dbc9d852bdbcc5da862f8ebfd24d21',1,'libCZI::IDecoder']]],
+  ['dimboundstostring_900',['DimBoundsToString',['../classlib_c_z_i_1_1_utils.html#a63811f2fb98b3c15e0203b22ab1bbbe0',1,'libCZI::Utils']]],
+  ['dimcoordinatetostring_901',['DimCoordinateToString',['../classlib_c_z_i_1_1_utils.html#aeb42843e65615302b51b68ad2b376e6d',1,'libCZI::Utils']]],
+  ['dimensiontochar_902',['DimensionToChar',['../classlib_c_z_i_1_1_utils.html#ae97a98f63029f18282b1c940a79518a4',1,'libCZI::Utils']]]
 ];

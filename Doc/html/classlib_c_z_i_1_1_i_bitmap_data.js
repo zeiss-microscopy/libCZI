@@ -1,5 +1,6 @@
 var classlib_c_z_i_1_1_i_bitmap_data =
 [
+    [ "~IBitmapData", "classlib_c_z_i_1_1_i_bitmap_data.html#a3492221fdf1810a4dbfb0b6801cc894c", null ],
     [ "GetHeight", "classlib_c_z_i_1_1_i_bitmap_data.html#a2072b5c8db493b7b19717811a96a6483", null ],
     [ "GetPixelType", "classlib_c_z_i_1_1_i_bitmap_data.html#a66f27266674d7f328dd5f1270b81a94e", null ],
     [ "GetSize", "classlib_c_z_i_1_1_i_bitmap_data.html#af612716947147a55dcbbb245c3335ace", null ],

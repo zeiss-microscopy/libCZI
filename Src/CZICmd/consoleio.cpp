@@ -27,91 +27,47 @@
 
 using namespace std;
 
-const wchar_t LINEFEED[] = L"\r\n";
-
 /*static*/std::shared_ptr<ILog> CConsoleLog::CreateInstance()
 {
 	return std::make_shared<CConsoleLog>();
 }
 
-void CConsoleLog::WriteStdOut(const char* sz)
+void CConsoleLog::WriteLineStdOut(const char* sz)
 {
 	std::cout << sz << endl;
+}
+
+void CConsoleLog::WriteLineStdOut(const wchar_t* sz)
+{
+	std::wcout << sz << endl;
+}
+
+void CConsoleLog::WriteLineStdErr(const char* sz)
+{
+	std::cout << sz << endl;
+}
+
+void CConsoleLog::WriteLineStdErr(const wchar_t* sz)
+{
+	std::wcout << sz << endl;
+}
+
+void CConsoleLog::WriteStdOut(const char* sz)
+{
+	std::cout << sz;
 }
 
 void CConsoleLog::WriteStdOut(const wchar_t* sz)
 {
-	std::wcout << sz << endl;
+	std::wcout << sz;
 }
-
 
 void CConsoleLog::WriteStdErr(const char* sz)
 {
-	std::cout << sz << endl;
+	std::cout << sz;
 }
 
 void CConsoleLog::WriteStdErr(const wchar_t* sz)
 {
-	std::wcout << sz << endl;
+	std::wcout << sz;
 }
-
-
-#if 0
-void CConsoleLog::WriteStdOut(const wchar_t* fmt, ...)
-{
-	va_list argptr;
-	va_start(argptr, fmt);
-	this->Write(stdout, fmt, argptr);
-	va_end(argptr);
-}
-
-void CConsoleLog::WriteStdOutLine(const wchar_t* fmt, ...)
-{
-	va_list argptr;
-	va_start(argptr, fmt);
-	this->Write(stdout, fmt, argptr);
-	this->WriteString(stdout, LINEFEED);
-	va_end(argptr);
-}
-
-void CConsoleLog::WriteStdErr(const wchar_t* fmt, ...)
-{
-	va_list argptr; /* Set up the variable argument list here */
-	va_start(argptr, fmt); /* Start up variable arguments */
-	this->Write(stderr, fmt, argptr);
-	va_end(argptr);
-}
-
-bool CConsoleLog::IsInfoEnabled(int level) const
-{
-	return true;
-}
-
-void CConsoleLog::WriteInfo(int level, const wchar_t* fmt, ...)
-{
-	va_list argptr;
-	va_start(argptr, fmt);
-	this->Write(stdout, fmt, argptr);
-	va_end(argptr);
-}
-
-void CConsoleLog::WriteInfoString(int level, const wchar_t* str)
-{
-	fputws(str, stdout);
-}
-
-void CConsoleLog::Write(FILE* fp, const wchar_t* fmt, va_list argptr)
-{
-#if defined(WIN32ENV)
-	vfwprintf_s(fp, fmt, argptr);
-#endif
-#if defined(LINUXENV)
-    vfwprintf(fp,fmt,argptr);
-#endif
-}
-
-void CConsoleLog::WriteString(FILE* fp, const wchar_t* s)
-{
-	fputws(s, fp);
-}
-#endif

@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['a',['a',['../structlib_c_z_i_1_1_i_display_settings_1_1_cubic_spline_coefficients.html#a543026ecf7bb3dcfa86d89687d90e6ac',1,'libCZI::IDisplaySettings::CubicSplineCoefficients']]],
-  ['accessors',['Accessors',['../accessors.html',1,'']]],
-  ['accessortype',['AccessorType',['../namespacelib_c_z_i.html#aa626474324df92c9cdc7258cdb1e677c',1,'libCZI']]],
-  ['attachment',['Attachment',['../classlib_c_z_i_1_1_i_sub_block.html#a4dc4926ea65d8d20310b8b79ea76e108ab60de398d6a7a2fe1c4c9585572b3ef1',1,'libCZI::ISubBlock::Attachment()'],['../classlib_c_z_i_1_1_i_metadata_segment.html#a3acd5e2bf5161629f1ee56ecef9b3b72a61a22550a6ebb48d975667b448757bec',1,'libCZI::IMetadataSegment::Attachment()']]],
-  ['attachmentinfo',['AttachmentInfo',['../structlib_c_z_i_1_1_attachment_info.html',1,'libCZI']]]
+  ['_5f1x1_1',['_1x1',['../namespacelib_c_z_i.html#a7bbb1dcff4abe146082b181c93282e21a713207c77e1e34bb73b9a6ea6050975a',1,'libCZI']]],
+  ['_5f2x2_2',['_2x2',['../namespacelib_c_z_i.html#a7bbb1dcff4abe146082b181c93282e21accde220fca5fb15a4b77524f24950186',1,'libCZI']]],
+  ['_5f4x4_3',['_4x4',['../namespacelib_c_z_i.html#a7bbb1dcff4abe146082b181c93282e21a55e26443cf63433601b7f3e3628fe67d',1,'libCZI']]],
+  ['_5f8x8_4',['_8x8',['../namespacelib_c_z_i.html#a7bbb1dcff4abe146082b181c93282e21a188f0cd02913c309111121b3f104f6f9',1,'libCZI']]]
 ];

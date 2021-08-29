@@ -30,58 +30,19 @@ enum class SaveDataFormat
 	PNG
 };
 
-#if defined(WIN32ENV)
-#include <Wincodec.h>
-
-class CSaveData
+class ISaveBitmap
 {
-private:
-	std::wstring	fileName;
-	SaveDataFormat	format;
 public:
-	CSaveData(const wchar_t* fileName, SaveDataFormat dataFormat);
-	CSaveData(const std::wstring fileName, SaveDataFormat dataFormat) : CSaveData(fileName.c_str(), dataFormat) {};
-
-	void	Save(libCZI::IBitmapData* bitmap);
-private:
-	void SaveWithWIC(const wchar_t* filename, const GUID encoder, const WICPixelFormatGUID& wicPixelFmt, libCZI::IBitmapData* bitmap);
-	void SaveWithWIC(IWICImagingFactory* pFactory, IWICStream* destStream, const GUID encoder, const WICPixelFormatGUID& wicPixelFmt, libCZI::IBitmapData* bitmap);
+	virtual void Save(const wchar_t* fileName, SaveDataFormat dataFormat, libCZI::IBitmapData* bitmap)=0;
+	virtual ~ISaveBitmap() {};
 };
 
-#endif
+class CSaveBitmapFactory
+{
+public:
+	static const char WIC_CLASS[];
+	static const char LIBPNG_CLASS[];
 
-#if defined(LINUXENV)
-//#if !defined(EMSCRIPTEN)
-	class CSaveData
-	{
-	private:
-		std::wstring	fileName;
-		SaveDataFormat	format;
-	public:
-		CSaveData(const wchar_t* fileName, SaveDataFormat dataFormat);
-		CSaveData(const std::wstring fileName, SaveDataFormat dataFormat) : CSaveData(fileName.c_str(), dataFormat) {};
-
-		void	Save(libCZI::IBitmapData* bitmap);
-	private:
-		void 	SaveBgr24(libCZI::IBitmapData* bitmap);
-		void 	SaveBgr48(libCZI::IBitmapData* bitmap);
-		void 	SaveGray16(libCZI::IBitmapData* bitmap);
-		void 	SaveGray8(libCZI::IBitmapData* bitmap);
-		void 	SaveBgra32(libCZI::IBitmapData* bitmap);
-		void 	SavePng(libCZI::IBitmapData* bitmap, int bit_depth, int color_type);
-		void 	SavePngTweakLineBeforeWritng(libCZI::IBitmapData* bitmap, int bit_depth, int color_type,
-			std::function<void(std::uint32_t, void*)> tweakLine);
-		FILE*	OpenDestForWrite();
-		void 	ThrowIfNull(const void* p,const char* info);
-	};
-//#else
-//class CSaveData
-//{
-//public:
-//	CSaveData(const wchar_t* fileName, SaveDataFormat dataFormat){};
-//	CSaveData(const std::wstring fileName, SaveDataFormat dataFormat) : CSaveData(fileName.c_str(), dataFormat) {};
-//
-//	void	Save(libCZI::IBitmapData* bitmap){};
-//};
-//#endif
-#endif
+	static std::shared_ptr<ISaveBitmap> CreateSaveBitmapObj(const char* className);
+	static std::shared_ptr<ISaveBitmap> CreateDefaultSaveBitmapObj();
+};

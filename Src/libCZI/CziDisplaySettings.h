@@ -25,51 +25,37 @@
 #include "splines.h"
 #include "pugixml.hpp"
 
-class CCziDisplaySettings : public libCZI::IDisplaySettings
+class CChannelDisplaySettingsOnPod : public libCZI::IChannelDisplaySetting
 {
+private:
+	libCZI::ChannelDisplaySettingsPOD cdsPod;
 public:
-	struct ChannelDisplaySetting
-	{
-		bool isEnabled;
-		float weight;
-		float blackPoint, whitePoint;
-		bool enableTinting;
-		libCZI::Rgb8Color tintingColor;
-		libCZI::IDisplaySettings::GradationCurveMode gradationCurveMode;
-		float gamma;
-		std::vector<libCZI::IDisplaySettings::SplineControlPoint> splineControlPoints;
-	};
+	CChannelDisplaySettingsOnPod(const libCZI::ChannelDisplaySettingsPOD& pod)
+		: cdsPod(pod)
+	{}
 
+public:	// interface IChannelDisplaySetting
+	bool GetIsEnabled() const override;
+	float GetWeight() const override;
+	bool TryGetTintingColorRgb8(libCZI::Rgb8Color* pColor) const override;
+	void GetBlackWhitePoint(float* pBlack, float* pWhite) const override;
+	libCZI::IDisplaySettings::GradationCurveMode GetGradationCurveMode() const override;
+	bool TryGetGamma(float* gamma) const override;
+	bool TryGetSplineControlPoints(std::vector<libCZI::IDisplaySettings::SplineControlPoint>* ctrlPts) const override;
+	bool TryGetSplineData(std::vector<libCZI::IDisplaySettings::SplineData>* data) const override;
+};
+
+class CDisplaySettingsOnPod : public libCZI::IDisplaySettings
+{
+private:
+	std::map<int, std::shared_ptr<libCZI::IChannelDisplaySetting>> channelDs;
 public:
-	explicit CCziDisplaySettings(std::function<bool(int no,int&, ChannelDisplaySetting& dispSetting)> getChannelDisplaySettings);
+	explicit CDisplaySettingsOnPod(std::function<bool(int no, int&, libCZI::ChannelDisplaySettingsPOD& dispSetting)> getChannelDisplaySettings);
+	CDisplaySettingsOnPod(const libCZI::DisplaySettingsPOD& pod);
+
 	static std::shared_ptr<libCZI::IDisplaySettings> CreateFromXml(pugi::xml_node node);
 public:	// interface IDisplaySettings
 	void EnumChannels(std::function<bool(int)> func) const override;
 	std::shared_ptr<libCZI::IChannelDisplaySetting> GetChannelDisplaySettings(int chIndex) const override;
-private:
-	std::map<int, ChannelDisplaySetting> channelDisplaySettings;
-
-	static std::vector<libCZI::IDisplaySettings::SplineControlPoint> ParseSplinePoints(const wchar_t* szString);
-
-	static std::vector<libCZI::IDisplaySettings::SplineData> GetSplineDataFromXmlString(const wchar_t* szString);
-
 };
 
-class CCziChannelDisplaySettings : public libCZI::IChannelDisplaySetting
-{
-private:
-	CCziDisplaySettings::ChannelDisplaySetting chDsplSetting;
-public:
-	explicit CCziChannelDisplaySettings(const CCziDisplaySettings::ChannelDisplaySetting& chDsplSetting)
-		: chDsplSetting(chDsplSetting)
-	{}
-
-	bool	GetIsEnabled() const override;
-	float	GetWeight() const override;
-	bool	TryGetTintingColorRgb8(libCZI::Rgb8Color* pColor) const override;
-	void	GetBlackWhitePoint(float* pBlack, float* pWhite) const override;
-	libCZI::IDisplaySettings::GradationCurveMode GetGradationCurveMode() const override;
-	bool	TryGetGamma(float* gamma) const override;
-	bool	TryGetSplineControlPoints(std::vector<libCZI::IDisplaySettings::SplineControlPoint>* ctrlPts) const override;
-	bool	TryGetSplineData(std::vector<libCZI::IDisplaySettings::SplineData>* data) const override;
-};

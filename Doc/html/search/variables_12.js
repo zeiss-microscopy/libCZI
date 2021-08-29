@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['x',['x',['../structlib_c_z_i_1_1_i_display_settings_1_1_spline_control_point.html#a1978764701b7179c6e5fd045dc88fe9a',1,'libCZI::IDisplaySettings::SplineControlPoint::x()'],['../structlib_c_z_i_1_1_int_rect.html#a7a1e25fc9f6a4c99d9a3710446b7a5de',1,'libCZI::IntRect::x()'],['../structlib_c_z_i_1_1_dbl_rect.html#a8f92b6a3e150fa3a89d4dd5eb993ae19',1,'libCZI::DblRect::x()']]],
-  ['xpos',['xPos',['../structlib_c_z_i_1_1_i_display_settings_1_1_spline_data.html#a745dd0b033824f68be93d3b038d6ed41',1,'libCZI::IDisplaySettings::SplineData']]]
+  ['username_1319',['userName',['../structlib_c_z_i_1_1_general_document_info.html#a2ac0606c9395217d63c586f9bd356f3e',1,'libCZI::GeneralDocumentInfo']]],
+  ['username_5fvalid_1320',['userName_valid',['../structlib_c_z_i_1_1_general_document_info.html#a830f66a4fff28cb15e06856b3184c2e4',1,'libCZI::GeneralDocumentInfo']]]
 ];

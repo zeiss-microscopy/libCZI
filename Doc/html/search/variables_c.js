@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['r',['r',['../structlib_c_z_i_1_1_rgb8_color.html#acdf7d80ba3adccfc7866b4c0f182248c',1,'libCZI::Rgb8Color::r()'],['../structlib_c_z_i_1_1_rgb_float_color.html#a41c20a73ab74d9ade494315511267ef2',1,'libCZI::RgbFloatColor::r()']]],
-  ['rating',['rating',['../structlib_c_z_i_1_1_general_document_info.html#a26ded0bae7ffb1bc68fef7f1862c0508',1,'libCZI::GeneralDocumentInfo']]]
+  ['name_1278',['name',['../structlib_c_z_i_1_1_attachment_info.html#a0e68d0e359ff6dc8ae54e39267486a43',1,'libCZI::AttachmentInfo::name()'],['../structlib_c_z_i_1_1_general_document_info.html#afc37e71ba6b59171c877c17749b91aa3',1,'libCZI::GeneralDocumentInfo::name()']]],
+  ['name_5fvalid_1279',['name_valid',['../structlib_c_z_i_1_1_general_document_info.html#ada2a118e64fac3fe72062e165206b952',1,'libCZI::GeneralDocumentInfo']]]
 ];

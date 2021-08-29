@@ -30,9 +30,9 @@ class CSplines
 public:
 	typedef libCZI::IDisplaySettings::CubicSplineCoefficients Coefficients;
 
-	static std::vector<Coefficients> GetSplineCoefficients(int pointsCnt, std::function<void(int index, double* x, double* y)> getPoint);
+	static std::vector<Coefficients> GetSplineCoefficients(int pointsCnt, const std::function<void(int index, double* x, double* y)>& getPoint);
 
-	static double CalculateSplineValue(double xPosition, int pointsCnt, std::function<void(int index, double* x)> getPoint, const  std::vector<Coefficients>& coefficients);
+	static double CalculateSplineValue(double xPosition, int pointsCnt, const std::function<void(int index, double* x)> getPoint, const std::vector<Coefficients>& coefficients);
 
 	static double CalculateSplineValue(double xPosition, const Coefficients& coeffs);
 };

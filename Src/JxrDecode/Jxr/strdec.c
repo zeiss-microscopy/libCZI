@@ -31,6 +31,7 @@
 #include "strTransform.h"
 #include <math.h>
 #include "perfTimer.h"
+#include "JXRGlue.h"
 
 #ifdef MEM_TRACE
 #define TRACE_MALLOC    1
@@ -410,7 +411,7 @@ Int processMacroblockDec(CWMImageStrCodec * pSC)
 #define _CLIP16(v) ((I16)_CLIP2(-32768, v, 32767))
 #define _CLIPU16(v) ((U16)_CLIP2(0, v, 65535))
 
-#define min(a,b) (((a) < (b)) ? (a) : (b))
+///#define min(a,b) (((a) < (b)) ? (a) : (b))
 
 //inverseConvert: Inverse conversion from float RGB to RGBE
 static _FORCEINLINE void inverseConvert (PixelI iF, U8 *pRGB, U8 *pE)
@@ -430,9 +431,9 @@ static _FORCEINLINE void inverseConvert (PixelI iF, U8 *pRGB, U8 *pE)
     }
 }
 
-#ifdef __ANSI__
-#define max(a,b) ((a) > (b) ? (a) : (b))
-#endif // __ANSI__
+//#ifdef __ANSI__
+//#define max(a,b) ((a) > (b) ? (a) : (b))
+//#endif // __ANSI__
 
 static _FORCEINLINE void inverseConvertRGBE (PixelI iFr, PixelI iFg, PixelI iFb, U8 *pR, U8 *pG, U8 *pB, U8 *pE)
 {
@@ -444,7 +445,7 @@ static _FORCEINLINE void inverseConvertRGBE (PixelI iFr, PixelI iFg, PixelI iFb,
     inverseConvert (iFg, pG, &pG_E);
     inverseConvert (iFb, pB, &pB_E);
 
-    *pE = max(max(pR_E, pG_E), pB_E); 
+    *pE = MAX(MAX(pR_E, pG_E), pB_E); 
 
     if(*pE > pR_E){
             iShift = (*pE - pR_E);
@@ -797,7 +798,7 @@ Int outputMBRowAlpha(CWMImageStrCodec * pSC)
     if(pSC->m_bSecondary == FALSE && pSC->m_pNextSC != NULL){ // with alpha channel
         const BITDEPTH_BITS bd = pSC->WMII.bdBitDepth;
         const PixelI iShift = (pSC->m_param.bScaledArith ? SHIFTZERO + QPFRACBITS : 0);
-        const size_t cHeight = min((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
+        const size_t cHeight = MIN((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
         const size_t cWidth = (pSC->m_Dparam->cROIRightX + 1);
         const size_t iFirstRow = ((pSC->cRow - 1) * 16 > pSC->m_Dparam->cROITopY ? 0 : (pSC->m_Dparam->cROITopY & 0xf)), iFirstColumn = pSC->m_Dparam->cROILeftX;
         const size_t iAlphaPos = pSC->WMII.cLeadingPadding + (pSC->WMII.cfColorFormat == CMYK ? 4 : 3);//only RGB and CMYK may have interleaved alpha
@@ -876,7 +877,7 @@ Int outputMBRow(CWMImageStrCodec * pSC)
     const COLORFORMAT cfExt = (pSC->m_param.cfColorFormat == Y_ONLY ? Y_ONLY : pSC->WMII.cfColorFormat);
     const BITDEPTH_BITS bd = pSC->WMII.bdBitDepth;
     const PixelI iShift = (pSC->m_param.bScaledArith ? SHIFTZERO + QPFRACBITS : 0);
-    const size_t cHeight = min((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
+    const size_t cHeight = MIN((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
     const size_t cWidth = (pSC->m_Dparam->cROIRightX + 1);
     const size_t iFirstRow = ((pSC->cRow - 1) * 16 > pSC->m_Dparam->cROITopY ? 0 : (pSC->m_Dparam->cROITopY & 0xf)), iFirstColumn = pSC->m_Dparam->cROILeftX;
     const PixelI *pY = pSC->a0MBbuffer[0];
@@ -1683,13 +1684,13 @@ break
             case BD_16:
             case BD_16S:
             case BD_16F:
-                fixupFullSize(U16, (pII->cBitsPerUnit >> 3) / sizeof(U16));
+                fixupFullSize(U16, ((pII->cBitsPerUnit >> 3) / sizeof(U16)));
                 break;
 
             case BD_32:
             case BD_32S:
             case BD_32F:
-                fixupFullSize(U32, (pII->cBitsPerUnit >> 3) / sizeof(float));
+                fixupFullSize(U32, ((pII->cBitsPerUnit >> 3) / sizeof(float)));
                 break;
 
             case BD_5:
@@ -1709,7 +1710,7 @@ Void outputNChannelThumbnail(CWMImageStrCodec * pSC, const PixelI cMul, const si
 {
     const size_t tScale = pSC->m_Dparam->cThumbnailScale;
     const size_t cWidth = (pSC->m_Dparam->cROIRightX + 1);
-    const size_t cHeight = min((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
+    const size_t cHeight = MIN((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
     const size_t cChannel = pSC->WMISCP.cChannel;
     const U8 nLen = pSC->WMISCP.nLenMantissaOrShift;
     const I8 nExpBias = pSC->WMISCP.nExpBias;
@@ -1837,7 +1838,7 @@ Int decodeThumbnailAlpha(CWMImageStrCodec * pSC, const size_t nBits, const Pixel
 {
     if(pSC->m_bSecondary == FALSE && pSC->m_pNextSC != NULL){ // with alpha channel
         const size_t tScale = (size_t)(1U << nBits);
-        const size_t cHeight = min((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
+        const size_t cHeight = MIN((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
         const size_t cWidth = (pSC->m_Dparam->cROIRightX + 1);
         const size_t iFirstRow = ((((pSC->cRow - 1) * 16 > pSC->m_Dparam->cROITopY ? 0 : (pSC->m_Dparam->cROITopY & 0xf)) + tScale - 1) / tScale * tScale);
         const size_t iFirstColumn = (pSC->m_Dparam->cROILeftX + tScale - 1) / tScale * tScale;
@@ -1914,7 +1915,7 @@ Int decodeThumbnailAlpha(CWMImageStrCodec * pSC, const size_t nBits, const Pixel
 Int decodeThumbnail(CWMImageStrCodec * pSC)
 {
     const size_t tScale = pSC->m_Dparam->cThumbnailScale;
-    const size_t cHeight = min((pSC->m_Dparam->bDecodeFullFrame ? pSC->WMII.cHeight : pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
+    const size_t cHeight = MIN((pSC->m_Dparam->bDecodeFullFrame ? pSC->WMII.cHeight : pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
     const size_t cWidth = (pSC->m_Dparam->bDecodeFullFrame ? pSC->WMII.cWidth : pSC->m_Dparam->cROIRightX + 1);
     const size_t iFirstRow = ((((pSC->cRow - 1) * 16 > pSC->m_Dparam->cROITopY ? 0 : (pSC->m_Dparam->cROITopY & 0xf)) + tScale - 1) / tScale * tScale);
     const size_t iFirstColumn = (pSC->m_Dparam->cROILeftX + tScale - 1) / tScale * tScale;

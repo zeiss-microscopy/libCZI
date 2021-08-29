@@ -100,9 +100,9 @@ ErrorExit:
         free(pAdHuff);
     }
     *ppAdHuff = NULL;
-    if (-1 == iMemStatus) {
+    /*if (-1 == iMemStatus) {
         printf("Insufficient memory to init decoder.\n");
-    }
+    }*/
     return ICERR_ERROR;
 }
 

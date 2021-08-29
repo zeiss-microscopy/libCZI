@@ -1,36 +1,56 @@
 /*
-@ @licstart  The following is the entire license notice for the
-JavaScript code in this file.
+ @licstart  The following is the entire license notice for the JavaScript code in this file.
 
-Copyright (C) 1997-2017 by Dimitri van Heesch
+ The MIT License (MIT)
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+ Copyright (C) 1997-2020 by Dimitri van Heesch
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ and associated documentation files (the "Software"), to deal in the Software without restriction,
+ including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
-You should have received a copy of the GNU General Public License along
-with this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ The above copyright notice and this permission notice shall be included in all copies or
+ substantial portions of the Software.
 
-@licend  The above is the entire license notice
-for the JavaScript code in this file
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ @licend  The above is the entire license notice for the JavaScript code in this file
 */
 var NAVTREE =
 [
   [ "libCZI", "index.html", [
-    [ "libCZI Documentation", "index.html", null ],
-    [ "Building libCZI", "buildinglib_c_z_i.html", null ],
-    [ "Image Document Concept", "imagedocumentconcept.html", null ],
-    [ "using libCZI", "using_naczirlib.html", null ],
+    [ "libCZI Documentation", "index.html", [
+      [ "CZI in a nutshell", "index.html#autotoc_md0", null ]
+    ] ],
+    [ "Building libCZI", "buildinglib_c_z_i.html", [
+      [ "Building on Windows with Visual Studio", "buildinglib_c_z_i.html#autotoc_md1", null ],
+      [ "Building on Linux", "buildinglib_c_z_i.html#autotoc_md2", null ],
+      [ "Building the documentation", "buildinglib_c_z_i.html#autotoc_md3", null ]
+    ] ],
+    [ "Image Document Concept", "imagedocumentconcept.html", [
+      [ "General concepts", "imagedocumentconcept.html#autotoc_md4", null ],
+      [ "Dimensions", "imagedocumentconcept.html#autotoc_md5", null ]
+    ] ],
+    [ "using libCZI", "using_libczi.html", [
+      [ "Opening a CZI-file", "using_libczi.html#autotoc_md6", null ],
+      [ "Reading sub-blocks in a CZI-file", "using_libczi.html#autotoc_md7", null ],
+      [ "creating multi-tile composites", "using_libczi.html#autotoc_md8", null ],
+      [ "creating a multi-channel composite", "using_libczi.html#autotoc_md9", null ]
+    ] ],
     [ "Accessors", "accessors.html", null ],
     [ "Multi-channel-composition", "multichannelcomposition.html", null ],
-    [ "CZIcmd Documentation", "naczircmd.html", null ],
+    [ "CZIcmd Documentation", "czicmd.html", [
+      [ "command 'PrintInformation'", "czicmd.html#autotoc_md10", null ],
+      [ "command 'SingleChannelTileAccessor'", "czicmd.html#autotoc_md11", null ],
+      [ "command 'ChannelComposite'", "czicmd.html#autotoc_md12", null ],
+      [ "command 'ExtractAttachment'", "czicmd.html#autotoc_md13", null ]
+    ] ],
     [ "3rd party software", "_3rdpartysoftware.html", null ],
     [ "Todos", "todos.html", null ],
     [ "Namespaces", "namespaces.html", [
@@ -49,7 +69,7 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Enumerator", "functions_eval.html", null ]
@@ -64,7 +84,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_3rdpartysoftware.html",
-"structlib_c_z_i_1_1_compositors_1_1_compose_single_tile_options.html#aca165a8ee4157c579b0ac9e7d4f83dc7"
+"classlib_c_z_i_1_1_i_dimension_channel_s_i_m_settings.html#a2d1323315e364ae3fc9297e937b36273",
+"functions_func.html",
+"structlib_c_z_i_1_1_channel_display_settings_p_o_d.html#a1bc6d34f37c6cbbe445706a18b1c0d0d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

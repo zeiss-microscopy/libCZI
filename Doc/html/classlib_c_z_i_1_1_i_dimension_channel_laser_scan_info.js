@@ -1,0 +1,25 @@
+var classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info =
+[
+    [ "~IDimensionChannelLaserScanInfo", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a3f93e2a3b8f1d6aff26690c533f3cbf5", null ],
+    [ "TryGetAveraging", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a69cff3087e065da3a898e267b5bbea21", null ],
+    [ "TryGetAveragingMethod", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a57f81be5dd1abacfb3cfd94b6d485acf", null ],
+    [ "TryGetAveragingMode", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a44e2022f1c87a7619dcfe5a703c03f0f", null ],
+    [ "TryGetCropOffset", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a15ae5ce3e4cc0d80a53c61e821eaf866", null ],
+    [ "TryGetFrameTime", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a5468914f8da28c1b7b68364882e98dd8", null ],
+    [ "TryGetLaserAttenuatorBleach", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a521fe3fb6b8408c5a81c5a5db83572b8", null ],
+    [ "TryGetLaserAttenuatorMeas", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#abba39670b47f2f1836cce9cc3ae99922", null ],
+    [ "TryGetLaserAttenuatorState", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#ad6c18b23b0f39c5648587536c3e571fd", null ],
+    [ "TryGetLaserBlanking", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#ad18f71039229ea72a0c3c3fe6e82015c", null ],
+    [ "TryGetLineStep", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a7ca64d08fa14a13413e2762096559a2a", null ],
+    [ "TryGetLineTime", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a1d1e720a4ee8daad8ea1ebb43f0b9990", null ],
+    [ "TryGetPixelTime", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a0a96a77dea147ceaff75515df2a2d8f7", null ],
+    [ "TryGetSampleOffsetX", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a3447f425b096883a88d141ee1bc94786", null ],
+    [ "TryGetSampleOffsetY", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a550ca503db84575680b14ab89f27464c", null ],
+    [ "TryGetSampleRotation", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a2255ff5b4d073dd1d707dc4a4647ef2c", null ],
+    [ "TryGetScanDirection", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a199c76e18b13da0cbb0d7f24d6d5d249", null ],
+    [ "TryGetScanningMode", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a6627aed0d57632cd4669302d5ddc7dc4", null ],
+    [ "TryGetScanSpeed", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a2e2ef2c9033aec04f39b31af30621145", null ],
+    [ "TryGetZoomX", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a13fdb1e6e51828e90a722936f61d56c2", null ],
+    [ "TryGetZoomY", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a22b3fd9cd55f0c106d8d3c56bea16371", null ],
+    [ "TryGetZoomZ", "classlib_c_z_i_1_1_i_dimension_channel_laser_scan_info.html#a4ae33cfe100cea7667b7908bc6edec41", null ]
+];

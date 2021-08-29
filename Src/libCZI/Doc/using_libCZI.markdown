@@ -1,4 +1,4 @@
-﻿using libCZI                 {#using_naczirlib}
+﻿using libCZI                 {#using_libczi}
 ============
 
 ## Opening a CZI-file ##
@@ -60,7 +60,7 @@ This code will print some of the information for all sub-blocks contained in a C
 	cziReader->EnumerateSubBlocks(
 		[](int idx, const libCZI::SubBlockInfo& info)
 	{
-		cout << "Index " << idx << ": " << libCZI::Utils::DimCoordinateToString(&info.coordinate) << " Rect=" << info.logigalRect << endl;
+		cout << "Index " << idx << ": " << libCZI::Utils::DimCoordinateToString(&info.coordinate) << " Rect=" << info.logicalRect << endl;
 		return true;
 	});
 ~~~~~~~~~~~~~~~~~~~~~
@@ -114,7 +114,7 @@ This piece of code will extract a small rectangular region from a huge multi-til
 	cziReader->Open(stream);
 	auto statistics = cziReader->GetStatistics();
 	auto accessor = cziReader->CreateSingleChannelTileAccessor();
-	libCZI::CDimCoordinate planeCoord{ { NaCZIr::DimensionIndex::C,1 } };	// the document only contains C-dimension
+	libCZI::CDimCoordinate planeCoord{ { libCZI::DimensionIndex::C,1 } };	// the document only contains C-dimension
 	auto multiTileComposit = accessor->Get(
 		libCZI::IntRect{ statistics.boundingBox.x + 26152, statistics.boundingBox.y + 32215 ,3000,2200 },
 		&planeCoord,
@@ -137,7 +137,7 @@ Here is an example which leverages the SingleChannelScalingTileAccessor:
 	cziReader->Open(stream);
 	auto statistics = cziReader->GetStatistics();
 	auto accessor = cziReader->CreateSingleChannelScalingTileAccessor();
-	NaCZIr::CDimCoordinate planeCoord{ { libCZI::DimensionIndex::C,1 } }; // the document only contains C-dimension, we choose channel#1
+	libCZI::CDimCoordinate planeCoord{ { libCZI::DimensionIndex::C,1 } }; // the document only contains C-dimension, we choose channel#1
 	auto multiTileComposit = accessor->Get(
 		libCZI::IntRect{
 				statistics.boundingBox.x + statistics.boundingBox.w / 4,

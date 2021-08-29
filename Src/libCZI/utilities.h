@@ -24,13 +24,14 @@
 
 #include <algorithm>
 #include <string>
+#include <cwctype>
 #include <functional>
 #include "libCZI_Pixels.h"
 
 class Utilities
 {
 public:
-	static inline void Split(const std::wstring &text, wchar_t sep, std::function<bool(const std::wstring)> funcToken)
+	static inline void Split(const std::wstring& text, wchar_t sep, std::function<bool(const std::wstring)> funcToken)
 	{
 		std::size_t start = 0, end = 0;
 		while (static_cast<std::size_t>(end = text.find(sep, start)) != static_cast<std::size_t>(std::wstring::npos))
@@ -50,6 +51,11 @@ public:
 		{
 			funcToken(temp);
 		}
+	}
+
+	static inline void RemoveSpaces(std::wstring& str)
+	{
+		str.erase(std::remove_if(str.begin(), str.end(), std::iswspace), str.end());
 	}
 
 	static inline  libCZI::IntRect Intersect(const libCZI::IntRect&a, const libCZI::IntRect& b)
@@ -122,6 +128,78 @@ public:
 		}
 
 		return v;
+	}
+
+	static std::wstring convertUtf8ToWchar_t(const char* sz);
+
+	static void Tokenize(const std::wstring& str, std::vector<std::wstring>& tokens, const std::wstring& delimiters = L" ");
+
+	static GUID GenerateNewGuid();
+
+	static bool IsGuidNull(const GUID& g);
+
+	static void ConvertInt16ToHostByteOrder(std::int16_t* p);
+	static void ConvertInt32ToHostByteOrder(std::int32_t* p);
+	static void ConvertInt64ToHostByteOrder(std::int64_t* p);
+	static void ConvertGuidToHostByteOrder(GUID* p);
+
+	static bool TryGetRgb8ColorFromString(const std::wstring& strXml, libCZI::Rgb8Color& color);
+};
+
+template <typename t>
+struct Nullable
+{
+	Nullable() :isValid(false) {};
+
+	bool isValid;
+	t	 value;
+
+	bool TryGet(t* p) const
+	{
+		if (this->isValid == true)
+		{
+			if (p != nullptr)
+			{
+				*p = this->value;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	void Set(const t& x)
+	{
+		this->value = x;
+		this->isValid = true;
+	}
+};
+
+template <typename t>
+struct ParseEnumHelper
+{
+	struct EnumValue
+	{
+		const wchar_t* text;
+		t              value;
+	};
+
+	static bool TryParseEnum(const EnumValue* values, int count, const wchar_t* str,t* pEnumValue)
+	{
+		for (int i = 0; i < count; ++i,++values)
+		{
+			if (wcscmp(str, values->text) == 0)
+			{
+				if (pEnumValue != nullptr)
+				{
+					*pEnumValue = values->value;
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 };
 

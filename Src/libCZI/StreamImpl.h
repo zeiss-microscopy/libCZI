@@ -38,6 +38,19 @@ public:	// interface libCZI::IStream
 	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 };
 
+/// <summary>	A simplistic output-stream implementation (based on C-runtime fopen). Note that this implementation is NOT thread-safe.</summary>
+class CSimpleOutputStreamStreams : public libCZI::IOutputStream
+{
+private:
+	FILE * fp;
+public:
+	CSimpleOutputStreamStreams() = delete;
+	CSimpleOutputStreamStreams(const wchar_t* filename, bool overwriteExisting);
+	~CSimpleOutputStreamStreams();
+public:	// interface libCZI::IOutputStream
+	virtual void Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten);
+};
+
 /// <summary>	A simplistic stream implementation (based on C++ streams). Note that this implementation is NOT thread-safe.</summary>
 class CSimpleStreamImplCppStreams : public libCZI::IStream
 {
@@ -63,6 +76,18 @@ public:
 public:	// interface libCZI::IStream
 	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 };
+
+class CSimpleOutputStreamImplWindows : public libCZI::IOutputStream
+{
+private:
+	HANDLE handle;
+public:
+	CSimpleOutputStreamImplWindows() = delete;
+	CSimpleOutputStreamImplWindows(const wchar_t* filename, bool overwriteExisting);
+	~CSimpleOutputStreamImplWindows();
+public:	// interface libCZI::IOutputStream
+	virtual void Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten);
+};
 #endif
 
 /// <summary>	A stream implementation (based on a memory-block). </summary>
@@ -77,4 +102,32 @@ public:
 	CStreamImplInMemory(libCZI::IAttachment* attachement);
 public:	// interface libCZI::IStream
 	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+};
+
+#if defined(_WIN32)
+class CSimpleInputOutputStreamImplWindows : public libCZI::IInputOutputStream
+{
+private:
+	HANDLE handle;
+public:
+	CSimpleInputOutputStreamImplWindows() = delete;
+	CSimpleInputOutputStreamImplWindows(const wchar_t* filename);
+	virtual ~CSimpleInputOutputStreamImplWindows();
+public:
+	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+	virtual void Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten);
+};
+#endif
+
+class CSimpleInputOutputStreamImpl : public libCZI::IInputOutputStream
+{
+private:
+	FILE * fp;
+public:
+	CSimpleInputOutputStreamImpl() = delete;
+	CSimpleInputOutputStreamImpl(const wchar_t* filename);
+	virtual ~CSimpleInputOutputStreamImpl();
+public:
+	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+	virtual void Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten);
 };

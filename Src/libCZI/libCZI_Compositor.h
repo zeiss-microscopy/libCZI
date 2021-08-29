@@ -252,7 +252,8 @@ namespace libCZI
 			/// each tile (in black color).
 			bool drawTileBorder;
 
-			/// If specified, only subblocks with a scene-index contained in the set will be considered.
+			/// If specified, only subblocks with a scene-index contained in the set will be considered. If an empty shared_ptr
+            /// is given here, then no filtering is applied.
 			std::shared_ptr<libCZI::IIndexSet> sceneFilter;
 
 			/// Clears this object to its blank state.

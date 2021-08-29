@@ -703,7 +703,7 @@ ERR ParseTifDEValue(
             break;
 
         default:
-            printf("Unrecognized TIFTag: %d(%#x), %d, %d" CRLF, (int)uTag, (int)uTag, (int)uType, (int)uCount);
+            /*printf("Unrecognized TIFTag: %d(%#x), %d, %d" CRLF, (int)uTag, (int)uTag, (int)uType, (int)uCount);*/
             break;
     }
 

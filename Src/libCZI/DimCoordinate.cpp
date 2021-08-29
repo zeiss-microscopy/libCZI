@@ -23,14 +23,15 @@
 #include "stdafx.h"
 #include "libCZI.h"
 #include <climits>
+#include <regex>
 
 using namespace libCZI;
 using namespace std;
 
-class CIntParseDimensionString
+class CIntParseCoordinateBoundsString
 {
 public:
-	static CDimCoordinate TryParse(const char* str, int& parsedUntil)
+	static CDimCoordinate ParseCoordinate(const char* str, int& parsedUntil)
 	{
 		parsedUntil = 0;
 		CDimCoordinate dim;
@@ -56,6 +57,63 @@ public:
 		}
 
 		return dim;
+	}
+
+	static CDimBounds ParseBounds(const char* str)
+	{
+		string s(str);
+		regex bounds_regex(R"((?:([a-zA-Z])(?:([\+|-]?[0-9]+):([\+|-]?[0-9]+))\s*))");
+
+		std::regex_iterator<std::string::iterator> it(s.begin(), s.end(), bounds_regex);
+		std::regex_iterator<std::string::iterator> end;
+
+		CDimBounds bounds;
+
+		bool lastMatchHasNoSuffix = false;
+		for (; it != std::regex_iterator<std::string::iterator>(); ++it)
+		{
+			if (it->size() == 4)
+			{
+				auto dimMatch = it->operator[](1);
+				auto dimIdx = Utils::CharToDimension(dimMatch.str()[0]);
+				if (dimIdx == DimensionIndex::invalid)
+				{
+					throw LibCZIStringParseException("Invalid dimension", -1, LibCZIStringParseException::ErrorType::InvalidSyntax);
+				}
+
+				int startIdx, sizeIdx;
+				auto startIdxMatch = it->operator[](2);
+				if (!TryParseInt(startIdxMatch.str().c_str(), &startIdx))
+				{
+					throw LibCZIStringParseException("Invalid start-index", -1, LibCZIStringParseException::ErrorType::InvalidSyntax);
+				}
+
+				auto sizeIdxMatch = it->operator[](3);
+				if (!TryParseInt(sizeIdxMatch.str().c_str(), &sizeIdx) || sizeIdx == 0)
+				{
+					throw LibCZIStringParseException("Invalid end-index", -1, LibCZIStringParseException::ErrorType::InvalidSyntax);
+				}
+
+				if (bounds.IsValid(dimIdx))
+				{
+					throw LibCZIStringParseException("Duplicate dimension", -1, LibCZIStringParseException::ErrorType::DuplicateDimension);
+				}
+
+				bounds.Set(dimIdx, startIdx, sizeIdx);
+
+				if (it->suffix().str().empty())
+				{
+					lastMatchHasNoSuffix = true;
+				}
+			}
+		}
+
+		if (lastMatchHasNoSuffix == false)
+		{
+			throw LibCZIStringParseException("Bounds-string did not parse", -1, LibCZIStringParseException::ErrorType::InvalidSyntax);
+		}
+
+		return bounds;
 	}
 private:
 	static bool Int_ParseCoordinate(const char* str, int& charsParsedOk, DimensionIndex& dimIdx, int& value)
@@ -187,21 +245,27 @@ private:
 			return false;
 		}
 
-		long int liValue = strtol(number, nullptr, 10);
-		if (liValue == (std::numeric_limits<long int>::max)() || liValue == (std::numeric_limits<long int>::min)())
+		if (!TryParseInt(number, &value))
 		{
-			if (errno == ERANGE)
-			{
-				return false;
-			}
+			return false;
 		}
+
+		return true;
+	}
+
+	static bool TryParseInt(const char* number, int* value)
+	{
+		long long liValue = strtoll(number, nullptr, 10);
 
 		if (liValue > (std::numeric_limits<int>::max)() || liValue < (std::numeric_limits<int>::min)())
 		{
 			return false;
 		}
 
-		value = static_cast<int>(liValue);
+		if (value != nullptr)
+		{
+			*value = static_cast<int>(liValue);
+		}
 
 		return true;
 	}
@@ -210,24 +274,10 @@ private:
 /*static*/CDimCoordinate libCZI::CDimCoordinate::Parse(const char* str)
 {
 	int parsedChars;
-	return CIntParseDimensionString::TryParse(str, parsedChars);
-	/*
-	regex coord_regex("([:blank:]*[Z|C|T|R|S|I|H|V|B][\\+|-]?[[:digit:]]+[,|;| ]*)", regex_constants::icase);
-
-	CDimCoordinate dim;
-	regex_iterator<const char*> itr(str, str + strlen(str), coord_regex);
-	regex_iterator<const char*> itr_end;
-	while (itr != itr_end)
-	{
-		auto match = *itr;
-		auto ms = match.str();
-		DimensionIndex dimIndex = Utils::CharToDimension(ms[0]);
-		int index = atoi(ms.c_str() + 1);
-		dim.Set(dimIndex, index);
-		++itr;
-	}
-
-	return dim;
-	*/
+	return CIntParseCoordinateBoundsString::ParseCoordinate(str, parsedChars);
 }
 
+/*static*/CDimBounds CDimBounds::Parse(const char* str)
+{
+	return CIntParseCoordinateBoundsString::ParseBounds(str);
+}
