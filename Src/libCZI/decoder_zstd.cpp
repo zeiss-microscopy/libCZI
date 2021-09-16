@@ -23,7 +23,7 @@
 #include "stdafx.h"
 #include "decoder_zstd.h"
 #include <zstd.h>
-#include <common/zstd_errors.h>
+#include <zstd_errors.h>
 #include "bitmapData.h"
 #include "libCZI_Utilities.h"
 
