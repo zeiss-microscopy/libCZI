@@ -23,7 +23,11 @@
 #include "stdafx.h"
 #include "decoder_zstd.h"
 #include <zstd.h>
+#if (ZSTD_VERSION_MAJOR >= 1 && ZSTD_VERSION_MINOR >= 5) 
 #include <zstd_errors.h>
+#else
+#include <common/zstd_errors.h>
+#endif
 #include "bitmapData.h"
 #include "libCZI_Utilities.h"
 
