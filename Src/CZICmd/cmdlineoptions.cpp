@@ -314,22 +314,22 @@ void CCmdLineOptions::PrintUsage(int switchesCnt, const std::function<std::tuple
 					L'c',
 					L"COMMAND",
 					LR"(COMMAND can be any of 'PrintInformation', 'ExtractSubBlock', 'SingleChannelTileAccessor', 'ChannelComposite',
-					'SingleChannelPyramidTileAccessor', 'SingleChannelScalingTileAccessor', 'ScalingChannelComposite' and 'ExtractAttachment'.  
-					\n'PrintInformation' will print information about the CZI-file to the console. The argument 'info-level' can be used
+					'SingleChannelPyramidTileAccessor', 'SingleChannelScalingTileAccessor', 'ScalingChannelComposite' and 'ExtractAttachment'.
+					\N'PrintInformation' will print information about the CZI-file to the console. The argument 'info-level' can be used
 					to specify which information is to be printed.
-					\n'ExtractSubBlock' will write the bitmap contained in the specified sub-block to the OUTPUTFILE.
-					\n'ChannelComposite' will create a
+					\N'ExtractSubBlock' will write the bitmap contained in the specified sub-block to the OUTPUTFILE.
+					\N'ChannelComposite' will create a
 					channel-composite of the specified region and plane and apply display-settings to it. The resulting bitmap will be written
 					to the specified OUTPUTFILE.
-					\n'SingleChannelTileAccessor' will create a tile-composite (only from sub-blocks on pyramid-layer 0) of the specified region and plane.
+					\N'SingleChannelTileAccessor' will create a tile-composite (only from sub-blocks on pyramid-layer 0) of the specified region and plane.
 					The resulting bitmap will be written to the specified OUTPUTFILE.
-					\n'SingleChannelPyramidTileAccessor' adds to the previous command the ability to explictely address a specific pyramid-layer (which must
+					\N'SingleChannelPyramidTileAccessor' adds to the previous command the ability to explictely address a specific pyramid-layer (which must
 					exist in the CZI-document).
-					\n'SingleChannelScalingTileAccessor' gets the specified region with an arbitrary zoom factor. It uses the pyramid-layers in the CZI-document
+					\N'SingleChannelScalingTileAccessor' gets the specified region with an arbitrary zoom factor. It uses the pyramid-layers in the CZI-document
 					and scales the bitmap if neccessary. The resulting bitmap will be written to the specified OUTPUTFILE.
-					\n'ScalingChannelComposite' operates like the previous command, but in addition gets all channels and creates a multi-channel-composite from them
+					\N'ScalingChannelComposite' operates like the previous command, but in addition gets all channels and creates a multi-channel-composite from them
 					using display-settings.
-					\n'ExtractAttachment' allows to extract (and save to a file) the contents of attachments.))"
+					\N'ExtractAttachment' allows to extract (and save to a file) the contents of attachments.))"
 			},
 			{
 				L's',
@@ -499,7 +499,7 @@ void CCmdLineOptions::PrintSynopsis(int switchesCnt, std::function<std::tuple<in
 								prefix = wstring(COLUMN_FOR_EXPLANATION, L' ');
 						}
 
-						// subtract 1 in order not to run into trouble if outputing a complete line (80 chars normally), where in the end we get two linefeeds...
+						// subtract 1 in order not to run into trouble if outputting a complete line (80 chars normally), where in the end we get two linefeeds...
 						auto lines = wrap(get<1>(expl).c_str(), 80 - COLUMN_FOR_EXPLANATION - 1);
 						bool isFirstLine = true;
 						for (const auto& l : lines)

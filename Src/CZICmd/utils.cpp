@@ -231,10 +231,16 @@ std::vector<std::wstring> wrap(const wchar_t* text, size_t line_length/* = 72*/)
 			break;
 		}
 
-		if (word.size() > 2 && word[0] == L'\\'&&word[1] == L'n')
+		// '\n' before a word means "insert a linebreak", and "\N' means "insert a linebreak and one more empty line"
+		if (word.size() > 2 && word[0] == L'\\' && (word[1] == L'n' || word[1] == L'N'))
 		{
 			line.erase(line.size() - 1);	// remove trailing space
 			vec.push_back(line);
+			if (word[1] == L'N')
+			{
+				vec.push_back(L"");
+			}
+
 			line.clear();
 			word.erase(0, 2);
 		}
