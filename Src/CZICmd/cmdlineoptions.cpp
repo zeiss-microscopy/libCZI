@@ -314,7 +314,7 @@ void CCmdLineOptions::PrintUsage(int switchesCnt, const std::function<std::tuple
 					L'c',
 					L"COMMAND",
 					LR"(COMMAND can be any of 'PrintInformation', 'ExtractSubBlock', 'SingleChannelTileAccessor', 'ChannelComposite',
-					'SingleChannelPyramidTileAccessor', 'SingleChannelScalingTileAccessor', 'ScalingChannelComposite' and 'ExtractAttachment'.
+					'SingleChannelPyramidTileAccessor', 'SingleChannelScalingTileAccessor', 'ScalingChannelComposite' and 'ExtractAttachment'. 
 					\N'PrintInformation' will print information about the CZI-file to the console. The argument 'info-level' can be used
 					to specify which information is to be printed.
 					\N'ExtractSubBlock' will write the bitmap contained in the specified sub-block to the OUTPUTFILE.
