@@ -76,14 +76,23 @@ void CSingleChannelPyramidLevelTileAccessor::InternalGet(libCZI::IBitmapData* pD
 	Clear(pDest, options.backGroundColor);
 	auto sizeBitmap = pDest->GetSize();
 	auto subSet = GetSubBlocksSubset(IntRect{ xPos,yPos,(int)sizeBitmap.w*sizeOfPixelOnLayer0,(int)sizeBitmap.h*sizeOfPixelOnLayer0 }, planeCoordinate, pyramidInfo, options.sceneFilter.get());
-	if (subSet.size()==0)
-	{	// no subblocks were found in the requested plane/ROI, so there is nothing to do
+	if (subSet.empty())
+	{
+	    // no subblocks were found in the requested plane/ROI, so there is nothing to do
 		return;
 	}
 
 	auto byLayer = CalcByLayer(subSet, pyramidInfo.minificationFactor);
-	// ok, now we just have to look at our requested pyramid-layer
-	const auto& indices = byLayer.at(pyramidInfo.pyramidLayerNo).indices;
+
+    // ok, now we just have to look at our requested pyramid-layer
+	const auto itr = byLayer.find(pyramidInfo.pyramidLayerNo);
+	if (itr == byLayer.end())
+	{
+		// not found, nothing we have to do
+		return;
+	}
+
+	const auto& indices = itr->second.indices;
 
 	// and now... copy...
 	this->ComposeTiles(pDest, xPos, yPos, sizeOfPixelOnLayer0, (int)indices.size(), options,
