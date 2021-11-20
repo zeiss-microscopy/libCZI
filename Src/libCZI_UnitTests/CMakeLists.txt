@@ -1,4 +1,4 @@
-# downlad and build googletest -> https://github.com/google/googletest/tree/master/googletest , https://crascit.com/2015/07/25/cmake-gtest/
+# downlad and build googletest -> https://github.com/google/googletest/tree/main/googletest , https://crascit.com/2015/07/25/cmake-gtest/
 
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
