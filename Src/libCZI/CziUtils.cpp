@@ -20,10 +20,10 @@
 // 
 //******************************************************************************
 
-#include <limits>
-
 #include "stdafx.h"
 #include "CziUtils.h"
+
+#include <limits>
 
 using namespace libCZI;
 
