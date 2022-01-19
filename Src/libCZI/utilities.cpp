@@ -139,8 +139,16 @@ tString trimImpl(const tString& str, const tString& whitespace)
     auto r = distu32(rng);
     g.Data2 = (uint16_t)r;
     g.Data3 = (uint16_t)(r >> 16);
+   	
+	r = distu32(rng);
+    for (int i = 0; i < 4; ++i)
+    {
+        g.Data4[i] = (uint8_t)r;
+        r >>= 8;
+    }
+
     r = distu32(rng);
-    for (int i = 0; i < 8; ++i)
+    for (int i = 4; i < 8; ++i)
     {
         g.Data4[i] = (uint8_t)r;
         r >>= 8;
