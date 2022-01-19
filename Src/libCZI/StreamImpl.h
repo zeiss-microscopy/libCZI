@@ -23,6 +23,7 @@
 #pragma once
 
 #include "libCZI.h"
+#include "inc_libCZI_Config.h"
 #include <fstream>
 
 /// <summary>	A simplistic stream implementation (based on C-runtime fopen). Note that this implementation is NOT thread-safe.</summary>
@@ -35,7 +36,7 @@ public:
 	CSimpleStreamImpl(const wchar_t* filename);
 	~CSimpleStreamImpl();
 public:	// interface libCZI::IStream
-	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 };
 
 /// <summary>	A simplistic output-stream implementation (based on C-runtime fopen). Note that this implementation is NOT thread-safe.</summary>
@@ -61,8 +62,36 @@ public:
 	CSimpleStreamImplCppStreams(const wchar_t* filename);
 	~CSimpleStreamImplCppStreams();
 public:	// interface libCZI::IStream
-	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 };
+
+#if LIBCZI_USE_PREADPWRITEBASED_STREAMIMPL
+/// <summary>	An input-stream implementation (based on open and pread). This implementation is thread-safe.</summary>
+class CStreamImplPread : public libCZI::IStream
+{
+private:
+	int fileDescriptor;
+public:
+	CStreamImplPread() = delete;
+	CStreamImplPread(const wchar_t* filename);
+	~CStreamImplPread();
+public:	// interface libCZI::IStream
+	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+};
+
+/// <summary>	An output-stream implementation (based on open and pwrite). This implementation is thread-safe.</summary>
+class COutputStreamImplPwrite : public libCZI::IOutputStream
+{
+private:
+	int fileDescriptor;
+public:
+	COutputStreamImplPwrite() = delete;
+	COutputStreamImplPwrite(const wchar_t* filename, bool overwriteExisting);
+	~COutputStreamImplPwrite();
+public:	// interface libCZI::IOutputStream
+	virtual void Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten);
+};
+#endif
 
 #if defined(_WIN32)
 class CSimpleStreamImplWindows : public libCZI::IStream
@@ -74,7 +103,7 @@ public:
 	CSimpleStreamImplWindows(const wchar_t* filename);
 	~CSimpleStreamImplWindows();
 public:	// interface libCZI::IStream
-	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 };
 
 class CSimpleOutputStreamImplWindows : public libCZI::IOutputStream
@@ -104,6 +133,21 @@ public:	// interface libCZI::IStream
 	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 };
 
+#if LIBCZI_USE_PREADPWRITEBASED_STREAMIMPL
+class CInputOutputStreamImplPreadPwrite : public libCZI::IInputOutputStream
+{
+private:
+	int fileDescriptor;
+public:
+	CInputOutputStreamImplPreadPwrite() = delete;
+	CInputOutputStreamImplPreadPwrite(const wchar_t* filename);
+	virtual ~CInputOutputStreamImplPreadPwrite();
+public:
+	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+	virtual void Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten);
+};
+#endif
+
 #if defined(_WIN32)
 class CSimpleInputOutputStreamImplWindows : public libCZI::IInputOutputStream
 {
@@ -114,7 +158,7 @@ public:
 	CSimpleInputOutputStreamImplWindows(const wchar_t* filename);
 	virtual ~CSimpleInputOutputStreamImplWindows();
 public:
-	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 	virtual void Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten);
 };
 #endif
@@ -128,6 +172,6 @@ public:
 	CSimpleInputOutputStreamImpl(const wchar_t* filename);
 	virtual ~CSimpleInputOutputStreamImpl();
 public:
-	virtual void Read(std::uint64_t offset, void *pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
+	virtual void Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead);
 	virtual void Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten);
 };

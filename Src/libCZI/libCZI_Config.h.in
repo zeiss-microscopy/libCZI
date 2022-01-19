@@ -22,6 +22,8 @@
 // whether the function "_aligned_malloc" is available
 #define LIBCZI_HAVE__ALIGNED_MALLOC @libCZI_HAVE__ALIGNED_MALLOC@
 
+// whether we can use pread/pwrite-APIs (for implementing file-stream objects), only relevant if not Win32-environment
+#define LIBCZI_USE_PREADPWRITEBASED_STREAMIMPL @libCZI_UsePreadPwriteBasedStreamImplementation@
 
 #define LIBCZI_REPOSITORYREMOTEURL "@libCZI_REPOSITORYREMOTEURL@"
 

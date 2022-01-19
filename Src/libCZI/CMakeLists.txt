@@ -23,12 +23,18 @@ else()
  set(libCZI_HAVE__ALIGNED_MALLOC 0)
 endif()
 
-set(libCZI_HAVE_ENDIAN_H ${HAVE_ENDIAN_H}) 
+set(libCZI_HAVE_ENDIAN_H ${HAVE_ENDIAN_H})
 
 if (CRASH_ON_UNALIGNED_ACCESS)
 	set (libCZI_CrashOnUnalignedIntegers 1)
 else()
   set (libCZI_CrashOnUnalignedIntegers 0)
+endif()
+
+if(NOT WIN32 AND HAVE_FCNTL_H_OPEN AND HAVE_UNISTD_H_PREAD AND HAVE_UNISTD_H_PWRITE)
+	set(libCZI_UsePreadPwriteBasedStreamImplementation 1)
+else()
+	set(libCZI_UsePreadPwriteBasedStreamImplementation 0)
 endif()
 
 string(CONCAT libCZI_CompilerIdentification ${CMAKE_CXX_COMPILER_ID} " " ${CMAKE_CXX_COMPILER_VERSION} )

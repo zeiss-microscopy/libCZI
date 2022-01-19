@@ -85,7 +85,11 @@ std::shared_ptr<libCZI::IStream> libCZI::CreateStreamFromFile(const wchar_t* szF
 #ifdef _WIN32
 		return make_shared<CSimpleStreamImplWindows>(szFilename);
 #else
+	#if LIBCZI_USE_PREADPWRITEBASED_STREAMIMPL
+		return make_shared<CStreamImplPread>(szFilename);
+	#else
 		return make_shared<CSimpleStreamImpl>(szFilename);
+	#endif
 #endif
 }
 
@@ -104,7 +108,11 @@ std::shared_ptr<IOutputStream> libCZI::CreateOutputStreamForFile(const wchar_t* 
 #ifdef _WIN32
 		return make_shared<CSimpleOutputStreamImplWindows>(szFilename, overwriteExisting);
 #else
+	#if LIBCZI_USE_PREADPWRITEBASED_STREAMIMPL
+		return make_shared<COutputStreamImplPwrite>(szFilename, overwriteExisting);
+	#else
 		return make_shared<CSimpleOutputStreamStreams>(szFilename, overwriteExisting);
+	#endif
 #endif
 }
 
@@ -113,7 +121,11 @@ std::shared_ptr<IInputOutputStream> libCZI::CreateInputOutputStreamForFile(const
 #ifdef _WIN32
 		return make_shared<CSimpleInputOutputStreamImplWindows>(szFilename);
 #else
+	#if LIBCZI_USE_PREADPWRITEBASED_STREAMIMPL
+		return make_shared<CInputOutputStreamImplPreadPwrite>(szFilename);
+	#else
 		return make_shared<CSimpleInputOutputStreamImpl>(szFilename);
+	#endif
 #endif
 }
 

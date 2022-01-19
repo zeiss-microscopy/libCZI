@@ -20,7 +20,7 @@ ENDIF(UNIX)
 file(GLOB CZICMDSRCFILES "*.h" "*.cpp" "*.hpp")
 file(GLOB_RECURSE CZICMDRAPIDJSONSRCFILES "*.h" "*.cpp" "*.hpp")
 
-add_executable(CZIcmd ${CZICMDSRCFILES} ${CZICMDRAPIDJSONSRCFILES}   )
+add_executable(CZIcmd ${CZICMDSRCFILES} ${CZICMDRAPIDJSONSRCFILES})
 
 set_target_properties(CZIcmd PROPERTIES CXX_STANDARD 11)
 target_compile_definitions(CZIcmd PRIVATE _LIBCZISTATICLIB)

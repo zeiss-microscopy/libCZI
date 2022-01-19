@@ -142,7 +142,7 @@ tString trimImpl(const tString& str, const tString& whitespace)
     r = distu32(rng);
     for (int i = 0; i < 8; ++i)
     {
-        g.Data4[0] = (uint8_t)r;
+        g.Data4[i] = (uint8_t)r;
         r >>= 8;
     }
 
