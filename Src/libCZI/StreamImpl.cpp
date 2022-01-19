@@ -27,6 +27,11 @@
 #include <codecvt>
 #include <iomanip>
 
+#if LIBCZI_USE_PREADPWRITEBASED_STREAMIMPL
+#include <fcntl.h>
+#include <unistd.h>
+#endif
+
 using namespace std;
 
 CSimpleStreamImpl::CSimpleStreamImpl(const wchar_t* filename)
@@ -113,6 +118,103 @@ void CSimpleStreamImplCppStreams::Read(std::uint64_t offset, void *pv, std::uint
 		*ptrBytesRead = this->infile.gcount();
 	}
 }
+
+//----------------------------------------------------------------------------
+
+#if LIBCZI_USE_PREADPWRITEBASED_STREAMIMPL
+CStreamImplPread::CStreamImplPread(const wchar_t* filename)
+	: fileDescriptor(0)
+{
+	size_t requiredSize = std::wcstombs(nullptr, filename, 0);
+	std::string conv(requiredSize, 0);
+	conv.resize(std::wcstombs(&conv[0], filename, requiredSize));
+	this->fileDescriptor = open(conv.c_str(), O_RDONLY);
+	if (this->fileDescriptor < 0)
+	{
+		auto err = errno;
+		std::stringstream ss;
+		ss << "Error opening the file \"" << conv << "\" -> errno=" << err << " (" << strerror(err) << ")";
+		throw std::runtime_error(ss.str());
+	}
+}
+
+CStreamImplPread::~CStreamImplPread()
+{
+	if (this->fileDescriptor != 0)
+	{
+		close(this->fileDescriptor);
+	}
+}
+
+/*virtual*/void CStreamImplPread::Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead)
+{
+	ssize_t bytesRead = pread(this->fileDescriptor, pv, size, offset);
+	if (bytesRead < 0)
+	{
+		auto err = errno;
+		std::stringstream ss;
+		ss << "Error reading from file (errno=" << err << " -> " << strerror(err) << ")";
+		throw std::runtime_error(ss.str());
+	}
+
+	if (ptrBytesRead != nullptr)
+	{
+		*ptrBytesRead = bytesRead;
+	}
+}
+
+//----------------------------------------------------------------------------
+
+COutputStreamImplPwrite::COutputStreamImplPwrite(const wchar_t* filename, bool overwriteExisting)
+	: fileDescriptor(0)
+{
+	size_t requiredSize = std::wcstombs(nullptr, filename, 0);
+	std::string conv(requiredSize, 0);
+	conv.resize(std::wcstombs(&conv[0], filename, requiredSize));
+
+	int flags = O_WRONLY | O_CREAT | O_TRUNC;
+	if (!overwriteExisting)
+	{
+		// If filename already exists, open will fail with EEXIST
+		flags |= O_EXCL;
+	}
+
+	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+	this->fileDescriptor = open(conv.c_str(), flags, mode);
+	if (this->fileDescriptor < 0)
+	{
+		auto err = errno;
+		std::stringstream ss;
+		ss << "Error opening the file \"" << conv << "\" -> errno=" << err << " (" << strerror(err) << ")";
+		throw std::runtime_error(ss.str());
+	}
+}
+
+COutputStreamImplPwrite::~COutputStreamImplPwrite()
+{
+	if (this->fileDescriptor != 0)
+	{
+		close(this->fileDescriptor);
+	}
+}
+
+/*virtual*/void COutputStreamImplPwrite::Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten)
+{
+	ssize_t bytesWritten = pwrite(this->fileDescriptor, pv, size, offset);
+	if (bytesWritten < 0)
+	{
+		auto err = errno;
+		std::stringstream ss;
+		ss << "Error reading from file (errno=" << err << " -> " << strerror(err) << ")";
+		throw std::runtime_error(ss.str());
+	}
+
+	if (ptrBytesWritten != nullptr)
+	{
+		*ptrBytesWritten = bytesWritten;
+	}
+}
+#endif
 
 //----------------------------------------------------------------------------
 
@@ -331,6 +433,71 @@ void CSimpleOutputStreamStreams::Write(std::uint64_t offset, const void* pv, std
 		*ptrBytesWritten = bytesRead;
 	}
 }
+
+//-----------------------------------------------------------------------------
+
+#if LIBCZI_USE_PREADPWRITEBASED_STREAMIMPL
+CInputOutputStreamImplPreadPwrite::CInputOutputStreamImplPreadPwrite(const wchar_t* filename)
+	: fileDescriptor(0)
+{
+	size_t requiredSize = std::wcstombs(nullptr, filename, 0);
+	std::string conv(requiredSize, 0);
+	conv.resize(std::wcstombs(&conv[0], filename, requiredSize));
+
+	int flags = O_RDWR | O_CREAT;
+	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+	this->fileDescriptor = open(conv.c_str(), flags, mode);
+	if (this->fileDescriptor < 0)
+	{
+		auto err = errno;
+		std::stringstream ss;
+		ss << "Error opening the file \"" << conv << "\" -> errno=" << err << " (" << strerror(err) << ")";
+		throw std::runtime_error(ss.str());
+	}
+}
+
+CInputOutputStreamImplPreadPwrite::~CInputOutputStreamImplPreadPwrite()
+{
+	if (this->fileDescriptor != 0)
+	{
+		close(this->fileDescriptor);
+	}
+}
+
+/*virtual*/void CInputOutputStreamImplPreadPwrite::Read(std::uint64_t offset, void* pv, std::uint64_t size, std::uint64_t* ptrBytesRead)
+{
+	ssize_t bytesRead = pread(this->fileDescriptor, pv, size, offset);
+	if (bytesRead < 0)
+	{
+		auto err = errno;
+		std::stringstream ss;
+		ss << "Error reading from file (errno=" << err << " -> " << strerror(err) << ")";
+		throw std::runtime_error(ss.str());
+	}
+
+	if (ptrBytesRead != nullptr)
+	{
+		*ptrBytesRead = bytesRead;
+	}
+}
+
+/*virtual*/void CInputOutputStreamImplPreadPwrite::Write(std::uint64_t offset, const void* pv, std::uint64_t size, std::uint64_t* ptrBytesWritten)
+{
+	ssize_t bytesWritten = pwrite(this->fileDescriptor, pv, size, offset);
+	if (bytesWritten < 0)
+	{
+		auto err = errno;
+		std::stringstream ss;
+		ss << "Error reading from file (errno=" << err << " -> " << strerror(err) << ")";
+		throw std::runtime_error(ss.str());
+	}
+
+	if (ptrBytesWritten != nullptr)
+	{
+		*ptrBytesWritten = bytesWritten;
+	}
+}
+#endif
 
 //-----------------------------------------------------------------------------
 
