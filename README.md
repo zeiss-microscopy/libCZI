@@ -50,16 +50,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
 ***
 
+### Remarks
+
+This repository will be archived soon because libCZI will be replaced vy the newer libCZIrw C++ library. It will be published on Github very soon (Summer 2022). This library contains important improvements and new features:
+
+* allows to read and write CZI image files
+* ZSTD compression
+* new licensing LGPLv3
+
+
 ### *Python Wrapper for libCZI*
 
-There are at least two python wrappers available for libCZI. They provide easy access to CZI image data from python. Those wrappers were created by the community and therefore is by no means responsible for their functionality and their maintenance. Feel free to use them at your own risk.
+### pylibCZIrw
 
-***
+ZEISS has published a python wrapper for the new libCZIrw which can be found here: [pylibCZIrw](https://pypi.org/project/pylibCZIrw/)
 
-#### AICSImageIO
+### Community-driven tools to read CZIs
 
-This library from the Allen Institute for Cell Science uses libCZI among other tools to read CZI, OME-TIFF and TIFF images and can be found here: [AICSimageIO](https://allencellmodeling.github.io/aicsimageio/)
+There are several available based on libCZI. They provide easy access to CZI image data from python but do not allow to write CZI files. Those wrappers were created by the community and therefore is by no means responsible for their functionality and their maintenance. Feel free to use them at your own risk.
+
+#### aicspylibczi
+
+The [aicspylibczirw](https://github.com/AllenCellModeling/aicspylibczi) library from the Allen Institute for Cell Science is based [pylibCZI](https://github.com/elhuhdron/pylibczi) and can be used on its own or as part of [AICSimageIO](https://allencellmodeling.github.io/aicsimageio/)
 
 #### pylibCZI
 
 This is a python module for reading Zeiss CZI files by utilizing libCZI and can be found here: [pylibCZI](https://github.com/elhuhdron/pylibczi)
+
+#### czifile
+
+The excellent library [czifile](https://pypi.org/project/czifile/) to read CZI file written in pure python. It seems not to be active anymore since over two years(2022-08-23). 
